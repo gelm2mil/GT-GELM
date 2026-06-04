@@ -1,192 +1,511 @@
-<!-- Actualización inicial -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bienvenido al proyecto musical GT-GELM</title>
+
+<title>GT-GELM Producciones</title>
 
 <style>
+
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
 
+html{
+    scroll-behavior:smooth;
+}
+
 body{
-    font-family: Arial, sans-serif;
-    background:#111;
+    font-family:Arial,sans-serif;
+    background:#05010a;
     color:white;
+    overflow-x:hidden;
 }
 
-header{
-    background:linear-gradient(135deg,#0b3d0b,#1e6b1e);
-    padding:40px 20px;
-    text-align:center;
-}
-
-header h1{
-    font-size:3rem;
-    margin-bottom:10px;
-}
-
-header p{
-    font-size:1.2rem;
-}
+/* ==========================
+   PORTADA PRINCIPAL
+========================== */
 
 .hero{
-    padding:40px 20px;
-    text-align:center;
+    position:relative;
+    width:100%;
+    min-height:100vh;
 }
 
 .hero img{
-    width:300px;
-    max-width:90%;
-    border-radius:15px;
-    box-shadow:0 0 20px rgba(255,255,255,.2);
+    width:100%;
+    height:100vh;
+    object-fit:cover;
+    display:block;
 }
 
-.hero h2{
-    margin-top:20px;
-    color:#ffd700;
-}
+.overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
 
-.contenido{
-    max-width:1200px;
-    margin:auto;
+    background:rgba(0,0,0,.55);
+
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
     padding:20px;
 }
 
+.overlay h1{
+    font-size:4rem;
+    text-shadow:0 0 20px #000;
+}
+
+.overlay p{
+    font-size:1.4rem;
+    margin-top:15px;
+    max-width:800px;
+    text-shadow:0 0 10px #000;
+}
+
+.btn-principal{
+
+    display:inline-block;
+
+    margin-top:30px;
+
+    padding:15px 35px;
+
+    border-radius:50px;
+
+    background:#00c896;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+.btn-principal:hover{
+
+    transform:scale(1.05);
+
+}
+
+/* ==========================
+   VIDEO DESTACADO
+========================== */
+
+.video-section{
+
+    padding:60px 20px;
+
+    max-width:1200px;
+
+    margin:auto;
+
+    text-align:center;
+
+}
+
+.video-section h2{
+
+    margin-bottom:25px;
+
+    color:#ffd700;
+
+    font-size:2rem;
+
+}
+
+.video-container{
+
+    position:relative;
+
+    padding-bottom:56.25%;
+
+    height:0;
+
+    overflow:hidden;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 0 25px rgba(0,255,255,.3);
+
+}
+
+.video-container iframe{
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+}
+
+/* ==========================
+   TARJETAS
+========================== */
+
 .canciones{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:60px 20px;
+
+}
+
+.titulo-seccion{
+
+    text-align:center;
+
+    margin-bottom:40px;
+
+    color:#ffd700;
+
+}
+
+.grid{
+
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:20px;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(300px,1fr));
+
+    gap:25px;
+
 }
 
 .card{
-    background:#1b1b1b;
+
+    background:#111;
+
     border-radius:15px;
+
     padding:20px;
-    box-shadow:0 0 10px rgba(255,255,255,.1);
+
+    box-shadow:
+    0 0 12px rgba(255,255,255,.08);
+
 }
 
 .card h3{
+
     color:#ffd700;
+
     margin-bottom:10px;
+
 }
 
 .card p{
+
+    line-height:1.6;
+
     margin-bottom:15px;
+
 }
 
-.boton{
+.card a{
+
     display:inline-block;
-    background:#0066ff;
-    color:white;
-    text-decoration:none;
-    padding:10px 20px;
+
+    margin-top:10px;
+
+    margin-right:10px;
+
+    padding:10px 18px;
+
     border-radius:10px;
+
+    text-decoration:none;
+
+    color:white;
+
+    background:#00c896;
+
 }
 
-.boton:hover{
-    background:#0047b3;
-}
+/* ==========================
+   PIE
+========================== */
 
 footer{
-    text-align:center;
-    padding:30px;
-    margin-top:40px;
+
     background:#000;
+
+    padding:40px 20px;
+
+    text-align:center;
+
+    margin-top:50px;
+
 }
+
+footer h3{
+
+    margin-bottom:10px;
+
+}
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media(max-width:768px){
+
+    .hero img{
+        height:70vh;
+    }
+
+    .overlay h1{
+        font-size:2.2rem;
+    }
+
+    .overlay p{
+        font-size:1rem;
+    }
+
+}
+
 </style>
 
 </head>
+
 <body>
 
-<header>
-    <h1>🇬🇹 GT-GELM Producciones</h1>
-    <p>Historias de Guatemala convertidas en música</p>
-</header>
+<!-- ==========================
+     PORTADA
+========================== -->
 
 <section class="hero">
 
-    <!-- CAMBIA ESTA IMAGEN MÁS ADELANTE -->
-    <img src="portada.jpg" alt="GT-GELM">
+    <img
+    src="img/banner-principal-gtgelm.png"
+    alt="GT-GELM">
 
-    <h2>Música • Historia • Cultura • Tradición</h2>
+    <div class="overlay">
 
-    <p>
-        Bienvenido al proyecto GT-GELM, un espacio dedicado a
-        preservar la historia, tradiciones y patrimonio de Guatemala
-        a través de canciones originales.
-    </p>
+        <h1>
+            GT-GELM Producciones
+        </h1>
+
+        <p>
+            Historias de Guatemala
+            convertidas en música
+        </p>
+
+        <a
+        href="#video"
+        class="btn-principal">
+
+        🎵 Escuchar Ahora
+
+        </a>
+
+    </div>
 
 </section>
 
-<div class="contenido">
+<!-- ==========================
+     VIDEO ALEATORIO
+========================== -->
 
-<h2 style="text-align:center;margin-bottom:30px;">
-🎵 Producciones Destacadas
+<section
+id="video"
+class="video-section">
+
+    <h2>
+        🎵 Canción Destacada
+    </h2>
+
+    <div class="video-container">
+
+        <iframe
+        id="videoAleatorio"
+        frameborder="0"
+        allowfullscreen>
+        </iframe>
+
+    </div>
+
+</section>
+
+<!-- ==========================
+     PRODUCCIONES
+========================== -->
+
+<section class="canciones">
+
+<h2 class="titulo-seccion">
+
+Producciones Destacadas
+
 </h2>
 
-<div class="canciones">
+<div class="grid">
 
 <div class="card">
-<h3>🏰 Tierra de Escudos y Tradición</h3>
+
+<h3>
+
+🏰 Tierra de Escudos y Tradición
+
+</h3>
+
 <p>
-Canción dedicada a Chimaltenango,
-la Ciudad de los Escudos.
+
+Canción dedicada a Chimaltenango.
+
 </p>
-<a class="boton"
+
+<a
 href="https://youtu.be/FDZK6Did5MI"
 target="_blank">
-Ver en YouTube
+
+▶ Ver Video
+
 </a>
+
+<a
+href="song.html?file=tierra-de-escudos">
+
+📜 Ver Letra
+
+</a>
+
 </div>
 
 <div class="card">
-<h3>🌄 Caminos del Ancestro</h3>
+
+<h3>
+
+🌄 Recorrido del Camino del Ancestro
+
+</h3>
+
 <p>
-Un viaje musical por la historia y las raíces de Guatemala.
+
+Inspirada en antiguos caminos de Guatemala.
+
 </p>
-<a class="boton"
-href="#"
+
+<a
+href="https://youtu.be/QIT5jlnmgLc"
 target="_blank">
-Próximamente
+
+▶ Ver Video
+
 </a>
+
+<a
+href="song.html?file=camino-del-ancestro">
+
+📜 Ver Letra
+
+</a>
+
 </div>
 
 <div class="card">
-<h3>🚂 El Zumbido del Riel</h3>
+
+<h3>
+
+⭐ El Valor de un Sueño
+
+</h3>
+
 <p>
-La travesía ferroviaria desde el Atlántico hasta la ciudad.
+
+Relato familiar convertido en canción.
+
 </p>
-<a class="boton"
-href="#"
+
+<a
+href="https://youtu.be/F3NznREqluI"
 target="_blank">
-Próximamente
+
+▶ Ver Video
+
 </a>
-</div>
+
+<a
+href="song.html?file=valor-de-un-sueno">
+
+📜 Ver Letra
+
+</a>
 
 </div>
 
 </div>
+
+</section>
+
+<!-- ==========================
+     PIE DE PAGINA
+========================== -->
 
 <footer>
 
-<h3>GT-GELM Producciones</h3>
+<h3>
+
+GT-GELM Producciones
+
+</h3>
 
 <p>
+
 Historias de Guatemala convertidas en música
+
 </p>
 
 <br>
 
 <p>
+
 © 2026 GT-GELM
+
 </p>
 
 </footer>
+
+<!-- ==========================
+     VIDEO ALEATORIO
+========================== -->
+
+<script>
+
+const videos = [
+
+"FDZK6Did5MI",
+"QIT5jlnmgLc",
+"F3NznREqluI"
+
+];
+
+const videoRandom =
+videos[Math.floor(Math.random()*videos.length)];
+
+document.getElementById(
+"videoAleatorio"
+).src =
+"https://www.youtube.com/embed/" + videoRandom;
+
+</script>
 
 </body>
 </html>
