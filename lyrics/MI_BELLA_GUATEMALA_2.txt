@@ -1,14 +1,15 @@
 ﻿MI BELLA GUATEMALA 2
-[INTRO]
-(Suena una marimba suave...
-entra guitarra limpia con eco...)
+INTRO
+
+Suena una marimba suave...
+entra guitarra limpia con eco...
 
 ¡Ehhhh Guatemala!
 Historias que nunca morirán...
 entre marimba y distorsión...
 ¡vive nuestro rock nacional!
 
-[VERSO 1]
+VERSO 1
 Voy caminando por calles mojadas,
 escuchando historias de la vieja ciudad,
 las radios sonaban aquellas guitarras,
@@ -19,12 +20,12 @@ recuerdo canciones al amanecer,
 las luces de antaño siguen encendidas,
 ¡porque el rock chapín no piensa caer!
 
-[PRE-CORO]
+PRE-CORO
 Y aunque pasen los años,
 seguimos aquí,
 cantándole fuerte a nuestra raíz.
 
-[CORO]
+CORO
 ¡Recordando nuestro rock nacional!
 las canciones que nunca van a morir,
 marimba y guitarras contando historias,
@@ -35,7 +36,7 @@ a las noches que nos hicieron sentir,
 entre leyendas, barrancos y estrellas,
 ¡nuestro folklore sigue vivo aquí!
 
-[VERSO 2]
+VERSO 2
 Como un duende cruzando la neblina,
 voy escuchando voces del ayer,
 las leyendas viven por las esquinas,
@@ -46,7 +47,7 @@ recordando aquellos tiempos de honor,
 las bandas que hicieron grande esta tierra,
 ¡dejando su fuego en el corazón!
 
-[VERSO 3]
+VERSO 3
 Suena la marimba contando secretos,
 de abuelos que hablaban junto al fogón,
 el Cadejo camina cuidando caminos,
@@ -57,7 +58,7 @@ el quetzal levanta nuevamente el vuelo,
 y entre volcanes la historia resiste,
 ¡porque Guatemala jamás toca el suelo!
 
-[CORO]
+CORO
 ¡Recordando nuestro rock nacional!
 las canciones que nunca van a morir,
 marimba y guitarras contando historias,
@@ -68,13 +69,13 @@ a las noches que nos hicieron sentir,
 entre leyendas, barrancos y estrellas,
 ¡nuestro folklore sigue vivo aquí!
 
-[PUENTE]
+PUENTE
 Viernes por la noche soñando en estadios,
 voces eternas que siguen aquí,
 el rock de mi tierra jamás será olvido,
 ¡porque vive dentro de ti y de mí!
 
-[OUTRO]
+OUTRO
 ¡Que suene la marimba!
 ¡Que griten las guitarras!
 ¡Que viva el folklore!
