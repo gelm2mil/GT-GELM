@@ -1,194 +1,73 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>GT-GELM Producciones</title>
-
-<link rel="stylesheet" href="style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GT-GELM Producciones - Reproductor Oficial</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Iconos elegantes -->
+    <link rel="stylesheet" href="https://cloudflare.com">
 </head>
-
 <body>
 
-<!-- ==========================
-     PORTADA
-========================== -->
+    <div class="player-container">
+        
+        <!-- SECCIÓN IZQUIERDA: REPRODUCTOR Y LETRAS -->
+        <main class="player-main">
+            <!-- Encabezado / Banner integrado -->
+            <header class="player-header">
+                <h1>GT-GELM PRODUCCIONES</h1>
+                <p>Historias de Guatemala convertidas en música</p>
+            </header>
 
-<section class="hero">
+            <!-- Tarjeta de reproducción activa -->
+            <div class="now-playing-card">
+                <div class="cover-wrapper">
+                    <img id="current-cover" src="img/banner-principal-gtgelm.png" alt="Portada">
+                </div>
+                <div class="track-info">
+                    <h2 id="current-title">Selecciona una canción...</h2>
+                    <p id="current-author">Interpretado por nerox2mil (Suno AI)</p>
+                </div>
 
-    <img
-    src="img/banner-principal-gtgelm.png"
-    alt="GT-GELM Producciones">
+                <!-- Reproductor nativo estilizado -->
+                <audio id="main-audio" controls></audio>
+            </div>
 
-    <div class="overlay">
+            <!-- Visor interactivo de letras de la canción -->
+            <div class="lyrics-container">
+                <h3><i class="fa-solid fa-file-lines"></i> Letra de la Canción</h3>
+                <div id="lyrics-box" class="lyrics-box">
+                    <p class="lyrics-placeholder">La letra aparecerá aquí al reproducir la pista.</p>
+                </div>
+            </div>
+            
+            <!-- Enlace oficial a YouTube -->
+            <div class="social-footer">
+                <a href="https://youtube.com" target="_blank" class="btn-youtube">
+                    <i class="fa-brands fa-youtube"></i> Visitar Canal Oficial de YouTube
+                </a>
+            </div>
+        </main>
 
-        <h1>
-            GT-GELM Producciones
-        </h1>
-
-        <p>
-
-            Historias de Guatemala
-            convertidas en música
-
-        </p>
-
-        <a
-        href="#coleccion"
-        class="btn-principal">
-
-        🎵 Explorar Colección
-
-        </a>
-
-    </div>
-
-</section>
-
-<!-- ==========================
-     VIDEO DESTACADO
-========================== -->
-
-<section
-id="video"
-class="video-section">
-
-    <h2>
-
-        🎬 Producción Destacada
-
-    </h2>
-
-    <div class="video-container">
-
-        <iframe
-        id="videoAleatorio"
-        frameborder="0"
-        allowfullscreen>
-
-        </iframe>
+        <!-- SECCIÓN DERECHA: LISTA DE CANCIONES Y BUSCADOR -->
+        <aside class="player-sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fa-solid fa-music"></i> Repertorio Completo</h3>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Buscar historias o canciones...">
+                </div>
+            </div>
+            <!-- Contenedor dinámico donde aparecerán las 115 pistas -->
+            <ul id="playlist" class="playlist">
+                <li class="loading-item">Cargando colección histórica...</li>
+            </ul>
+        </aside>
 
     </div>
 
-</section>
-
-<!-- ==========================
-     COLECCIÓN
-========================== -->
-
-<section
-id="coleccion"
-class="canciones">
-
-    <h2 class="titulo-seccion">
-
-        📚 Colección Histórica GT-GELM
-
-    </h2>
-
-    <div class="buscador">
-
-        <input
-        type="text"
-        id="buscarCancion"
-        placeholder="Buscar canción...">
-
-    </div>
-
-    <div
-    id="contenedorCanciones"
-    class="grid">
-
-    </div>
-
-</section>
-
-<!-- ==========================
-     FOOTER
-========================== -->
-
-<footer>
-
-    <h3>
-
-        GT-GELM Producciones
-
-    </h3>
-
-    <p>
-
-        Historia • Cultura • Tradición • Guatemala
-
-    </p>
-
-    <br>
-
-    <p>
-
-        © 2026 GT-GELM
-
-    </p>
-
-</footer>
-
-<!-- ==========================
-     VIDEO ALEATORIO
-========================== -->
-
-<script>
-
-const videos = [
-
-"FDZK6Did5MI",
-"QIT5jlnmgLc",
-"F3NznREqluI"
-
-];
-
-const videoRandom =
-videos[Math.floor(Math.random()*videos.length)];
-
-document.getElementById(
-"videoAleatorio"
-).src =
-"https://www.youtube.com/embed/" +
-videoRandom;
-
-</script>
-
-<script src="app.js"></script>
-
-<script>
-
-document
-.getElementById("buscarCancion")
-.addEventListener("keyup", function(){
-
-const texto =
-this.value.toLowerCase();
-
-const cards =
-document.querySelectorAll(".card");
-
-cards.forEach(card=>{
-
-card.style.display =
-card.innerText.toLowerCase()
-.includes(texto)
-
-? "block"
-
-: "none";
-
-});
-
-});
-
-</script>
-
+    <!-- Carga del script lógico -->
+    <script src="app.js"></script>
 </body>
 </html>
