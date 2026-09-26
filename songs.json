@@ -1,0 +1,814 @@
+[
+  {
+    "id": 1,
+    "title": "QUINCE DE SEPTIEMBRE",
+    "audio": "https://gelm.pages.dev/GT-GELM/QUINCE%20DE%20SEPTIEMBRE.mp3",
+    "cover": "img/QUINCE DE SEPTIEMBRE.png",
+    "lyrics": "lyrics/QUINCE DE SEPTIEMBRE.txt"
+  },
+  {
+    "id": 2,
+    "title": "Recordando el rock nacional (Al Sabor) (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Recordando%20el%20rock%20nacional%20%28Al%20Sabor%29%20%281%29.mp3",
+    "cover": "img/Recordando el rock nacional (Al Sabor) (1).png",
+    "lyrics": "lyrics/Recordando el rock nacional (Al Sabor) (1).txt"
+  },
+  {
+    "id": 3,
+    "title": "Recordando el rock nacional (Al Sabor)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Recordando%20el%20rock%20nacional%20%28Al%20Sabor%29.mp3",
+    "cover": "img/Recordando el rock nacional (Al Sabor).png",
+    "lyrics": "lyrics/Recordando el rock nacional (Al Sabor).txt"
+  },
+  {
+    "id": 4,
+    "title": "Recordar es revivir",
+    "audio": "https://gelm.pages.dev/GT-GELM/Recordar%20es%20revivir.mp3",
+    "cover": "img/Recordar es revivir.png",
+    "lyrics": "lyrics/Recordar es revivir.txt"
+  },
+  {
+    "id": 5,
+    "title": "RELATO DE UN VIEJO (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/RELATO%20DE%20UN%20VIEJO%20%281%29.mp3",
+    "cover": "img/RELATO DE UN VIEJO (1).png",
+    "lyrics": "lyrics/RELATO DE UN VIEJO (1).txt"
+  },
+  {
+    "id": 6,
+    "title": "RELATO DE UN VIEJO",
+    "audio": "https://gelm.pages.dev/GT-GELM/RELATO%20DE%20UN%20VIEJO.mp3",
+    "cover": "img/RELATO DE UN VIEJO.png",
+    "lyrics": "lyrics/RELATO DE UN VIEJO.txt"
+  },
+  {
+    "id": 7,
+    "title": "Ri aq'omanel Nawal...",
+    "audio": "https://gelm.pages.dev/GT-GELM/Ri%20aq%27omanel%20Nawal....mp3",
+    "cover": "img/Ri aq'omanel Nawal....png",
+    "lyrics": "lyrics/Ri aq'omanel Nawal....txt"
+  },
+  {
+    "id": 8,
+    "title": "Ri aq'omanel Nawal",
+    "audio": "https://gelm.pages.dev/GT-GELM/Ri%20aq%27omanel%20Nawal.mp3",
+    "cover": "img/Ri aq'omanel Nawal.png",
+    "lyrics": "lyrics/Ri aq'omanel Nawal.txt"
+  },
+  {
+    "id": 9,
+    "title": "Saqkorowach Godorniz",
+    "audio": "https://gelm.pages.dev/GT-GELM/Saqkorowach%20Godorniz.mp3",
+    "cover": "img/Saqkorowach Godorniz.png",
+    "lyrics": "lyrics/Saqkorowach Godorniz.txt"
+  },
+  {
+    "id": 10,
+    "title": "Suchiate - Capitulo I _ El Rio de las Flores",
+    "audio": "https://gelm.pages.dev/GT-GELM/Suchiate%20-%20Capitulo%20I%20_%20El%20Rio%20de%20las%20Flores.mp3",
+    "cover": "img/Suchiate - Capitulo I _ El Rio de las Flores.png",
+    "lyrics": "lyrics/Suchiate - Capitulo I _ El Rio de las Flores.txt"
+  },
+  {
+    "id": 11,
+    "title": "Tecun Uman 1",
+    "audio": "https://gelm.pages.dev/GT-GELM/Tecun%20Uman%201.mp3",
+    "cover": "img/Tecun Uman 1.png",
+    "lyrics": "lyrics/Tecun Uman 1.txt"
+  },
+  {
+    "id": 12,
+    "title": "Tecun Uman 2",
+    "audio": "https://gelm.pages.dev/GT-GELM/Tecun%20Uman%202.mp3",
+    "cover": "img/Tecun Uman 2.png",
+    "lyrics": "lyrics/Tecun Uman 2.txt"
+  },
+  {
+    "id": 13,
+    "title": "Tecun Uman 3",
+    "audio": "https://gelm.pages.dev/GT-GELM/Tecun%20Uman%203.mp3",
+    "cover": "img/Tecun Uman 3.png",
+    "lyrics": "lyrics/Tecun Uman 3.txt"
+  },
+  {
+    "id": 14,
+    "title": "Tecun Uman IV",
+    "audio": "https://gelm.pages.dev/GT-GELM/Tecun%20Uman%20IV.mp3",
+    "cover": "img/Tecun Uman IV.png",
+    "lyrics": "lyrics/Tecun Uman IV.txt"
+  },
+  {
+    "id": 15,
+    "title": "TITÁN DE BARRO Y MEMORIA GT-GELM (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/TIT%C3%81N%20DE%20BARRO%20Y%20MEMORIA%20GT-GELM%20%281%29.mp3",
+    "cover": "img/TITÁN DE BARRO Y MEMORIA GT-GELM (1).png",
+    "lyrics": "lyrics/TITÁN DE BARRO Y MEMORIA GT-GELM (1).txt"
+  },
+  {
+    "id": 16,
+    "title": "TITÁN DE BARRO Y MEMORIA GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/TIT%C3%81N%20DE%20BARRO%20Y%20MEMORIA%20GT-GELM.mp3",
+    "cover": "img/TITÁN DE BARRO Y MEMORIA GT-GELM.png",
+    "lyrics": "lyrics/TITÁN DE BARRO Y MEMORIA GT-GELM.txt"
+  },
+  {
+    "id": 17,
+    "title": "Title _ Aprendiendo de Nuestra Bella Guatemala",
+    "audio": "https://gelm.pages.dev/GT-GELM/Title%20_%20Aprendiendo%20de%20Nuestra%20Bella%20Guatemala.mp3",
+    "cover": "img/Title _ Aprendiendo de Nuestra Bella Guatemala.png",
+    "lyrics": "lyrics/Title _ Aprendiendo de Nuestra Bella Guatemala.txt"
+  },
+  {
+    "id": 18,
+    "title": "TRADICIONES DE MI TIERRA (Mosaico Chapin)",
+    "audio": "https://gelm.pages.dev/GT-GELM/TRADICIONES%20DE%20MI%20TIERRA%20%28Mosaico%20Chapin%29.mp3",
+    "cover": "img/TRADICIONES DE MI TIERRA (Mosaico Chapin).png",
+    "lyrics": "lyrics/TRADICIONES DE MI TIERRA (Mosaico Chapin).txt"
+  },
+  {
+    "id": 19,
+    "title": "Tulate (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Tulate%20%281%29.mp3",
+    "cover": "img/Tulate (1).png",
+    "lyrics": "lyrics/Tulate (1).txt"
+  },
+  {
+    "id": 20,
+    "title": "Tulate",
+    "audio": "https://gelm.pages.dev/GT-GELM/Tulate.mp3",
+    "cover": "img/Tulate.png",
+    "lyrics": "lyrics/Tulate.txt"
+  },
+  {
+    "id": 21,
+    "title": "Verapases",
+    "audio": "https://gelm.pages.dev/GT-GELM/Verapases.mp3",
+    "cover": "img/Verapases.png",
+    "lyrics": "lyrics/Verapases.txt"
+  },
+  {
+    "id": 22,
+    "title": "Vivas las posas",
+    "audio": "https://gelm.pages.dev/GT-GELM/Vivas%20las%20posas.mp3",
+    "cover": "img/Vivas las posas.png",
+    "lyrics": "lyrics/Vivas las posas.txt"
+  },
+  {
+    "id": 23,
+    "title": "BELICE _ Raices de una Misma Historia _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/BELICE%20_%20Raices%20de%20una%20Misma%20Historia%20_%20GT-GELM.mp3",
+    "cover": "img/BELICE _ Raices de una Misma Historia _ GT-GELM.png",
+    "lyrics": "lyrics/BELICE _ Raices de una Misma Historia _ GT-GELM.txt"
+  },
+  {
+    "id": 24,
+    "title": "15 DE SEPTIEMBRE _ GUATEMALA LIBRE",
+    "audio": "https://gelm.pages.dev/GT-GELM/15%20DE%20SEPTIEMBRE%20_%20GUATEMALA%20LIBRE.mp3",
+    "cover": "img/15 DE SEPTIEMBRE _ GUATEMALA LIBRE.png",
+    "lyrics": "lyrics/15 DE SEPTIEMBRE _ GUATEMALA LIBRE.txt"
+  },
+  {
+    "id": 25,
+    "title": "CHINAUTLA _ El Barro que",
+    "audio": "https://gelm.pages.dev/GT-GELM/CHINAUTLA%20_%20El%20Barro%20que.mp3",
+    "cover": "img/CHINAUTLA _ El Barro que.png",
+    "lyrics": "lyrics/CHINAUTLA _ El Barro que.txt"
+  },
+  {
+    "id": 26,
+    "title": "GUATEMALA PROFUNDA _ El Mapa Secreto de Nuestra Tierra _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/GUATEMALA%20PROFUNDA%20_%20El%20Mapa%20Secreto%20de%20Nuestra%20Tierra%20_%20GT-GELM.mp3",
+    "cover": "img/GUATEMALA PROFUNDA _ El Mapa Secreto de Nuestra Tierra _ GT-GELM.png",
+    "lyrics": "lyrics/GUATEMALA PROFUNDA _ El Mapa Secreto de Nuestra Tierra _ GT-GELM.txt"
+  },
+  {
+    "id": 27,
+    "title": "MANIFIESTO GT - GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/MANIFIESTO%20GT%20-%20GELM.mp3",
+    "cover": "img/MANIFIESTO GT - GELM.png",
+    "lyrics": "lyrics/MANIFIESTO GT - GELM.txt"
+  },
+  {
+    "id": 28,
+    "title": "ATITLÁN _ Donde el Cielo y Xibalba se Tocaban _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/ATITL%C3%81N%20_%20Donde%20el%20Cielo%20y%20Xibalba%20se%20Tocaban%20_%20GT-GELM.mp3",
+    "cover": "img/ATITLÁN _ Donde el Cielo y Xibalba se Tocaban _ GT-GELM.png",
+    "lyrics": "lyrics/ATITLÁN _ Donde el Cielo y Xibalba se Tocaban _ GT-GELM.txt"
+  },
+  {
+    "id": 29,
+    "title": "LOS CANTOS DE MI ESCUELA _ Recuerdos de la Primaria Chapina _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/LOS%20CANTOS%20DE%20MI%20ESCUELA%20_%20Recuerdos%20de%20la%20Primaria%20Chapina%20_%20GT-GELM.mp3",
+    "cover": "img/LOS CANTOS DE MI ESCUELA _ Recuerdos de la Primaria Chapina _ GT-GELM.png",
+    "lyrics": "lyrics/LOS CANTOS DE MI ESCUELA _ Recuerdos de la Primaria Chapina _ GT-GELM.txt"
+  },
+  {
+    "id": 30,
+    "title": "HUEHUETENANGO _ Tierra de los Viejos Sabios _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/HUEHUETENANGO%20_%20Tierra%20de%20los%20Viejos%20Sabios%20_%20GT-GELM.mp3",
+    "cover": "img/HUEHUETENANGO _ Tierra de los Viejos Sabios _ GT-GELM.png",
+    "lyrics": "lyrics/HUEHUETENANGO _ Tierra de los Viejos Sabios _ GT-GELM.txt"
+  },
+  {
+    "id": 31,
+    "title": "HUEHUETENANGO _ Tierra de Zaculeu y Cuchumatanes _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/HUEHUETENANGO%20_%20Tierra%20de%20Zaculeu%20y%20Cuchumatanes%20_%20GT-GELM.mp3",
+    "cover": "img/HUEHUETENANGO _ Tierra de Zaculeu y Cuchumatanes _ GT-GELM.png",
+    "lyrics": "lyrics/HUEHUETENANGO _ Tierra de Zaculeu y Cuchumatanes _ GT-GELM.txt"
+  },
+  {
+    "id": 32,
+    "title": "A LOS GUARDIANES DE LOS CUCHUMATANES _ Tradiciones de Todos Santos _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/A%20LOS%20GUARDIANES%20DE%20LOS%20CUCHUMATANES%20_%20Tradiciones%20de%20Todos%20Santos%20_%20GT-GELM.mp3",
+    "cover": "img/A LOS GUARDIANES DE LOS CUCHUMATANES _ Tradiciones de Todos Santos _ GT-GELM.png",
+    "lyrics": "lyrics/A LOS GUARDIANES DE LOS CUCHUMATANES _ Tradiciones de Todos Santos _ GT-GELM.txt"
+  },
+  {
+    "id": 33,
+    "title": "SAMABAJ _ La Ciudad Perdida Bajo Atitlan _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/SAMABAJ%20_%20La%20Ciudad%20Perdida%20Bajo%20Atitlan%20_%20GT-GELM.mp3",
+    "cover": "img/SAMABAJ _ La Ciudad Perdida Bajo Atitlan _ GT-GELM.png",
+    "lyrics": "lyrics/SAMABAJ _ La Ciudad Perdida Bajo Atitlan _ GT-GELM.txt"
+  },
+  {
+    "id": 34,
+    "title": "POZO VIVO _ El Misterio que Responde al Sonido _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/POZO%20VIVO%20_%20El%20Misterio%20que%20Responde%20al%20Sonido%20_%20GT-GELM.mp3",
+    "cover": "img/POZO VIVO _ El Misterio que Responde al Sonido _ GT-GELM.png",
+    "lyrics": "lyrics/POZO VIVO _ El Misterio que Responde al Sonido _ GT-GELM.txt"
+  },
+  {
+    "id": 35,
+    "title": "CRÓNICAS DEL IXCÁN (Parte 1) La Selva de los Pioneros",
+    "audio": "https://gelm.pages.dev/GT-GELM/CR%C3%93NICAS%20DEL%20IXC%C3%81N%20%28Parte%201%29%20La%20Selva%20de%20los%20Pioneros.mp3",
+    "cover": "img/CRÓNICAS DEL IXCÁN (Parte 1) La Selva de los Pioneros.png",
+    "lyrics": "lyrics/CRÓNICAS DEL IXCÁN (Parte 1) La Selva de los Pioneros.txt"
+  },
+  {
+    "id": 36,
+    "title": "LAS QUINCE JORNADAS DEL VIEJO (Parte 2_ Dueño del Asfalto",
+    "audio": "https://gelm.pages.dev/GT-GELM/LAS%20QUINCE%20JORNADAS%20DEL%20VIEJO%20%28Parte%202_%20Due%C3%B1o%20del%20Asfalto.mp3",
+    "cover": "img/LAS QUINCE JORNADAS DEL VIEJO (Parte 2_ Dueño del Asfalto.png",
+    "lyrics": "lyrics/LAS QUINCE JORNADAS DEL VIEJO (Parte 2_ Dueño del Asfalto.txt"
+  },
+  {
+    "id": 37,
+    "title": "NAJ TÚNICH _ El Descenso al Xibalbá _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/NAJ%20T%C3%9ANICH%20_%20El%20Descenso%20al%20Xibalb%C3%A1%20_%20GT-GELM.mp3",
+    "cover": "img/NAJ TÚNICH _ El Descenso al Xibalbá _ GT-GELM.png",
+    "lyrics": "lyrics/NAJ TÚNICH _ El Descenso al Xibalbá _ GT-GELM.txt"
+  },
+  {
+    "id": 38,
+    "title": "EL IXCÁN INDOMABLE Éxodo, Regreso y Franja Transversal",
+    "audio": "https://gelm.pages.dev/GT-GELM/EL%20IXC%C3%81N%20INDOMABLE%20%C3%89xodo%2C%20Regreso%20y%20Franja%20Transversal.mp3",
+    "cover": "img/EL IXCÁN INDOMABLE Éxodo, Regreso y Franja Transversal.png",
+    "lyrics": "lyrics/EL IXCÁN INDOMABLE Éxodo, Regreso y Franja Transversal.txt"
+  },
+  {
+    "id": 39,
+    "title": "PATRULLEROS DEL NORTE _ Ruta del Setenta y Cuatro _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/PATRULLEROS%20DEL%20NORTE%20_%20Ruta%20del%20Setenta%20y%20Cuatro%20_%20GT-GELM.mp3",
+    "cover": "img/PATRULLEROS DEL NORTE _ Ruta del Setenta y Cuatro _ GT-GELM.png",
+    "lyrics": "lyrics/PATRULLEROS DEL NORTE _ Ruta del Setenta y Cuatro _ GT-GELM.txt"
+  },
+  {
+    "id": 40,
+    "title": "GT-GELM-76",
+    "audio": "https://gelm.pages.dev/GT-GELM/GT-GELM-76.mp3",
+    "cover": "img/GT-GELM-76.png",
+    "lyrics": "lyrics/GT-GELM-76.txt"
+  },
+  {
+    "id": 41,
+    "title": "GUATEMALA LIBRE Y SOBERANA (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/GUATEMALA%20LIBRE%20Y%20SOBERANA%20%281%29.mp3",
+    "cover": "img/GUATEMALA LIBRE Y SOBERANA (1).png",
+    "lyrics": "lyrics/GUATEMALA LIBRE Y SOBERANA (1).txt"
+  },
+  {
+    "id": 42,
+    "title": "GUATEMALA LIBRE Y SOBERANA",
+    "audio": "https://gelm.pages.dev/GT-GELM/GUATEMALA%20LIBRE%20Y%20SOBERANA.mp3",
+    "cover": "img/GUATEMALA LIBRE Y SOBERANA.png",
+    "lyrics": "lyrics/GUATEMALA LIBRE Y SOBERANA.txt"
+  },
+  {
+    "id": 43,
+    "title": "GUATEMALA NUNCA SE RINDE GT-GELM(MP3_160K)",
+    "audio": "https://gelm.pages.dev/GT-GELM/GUATEMALA%20NUNCA%20SE%20RINDE%20GT-GELM%28MP3_160K%29.mp3",
+    "cover": "img/GUATEMALA NUNCA SE RINDE GT-GELM(MP3_160K).png",
+    "lyrics": "lyrics/GUATEMALA NUNCA SE RINDE GT-GELM(MP3_160K).txt"
+  },
+  {
+    "id": 44,
+    "title": "Guatemala Ruge septiembre",
+    "audio": "https://gelm.pages.dev/GT-GELM/Guatemala%20Ruge%20septiembre.mp3",
+    "cover": "img/Guatemala Ruge septiembre.png",
+    "lyrics": "lyrics/Guatemala Ruge septiembre.txt"
+  },
+  {
+    "id": 45,
+    "title": "Guatemala tierra de volcanes 1",
+    "audio": "https://gelm.pages.dev/GT-GELM/Guatemala%20tierra%20de%20volcanes%201.mp3",
+    "cover": "img/Guatemala tierra de volcanes 1.png",
+    "lyrics": "lyrics/Guatemala tierra de volcanes 1.txt"
+  },
+  {
+    "id": 46,
+    "title": "Camino de mi ancestro GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/Camino%20de%20mi%20ancestro%20GT-GELM.mp3",
+    "cover": "img/Camino de mi ancestro GT-GELM.png",
+    "lyrics": "lyrics/Camino de mi ancestro GT-GELM.txt"
+  },
+  {
+    "id": 47,
+    "title": "Historia de Mi Tierra (Al Sabor) (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Historia%20de%20Mi%20Tierra%20%28Al%20Sabor%29%20%281%29.mp3",
+    "cover": "img/Historia de Mi Tierra (Al Sabor) (1).png",
+    "lyrics": "lyrics/Historia de Mi Tierra (Al Sabor) (1).txt"
+  },
+  {
+    "id": 48,
+    "title": "Historia de Mi Tierra (Al Sabor) (2)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Historia%20de%20Mi%20Tierra%20%28Al%20Sabor%29%20%282%29.mp3",
+    "cover": "img/Historia de Mi Tierra (Al Sabor) (2).png",
+    "lyrics": "lyrics/Historia de Mi Tierra (Al Sabor) (2).txt"
+  },
+  {
+    "id": 49,
+    "title": "Historia de Mi Tierra (Al Sabor) (3)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Historia%20de%20Mi%20Tierra%20%28Al%20Sabor%29%20%283%29.mp3",
+    "cover": "img/Historia de Mi Tierra (Al Sabor) (3).png",
+    "lyrics": "lyrics/Historia de Mi Tierra (Al Sabor) (3).txt"
+  },
+  {
+    "id": 50,
+    "title": "Historia de Mi Tierra (Al Sabor) (4)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Historia%20de%20Mi%20Tierra%20%28Al%20Sabor%29%20%284%29.mp3",
+    "cover": "img/Historia de Mi Tierra (Al Sabor) (4).png",
+    "lyrics": "lyrics/Historia de Mi Tierra (Al Sabor) (4).txt"
+  },
+  {
+    "id": 51,
+    "title": "Historia de Mi Tierra (Al Sabor) (6)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Historia%20de%20Mi%20Tierra%20%28Al%20Sabor%29%20%286%29.mp3",
+    "cover": "img/Historia de Mi Tierra (Al Sabor) (6).png",
+    "lyrics": "lyrics/Historia de Mi Tierra (Al Sabor) (6).txt"
+  },
+  {
+    "id": 52,
+    "title": "Historia de Mi Tierra (Al Sabor)",
+    "audio": "https://gelm.pages.dev/GT-GELM/Historia%20de%20Mi%20Tierra%20%28Al%20Sabor%29.mp3",
+    "cover": "img/Historia de Mi Tierra (Al Sabor).png",
+    "lyrics": "lyrics/Historia de Mi Tierra (Al Sabor).txt"
+  },
+  {
+    "id": 53,
+    "title": "Historia del turno",
+    "audio": "https://gelm.pages.dev/GT-GELM/Historia%20del%20turno.mp3",
+    "cover": "img/Historia del turno.png",
+    "lyrics": "lyrics/Historia del turno.txt"
+  },
+  {
+    "id": 54,
+    "title": "HISTORIAS DE MONTE Y RIELES",
+    "audio": "https://gelm.pages.dev/GT-GELM/HISTORIAS%20DE%20MONTE%20Y%20RIELES.mp3",
+    "cover": "img/HISTORIAS DE MONTE Y RIELES.png",
+    "lyrics": "lyrics/HISTORIAS DE MONTE Y RIELES.txt"
+  },
+  {
+    "id": 55,
+    "title": "Hunahpu e Ixbalanque",
+    "audio": "https://gelm.pages.dev/GT-GELM/Hunahpu%20e%20Ixbalanque.mp3",
+    "cover": "img/Hunahpu e Ixbalanque.png",
+    "lyrics": "lyrics/Hunahpu e Ixbalanque.txt"
+  },
+  {
+    "id": 56,
+    "title": "LA ASUNCIÓN ESTÁ DE FIESTA",
+    "audio": "https://gelm.pages.dev/GT-GELM/LA%20ASUNCI%C3%93N%20EST%C3%81%20DE%20FIESTA.mp3",
+    "cover": "img/LA ASUNCIÓN ESTÁ DE FIESTA.png",
+    "lyrics": "lyrics/LA ASUNCIÓN ESTÁ DE FIESTA.txt"
+  },
+  {
+    "id": 57,
+    "title": "LA LAGUNA DEL MACHETE _ El Encanto de Madre Vieja",
+    "audio": "https://gelm.pages.dev/GT-GELM/LA%20LAGUNA%20DEL%20MACHETE%20_%20El%20Encanto%20de%20Madre%20Vieja.mp3",
+    "cover": "img/LA LAGUNA DEL MACHETE _ El Encanto de Madre Vieja.png",
+    "lyrics": "lyrics/LA LAGUNA DEL MACHETE _ El Encanto de Madre Vieja.txt"
+  },
+  {
+    "id": 58,
+    "title": "La vida es un sueño (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/La%20vida%20es%20un%20sue%C3%B1o%20%281%29.mp3",
+    "cover": "img/La vida es un sueño (1).png",
+    "lyrics": "lyrics/La vida es un sueño (1).txt"
+  },
+  {
+    "id": 59,
+    "title": "La vida es un sueño",
+    "audio": "https://gelm.pages.dev/GT-GELM/La%20vida%20es%20un%20sue%C3%B1o.mp3",
+    "cover": "img/La vida es un sueño.png",
+    "lyrics": "lyrics/La vida es un sueño.txt"
+  },
+  {
+    "id": 60,
+    "title": "LA VOZ KICHE - chapin7839",
+    "audio": "https://gelm.pages.dev/GT-GELM/LA%20VOZ%20KICHE%20-%20chapin7839.mp3",
+    "cover": "img/LA VOZ KICHE - chapin7839.png",
+    "lyrics": "lyrics/LA VOZ KICHE - chapin7839.txt"
+  },
+  {
+    "id": 61,
+    "title": "la-voz-xinka",
+    "audio": "https://gelm.pages.dev/GT-GELM/la-voz-xinka.mp3",
+    "cover": "img/la-voz-xinka.png",
+    "lyrics": "lyrics/la-voz-xinka.txt"
+  },
+  {
+    "id": 62,
+    "title": "Las 25 vices de Guatemala",
+    "audio": "https://gelm.pages.dev/GT-GELM/Las%2025%20vices%20de%20Guatemala.mp3",
+    "cover": "img/Las 25 vices de Guatemala.png",
+    "lyrics": "lyrics/Las 25 vices de Guatemala.txt"
+  },
+  {
+    "id": 63,
+    "title": "LAS CUATRO CAPITALES _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/LAS%20CUATRO%20CAPITALES%20_%20GT-GELM.mp3",
+    "cover": "img/LAS CUATRO CAPITALES _ GT-GELM.png",
+    "lyrics": "lyrics/LAS CUATRO CAPITALES _ GT-GELM.txt"
+  },
+  {
+    "id": 64,
+    "title": "LAS LUCES DE LA SIERRA _ GT_GELM (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/LAS%20LUCES%20DE%20LA%20SIERRA%20_%20GT_GELM%20%281%29.mp3",
+    "cover": "img/LAS LUCES DE LA SIERRA _ GT_GELM (1).png",
+    "lyrics": "lyrics/LAS LUCES DE LA SIERRA _ GT_GELM (1).txt"
+  },
+  {
+    "id": 65,
+    "title": "LAS LUCES DE LA SIERRA _ GT_GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/LAS%20LUCES%20DE%20LA%20SIERRA%20_%20GT_GELM.mp3",
+    "cover": "img/LAS LUCES DE LA SIERRA _ GT_GELM.png",
+    "lyrics": "lyrics/LAS LUCES DE LA SIERRA _ GT_GELM.txt"
+  },
+  {
+    "id": 66,
+    "title": "LAS LUCES DE LA SIERRA I GT GELM (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/LAS%20LUCES%20DE%20LA%20SIERRA%20I%20GT%20GELM%20%281%29.mp3",
+    "cover": "img/LAS LUCES DE LA SIERRA I GT GELM (1).png",
+    "lyrics": "lyrics/LAS LUCES DE LA SIERRA I GT GELM (1).txt"
+  },
+  {
+    "id": 67,
+    "title": "LAS LUCES DE LA SIERRA I GT GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/LAS%20LUCES%20DE%20LA%20SIERRA%20I%20GT%20GELM.mp3",
+    "cover": "img/LAS LUCES DE LA SIERRA I GT GELM.png",
+    "lyrics": "lyrics/LAS LUCES DE LA SIERRA I GT GELM.txt"
+  },
+  {
+    "id": 68,
+    "title": "LAS QUINCE JORNADAS...",
+    "audio": "https://gelm.pages.dev/GT-GELM/LAS%20QUINCE%20JORNADAS....mp3",
+    "cover": "img/LAS QUINCE JORNADAS....png",
+    "lyrics": "lyrics/LAS QUINCE JORNADAS....txt"
+  },
+  {
+    "id": 69,
+    "title": "LAS QUINCE JORNADAS...",
+    "audio": "https://gelm.pages.dev/GT-GELM/LAS%20QUINCE%20JORNADAS....mp3",
+    "cover": "img/LAS QUINCE JORNADAS....png",
+    "lyrics": "lyrics/LAS QUINCE JORNADAS....txt"
+  },
+  {
+    "id": 70,
+    "title": "LOS SENDEROS OLVIDADOS",
+    "audio": "https://gelm.pages.dev/GT-GELM/LOS%20SENDEROS%20OLVIDADOS.mp3",
+    "cover": "img/LOS SENDEROS OLVIDADOS.png",
+    "lyrics": "lyrics/LOS SENDEROS OLVIDADOS.txt"
+  },
+  {
+    "id": 71,
+    "title": "LUCIERNAGA LUZ DE MI PUEBLO",
+    "audio": "https://gelm.pages.dev/GT-GELM/LUCIERNAGA%20LUZ%20DE%20MI%20PUEBLO.mp3",
+    "cover": "img/LUCIERNAGA LUZ DE MI PUEBLO.png",
+    "lyrics": "lyrics/LUCIERNAGA LUZ DE MI PUEBLO.txt"
+  },
+  {
+    "id": 72,
+    "title": "MI QUICHÉ",
+    "audio": "https://gelm.pages.dev/GT-GELM/MI%20QUICH%C3%89.mp3",
+    "cover": "img/MI QUICHÉ.png",
+    "lyrics": "lyrics/MI QUICHÉ.txt"
+  },
+  {
+    "id": 73,
+    "title": "PMT Chimaltenango (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/PMT%20Chimaltenango%20%281%29.mp3",
+    "cover": "img/PMT Chimaltenango (1).png",
+    "lyrics": "lyrics/PMT Chimaltenango (1).txt"
+  },
+  {
+    "id": 74,
+    "title": "PMT Chimaltenango (2)",
+    "audio": "https://gelm.pages.dev/GT-GELM/PMT%20Chimaltenango%20%282%29.mp3",
+    "cover": "img/PMT Chimaltenango (2).png",
+    "lyrics": "lyrics/PMT Chimaltenango (2).txt"
+  },
+  {
+    "id": 75,
+    "title": "PMT Chimaltenango",
+    "audio": "https://gelm.pages.dev/GT-GELM/PMT%20Chimaltenango.mp3",
+    "cover": "img/PMT Chimaltenango.png",
+    "lyrics": "lyrics/PMT Chimaltenango.txt"
+  },
+  {
+    "id": 76,
+    "title": "Quetzaltenango GT",
+    "audio": "https://gelm.pages.dev/GT-GELM/Quetzaltenango%20GT.mp3",
+    "cover": "img/Quetzaltenango GT.png",
+    "lyrics": "lyrics/Quetzaltenango GT.txt"
+  },
+  {
+    "id": 77,
+    "title": "Quiche",
+    "audio": "https://gelm.pages.dev/GT-GELM/Quiche.mp3",
+    "cover": "img/Quiche.png",
+    "lyrics": "lyrics/Quiche.txt"
+  },
+  {
+    "id": 78,
+    "title": "Las Fortalezas de Guatemala",
+    "audio": "https://gelm.pages.dev/GT-GELM/Las%20Fortalezas%20de%20Guatemala.mp3",
+    "cover": "img/Las Fortalezas de Guatemala.png",
+    "lyrics": "lyrics/Las Fortalezas de Guatemala.txt"
+  },
+  {
+    "id": 79,
+    "title": "2 KAIBIL BALAM _ El Jaguar de Zaculeu _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/2%20KAIBIL%20BALAM%20_%20El%20Jaguar%20de%20Zaculeu%20_%20GT-GELM.mp3",
+    "cover": "img/2 KAIBIL BALAM _ El Jaguar de Zaculeu _ GT-GELM.png",
+    "lyrics": "lyrics/2 KAIBIL BALAM _ El Jaguar de Zaculeu _ GT-GELM.txt"
+  },
+  {
+    "id": 80,
+    "title": "24 de junio 2026 dia de la esposa de don chente (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/24%20de%20junio%202026%20dia%20de%20la%20esposa%20de%20don%20chente%20%281%29.mp3",
+    "cover": "img/24 de junio 2026 dia de la esposa de don chente (1).png",
+    "lyrics": "lyrics/24 de junio 2026 dia de la esposa de don chente (1).txt"
+  },
+  {
+    "id": 81,
+    "title": "24 de junio 2026 dia de la esposa de don chente",
+    "audio": "https://gelm.pages.dev/GT-GELM/24%20de%20junio%202026%20dia%20de%20la%20esposa%20de%20don%20chente.mp3",
+    "cover": "img/24 de junio 2026 dia de la esposa de don chente.png",
+    "lyrics": "lyrics/24 de junio 2026 dia de la esposa de don chente.txt"
+  },
+  {
+    "id": 82,
+    "title": "30 de junio Dia del ejercito (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/30%20de%20junio%20Dia%20del%20ejercito%20%281%29.mp3",
+    "cover": "img/30 de junio Dia del ejercito (1).png",
+    "lyrics": "lyrics/30 de junio Dia del ejercito (1).txt"
+  },
+  {
+    "id": 83,
+    "title": "30 de junio Dia del ejercito",
+    "audio": "https://gelm.pages.dev/GT-GELM/30%20de%20junio%20Dia%20del%20ejercito.mp3",
+    "cover": "img/30 de junio Dia del ejercito.png",
+    "lyrics": "lyrics/30 de junio Dia del ejercito.txt"
+  },
+  {
+    "id": 84,
+    "title": "AL VOLANTE POR LA VIDA",
+    "audio": "https://gelm.pages.dev/GT-GELM/AL%20VOLANTE%20POR%20LA%20VIDA.mp3",
+    "cover": "img/AL VOLANTE POR LA VIDA.png",
+    "lyrics": "lyrics/AL VOLANTE POR LA VIDA.txt"
+  },
+  {
+    "id": 85,
+    "title": "Alotenango 1",
+    "audio": "https://gelm.pages.dev/GT-GELM/Alotenango%201.mp3",
+    "cover": "img/Alotenango 1.png",
+    "lyrics": "lyrics/Alotenango 1.txt"
+  },
+  {
+    "id": 86,
+    "title": "Amatitlán - Capitulo I",
+    "audio": "https://gelm.pages.dev/GT-GELM/Amatitl%C3%A1n%20-%20Capitulo%20I.mp3",
+    "cover": "img/Amatitlán - Capitulo I.png",
+    "lyrics": "lyrics/Amatitlán - Capitulo I.txt"
+  },
+  {
+    "id": 87,
+    "title": "Amatitlán - Capitulo II _ Cuando la Vida Despertó en sus Orillas",
+    "audio": "https://gelm.pages.dev/GT-GELM/Amatitl%C3%A1n%20-%20Capitulo%20II%20_%20Cuando%20la%20Vida%20Despert%C3%B3%20en%20sus%20Orillas.mp3",
+    "cover": "img/Amatitlán - Capitulo II _ Cuando la Vida Despertó en sus Orillas.png",
+    "lyrics": "lyrics/Amatitlán - Capitulo II _ Cuando la Vida Despertó en sus Orillas.txt"
+  },
+  {
+    "id": 88,
+    "title": "Amatitlán - Capitulo II Donde un Pueblo Encontró su Hogar",
+    "audio": "https://gelm.pages.dev/GT-GELM/Amatitl%C3%A1n%20-%20Capitulo%20II%20Donde%20un%20Pueblo%20Encontr%C3%B3%20su%20Hogar.mp3",
+    "cover": "img/Amatitlán - Capitulo II Donde un Pueblo Encontró su Hogar.png",
+    "lyrics": "lyrics/Amatitlán - Capitulo II Donde un Pueblo Encontró su Hogar.txt"
+  },
+  {
+    "id": 89,
+    "title": "AMATITLÁN _ El Espejo Sagrado del Fuego",
+    "audio": "https://gelm.pages.dev/GT-GELM/AMATITL%C3%81N%20_%20El%20Espejo%20Sagrado%20del%20Fuego.mp3",
+    "cover": "img/AMATITLÁN _ El Espejo Sagrado del Fuego.png",
+    "lyrics": "lyrics/AMATITLÁN _ El Espejo Sagrado del Fuego.txt"
+  },
+  {
+    "id": 90,
+    "title": "Amatitlan 4 _ GT GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/Amatitlan%204%20_%20GT%20GELM.mp3",
+    "cover": "img/Amatitlan 4 _ GT GELM.png",
+    "lyrics": "lyrics/Amatitlan 4 _ GT GELM.txt"
+  },
+  {
+    "id": 91,
+    "title": "Antigua recuerdos",
+    "audio": "https://gelm.pages.dev/GT-GELM/Antigua%20recuerdos.mp3",
+    "cover": "img/Antigua recuerdos.png",
+    "lyrics": "lyrics/Antigua recuerdos.txt"
+  },
+  {
+    "id": 92,
+    "title": "Aprendiendo Guatemala",
+    "audio": "https://gelm.pages.dev/GT-GELM/Aprendiendo%20Guatemala.mp3",
+    "cover": "img/Aprendiendo Guatemala.png",
+    "lyrics": "lyrics/Aprendiendo Guatemala.txt"
+  },
+  {
+    "id": 93,
+    "title": "Asi era mi caminata",
+    "audio": "https://gelm.pages.dev/GT-GELM/Asi%20era%20mi%20caminata.mp3",
+    "cover": "img/Asi era mi caminata.png",
+    "lyrics": "lyrics/Asi era mi caminata.txt"
+  },
+  {
+    "id": 94,
+    "title": "BASTIONES DE LA ETERNIDAD (Las Fortalezas de Guatemala)",
+    "audio": "https://gelm.pages.dev/GT-GELM/BASTIONES%20DE%20LA%20ETERNIDAD%20%28Las%20Fortalezas%20de%20Guatemala%29.mp3",
+    "cover": "img/BASTIONES DE LA ETERNIDAD (Las Fortalezas de Guatemala).png",
+    "lyrics": "lyrics/BASTIONES DE LA ETERNIDAD (Las Fortalezas de Guatemala).txt"
+  },
+  {
+    "id": 95,
+    "title": "BOHEMIO",
+    "audio": "https://gelm.pages.dev/GT-GELM/BOHEMIO.mp3",
+    "cover": "img/BOHEMIO.png",
+    "lyrics": "lyrics/BOHEMIO.txt"
+  },
+  {
+    "id": 96,
+    "title": "Chimaltenango",
+    "audio": "https://gelm.pages.dev/GT-GELM/Chimaltenango.mp3",
+    "cover": "img/Chimaltenango.png",
+    "lyrics": "lyrics/Chimaltenango.txt"
+  },
+  {
+    "id": 97,
+    "title": "CHIMALTENANGO FOLKLOR",
+    "audio": "https://gelm.pages.dev/GT-GELM/CHIMALTENANGO%20FOLKLOR.mp3",
+    "cover": "img/CHIMALTENANGO FOLKLOR.png",
+    "lyrics": "lyrics/CHIMALTENANGO FOLKLOR.txt"
+  },
+  {
+    "id": 98,
+    "title": "Como olvidar lines del tren",
+    "audio": "https://gelm.pages.dev/GT-GELM/Como%20olvidar%20lines%20del%20tren.mp3",
+    "cover": "img/Como olvidar lines del tren.png",
+    "lyrics": "lyrics/Como olvidar lines del tren.txt"
+  },
+  {
+    "id": 99,
+    "title": "Con amor a todos los padres del mundo",
+    "audio": "https://gelm.pages.dev/GT-GELM/Con%20amor%20a%20todos%20los%20padres%20del%20mundo.mp3",
+    "cover": "img/Con amor a todos los padres del mundo.png",
+    "lyrics": "lyrics/Con amor a todos los padres del mundo.txt"
+  },
+  {
+    "id": 100,
+    "title": "CONOCES TU GUATEMALA",
+    "audio": "https://gelm.pages.dev/GT-GELM/CONOCES%20TU%20GUATEMALA.mp3",
+    "cover": "img/CONOCES TU GUATEMALA.png",
+    "lyrics": "lyrics/CONOCES TU GUATEMALA.txt"
+  },
+  {
+    "id": 101,
+    "title": "Crique pablo",
+    "audio": "https://gelm.pages.dev/GT-GELM/Crique%20pablo.mp3",
+    "cover": "img/Crique pablo.png",
+    "lyrics": "lyrics/Crique pablo.txt"
+  },
+  {
+    "id": 102,
+    "title": "CUENTOS DE JALAPA",
+    "audio": "https://gelm.pages.dev/GT-GELM/CUENTOS%20DE%20JALAPA.mp3",
+    "cover": "img/CUENTOS DE JALAPA.png",
+    "lyrics": "lyrics/CUENTOS DE JALAPA.txt"
+  },
+  {
+    "id": 103,
+    "title": "EL CALLEJÓN DEL MISTERIO",
+    "audio": "https://gelm.pages.dev/GT-GELM/EL%20CALLEJ%C3%93N%20DEL%20MISTERIO.mp3",
+    "cover": "img/EL CALLEJÓN DEL MISTERIO.png",
+    "lyrics": "lyrics/EL CALLEJÓN DEL MISTERIO.txt"
+  },
+  {
+    "id": 104,
+    "title": "EL GABILAN GT",
+    "audio": "https://gelm.pages.dev/GT-GELM/EL%20GABILAN%20GT.mp3",
+    "cover": "img/EL GABILAN GT.png",
+    "lyrics": "lyrics/EL GABILAN GT.txt"
+  },
+  {
+    "id": 105,
+    "title": "EL MAPA DE ORO _ Los 21 Municipios del Quiché _ GT-GELM (1)",
+    "audio": "https://gelm.pages.dev/GT-GELM/EL%20MAPA%20DE%20ORO%20_%20Los%2021%20Municipios%20del%20Quich%C3%A9%20_%20GT-GELM%20%281%29.mp3",
+    "cover": "img/EL MAPA DE ORO _ Los 21 Municipios del Quiché _ GT-GELM (1).png",
+    "lyrics": "lyrics/EL MAPA DE ORO _ Los 21 Municipios del Quiché _ GT-GELM (1).txt"
+  },
+  {
+    "id": 106,
+    "title": "EL MAPA DE ORO _ Los 21 Municipios del Quiché _ GT-GELM",
+    "audio": "https://gelm.pages.dev/GT-GELM/EL%20MAPA%20DE%20ORO%20_%20Los%2021%20Municipios%20del%20Quich%C3%A9%20_%20GT-GELM.mp3",
+    "cover": "img/EL MAPA DE ORO _ Los 21 Municipios del Quiché _ GT-GELM.png",
+    "lyrics": "lyrics/EL MAPA DE ORO _ Los 21 Municipios del Quiché _ GT-GELM.txt"
+  },
+  {
+    "id": 107,
+    "title": "EL RÍO ENCANTADO _ El Hijo de Lempa",
+    "audio": "https://gelm.pages.dev/GT-GELM/EL%20R%C3%8DO%20ENCANTADO%20_%20El%20Hijo%20de%20Lempa.mp3",
+    "cover": "img/EL RÍO ENCANTADO _ El Hijo de Lempa.png",
+    "lyrics": "lyrics/EL RÍO ENCANTADO _ El Hijo de Lempa.txt"
+  },
+  {
+    "id": 108,
+    "title": "EL VIEJO LO CONTÓ",
+    "audio": "https://gelm.pages.dev/GT-GELM/EL%20VIEJO%20LO%20CONT%C3%93.mp3",
+    "cover": "img/EL VIEJO LO CONTÓ.png",
+    "lyrics": "lyrics/EL VIEJO LO CONTÓ.txt"
+  },
+  {
+    "id": 109,
+    "title": "El vuelo del quetzal",
+    "audio": "https://gelm.pages.dev/GT-GELM/El%20vuelo%20del%20quetzal.mp3",
+    "cover": "img/El vuelo del quetzal.png",
+    "lyrics": "lyrics/El vuelo del quetzal.txt"
+  },
+  {
+    "id": 110,
+    "title": "EL ZUMBIDO DEL RIEL",
+    "audio": "https://gelm.pages.dev/GT-GELM/EL%20ZUMBIDO%20DEL%20RIEL.mp3",
+    "cover": "img/EL ZUMBIDO DEL RIEL.png",
+    "lyrics": "lyrics/EL ZUMBIDO DEL RIEL.txt"
+  },
+  {
+    "id": 111,
+    "title": "Espejo Sagrado del Fuego",
+    "audio": "https://gelm.pages.dev/GT-GELM/Espejo%20Sagrado%20del%20Fuego.mp3",
+    "cover": "img/Espejo Sagrado del Fuego.png",
+    "lyrics": "lyrics/Espejo Sagrado del Fuego.txt"
+  },
+  {
+    "id": 112,
+    "title": "Feria Titular chimaltenango",
+    "audio": "https://gelm.pages.dev/GT-GELM/Feria%20Titular%20chimaltenango.mp3",
+    "cover": "img/Feria Titular chimaltenango.png",
+    "lyrics": "lyrics/Feria Titular chimaltenango.txt"
+  },
+  {
+    "id": 113,
+    "title": "Genrin hijo mio",
+    "audio": "https://gelm.pages.dev/GT-GELM/Genrin%20hijo%20mio.mp3",
+    "cover": "img/Genrin hijo mio.png",
+    "lyrics": "lyrics/Genrin hijo mio.txt"
+  },
+  {
+    "id": 114,
+    "title": "Godorniz Saqkorowach",
+    "audio": "https://gelm.pages.dev/GT-GELM/Godorniz%20Saqkorowach.mp3",
+    "cover": "img/Godorniz Saqkorowach.png",
+    "lyrics": "lyrics/Godorniz Saqkorowach.txt"
+  },
+  {
+    "id": 115,
+    "title": "GT-15 DE SEPTIEMBRE-1",
+    "audio": "https://gelm.pages.dev/GT-GELM/GT-15%20DE%20SEPTIEMBRE-1.mp3",
+    "cover": "img/GT-15 DE SEPTIEMBRE-1.png",
+    "lyrics": "lyrics/GT-15 DE SEPTIEMBRE-1.txt"
+  },
+  {
+    "id": 116,
+    "title": "GT-GELM.m",
+    "audio": "https://gelm.pages.dev/GT-GELM/GT-GELM.m.mp3",
+    "cover": "img/GT-GELM.m.png",
+    "lyrics": "lyrics/GT-GELM.m.txt"
+  }
+]
