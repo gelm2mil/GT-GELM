@@ -1,525 +1,273 @@
-/* ===================================================
-GT-GELM PRODUCCIONES
-STYLE.CSS OFICIAL v2.0
-Historias de Guatemala convertidas en música
-=================================================== */
-
-/* ================= VARIABLES ================= */
-
-:root{
-
-```
---jade:#00ffc8;
---oro:#ffd700;
---azul:#00d9ff;
---fondo:#05010a;
-
---panel:rgba(0,0,0,.82);
-
---sombra:
-0 0 18px rgba(0,255,255,.45);
-```
-
+:root {
+    --bg-main: #0b0c10;
+    --bg-card: #1f2833;
+    --bg-track: #151a22;
+    --text-light: #ffffff;
+    --text-muted: #c5c6c7;
+    --primary: #4682b4; /* Azul acero moderno */
+    --accent: #ffb703;  /* Dorado cultural */
+    --youtube: #ff0000;
 }
 
-/* ================= RESET ================= */
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-html{
-scroll-behavior:smooth;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-light);
+    height: 100vh;
+    overflow: hidden;
 }
 
-body{
-
-```
-font-family:Arial,sans-serif;
-
-color:#eee;
-
-background:
-radial-gradient(circle at 20% 0%,
-rgba(0,255,255,.18),
-transparent 50%),
-
-radial-gradient(circle at 80% 0%,
-rgba(255,0,255,.12),
-transparent 55%),
-
-var(--fondo);
-
-background-attachment:fixed;
-
-overflow-x:hidden;
-```
-
+/* Contenedor dividido en dos columnas */
+.player-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
 }
 
-/* ================= HERO ================= */
-
-.hero{
-
-```
-position:relative;
-
-min-height:100vh;
-
-width:100%;
-```
-
+/* Área Principal (Izquierda) */
+.player-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    overflow-y: auto;
+    background: linear-gradient(180deg, #1f2833 0%, #0b0c10 100%);
 }
 
-.hero img{
-
-```
-width:100%;
-
-height:100vh;
-
-object-fit:cover;
-
-display:block;
-```
-
+.player-header {
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid rgba(255, 183, 3, 0.2);
+    padding-bottom: 10px;
 }
 
-.overlay{
-
-```
-position:absolute;
-
-inset:0;
-
-background:rgba(0,0,0,.55);
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-text-align:center;
-
-padding:20px;
-```
-
+.player-header h1 {
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(255,183,3,0.3);
 }
 
-.overlay h1{
-
-```
-font-size:4rem;
-
-color:white;
-
-text-shadow:
-0 0 20px black,
-0 0 40px var(--jade);
-```
-
+.player-header p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 4px;
 }
 
-.overlay p{
-
-```
-max-width:900px;
-
-margin-top:15px;
-
-font-size:1.3rem;
-
-color:#fff;
-```
-
+/* Tarjeta del tema en reproducción */
+.now-playing-card {
+    background: rgba(31, 40, 51, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    margin-bottom: 20px;
 }
 
-.btn-principal{
-
-```
-margin-top:30px;
-
-padding:15px 35px;
-
-border-radius:999px;
-
-background:linear-gradient(
-135deg,
-var(--jade),
-var(--azul));
-
-color:#000;
-
-text-decoration:none;
-
-font-weight:bold;
-
-transition:.3s;
-```
-
+.cover-wrapper {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 15px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.7);
+    border: 2px solid var(--primary);
 }
 
-.btn-principal:hover{
-
-```
-transform:scale(1.05);
-```
-
+.cover-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* ================= VIDEO ================= */
-
-.video-section{
-
-```
-max-width:1200px;
-
-margin:auto;
-
-padding:70px 20px;
-```
-
+.track-info h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: var(--text-light);
 }
 
-.video-section h2{
-
-```
-text-align:center;
-
-color:var(--oro);
-
-margin-bottom:25px;
-```
-
+.track-info p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 15px;
 }
 
-.video-container{
-
-```
-position:relative;
-
-padding-bottom:56.25%;
-
-height:0;
-
-overflow:hidden;
-
-border-radius:18px;
-
-box-shadow:
-0 0 20px rgba(0,255,255,.5);
-```
-
+audio {
+    width: 100%;
+    max-width: 500px;
+    margin-top: 5px;
 }
 
-.video-container iframe{
-
-```
-position:absolute;
-
-top:0;
-left:0;
-
-width:100%;
-height:100%;
-```
-
+/* Contenedor de letras de Suno */
+.lyrics-container {
+    flex: 1;
+    background: var(--bg-track);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+    border: 1px solid rgba(70, 130, 180, 0.2);
 }
 
-/* ================= PORTAL ================= */
-
-.portal{
-
-```
-padding:40px 20px;
-```
-
+.lyrics-container h3 {
+    font-size: 15px;
+    color: var(--primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.layout{
-
-```
-display:flex;
-
-gap:15px;
-
-min-height:800px;
-```
-
+.lyrics-box {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    text-align: center;
+    white-space: pre-line;
+    padding: 10px;
 }
 
-/* ================= MENU ================= */
-
-.menu{
-
-```
-width:260px;
-
-background:var(--panel);
-
-border-radius:18px;
-
-padding:15px;
-
-border:1px solid rgba(0,255,200,.25);
-
-box-shadow:var(--sombra);
-```
-
+.lyrics-placeholder {
+    color: #556070;
+    font-style: italic;
+    margin-top: 30px;
 }
 
-.menu h2{
-
-```
-text-align:center;
-
-color:var(--jade);
-
-margin-bottom:20px;
-```
-
+/* Botón YouTube */
+.social-footer {
+    text-align: center;
+    margin-top: 15px;
 }
 
-.btn-menu{
-
-```
-width:100%;
-
-margin-bottom:10px;
-
-padding:12px;
-
-background:#000;
-
-color:var(--jade);
-
-border:1px solid rgba(0,255,200,.35);
-
-border-radius:12px;
-
-cursor:pointer;
-
-transition:.25s;
-```
-
+.btn-youtube {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--youtube);
+    color: white;
+    text-decoration: none;
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn-menu:hover{
-
-```
-background:var(--jade);
-
-color:black;
-```
-
+.btn-youtube:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 15px rgba(255,0,0,0.4);
 }
 
-/* ================= CENTRO ================= */
-
-.centro{
-
-```
-flex:1;
-
-background:var(--panel);
-
-border-radius:18px;
-
-border:1px solid rgba(0,255,200,.25);
-
-box-shadow:var(--sombra);
-
-overflow:hidden;
-```
-
+/* Barra Lateral de Canciones (Derecha) */
+.player-sidebar {
+    width: 360px;
+    background: var(--bg-track);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
 }
 
-.centro-header{
-
-```
-padding:18px;
-
-text-align:center;
-
-border-bottom:1px solid rgba(255,255,255,.08);
-```
-
+.sidebar-header {
+    padding: 20px;
+    background: rgba(11, 12, 16, 0.9);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-.centro-header h2{
-
-```
-color:var(--oro);
-```
-
+.sidebar-header h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--accent);
 }
 
-#contenido{
-
-```
-padding:25px;
-
-min-height:700px;
-```
-
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-/* ================= REPRODUCTOR ================= */
-
-.reproductor{
-
-```
-width:350px;
-
-background:var(--panel);
-
-border-radius:18px;
-
-border:1px solid rgba(0,255,200,.25);
-
-box-shadow:var(--sombra);
-
-padding:12px;
-```
-
+.search-icon {
+    position: absolute;
+    left: 12px;
+    color: #667488;
+    font-size: 14px;
 }
 
-.reproductor h3{
-
-```
-text-align:center;
-
-color:var(--oro);
-
-margin-bottom:12px;
-```
-
+.search-box input {
+    width: 100%;
+    padding: 10px 12px 10px 38px;
+    background: var(--bg-main);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: white;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.2s;
 }
 
-.reproductor iframe{
-
-```
-width:100%;
-
-height:500px;
-
-border:none;
-
-border-radius:14px;
-```
-
+.search-box input:focus {
+    border-color: var(--primary);
 }
 
-/* ================= TARJETAS ================= */
-
-.card{
-
-```
-background:#101010;
-
-padding:18px;
-
-border-radius:14px;
-
-margin-bottom:15px;
-
-border:1px solid rgba(255,255,255,.06);
-```
-
+/* Lista dinámica de canciones */
+.playlist {
+    flex: 1;
+    overflow-y: auto;
+    list-style: none;
 }
 
-.card h3{
-
-```
-color:var(--oro);
-
-margin-bottom:10px;
-```
-
+.playlist li {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.02);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    transition: background 0.2s;
 }
 
-.card a{
-
-```
-display:inline-block;
-
-margin-top:10px;
-
-margin-right:10px;
-
-padding:8px 15px;
-
-border-radius:10px;
-
-text-decoration:none;
-
-background:var(--jade);
-
-color:black;
-
-font-weight:bold;
-```
-
+.playlist li:hover {
+    background: rgba(70, 130, 180, 0.1);
 }
 
-/* ================= FOOTER ================= */
-
-footer{
-
-```
-text-align:center;
-
-padding:30px;
-
-margin-top:40px;
-
-background:black;
-
-color:#bbb;
-```
-
+.playlist li.active {
+    background: rgba(70, 130, 180, 0.2);
+    border-left: 4px solid var(--accent);
+    color: var(--accent);
+    font-weight: 600;
 }
 
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:1100px){
-
-```
-.layout{
-
-    flex-direction:column;
-
+.loading-item {
+    color: #667488;
+    text-align: center;
+    font-style: italic;
+    padding-top: 40px !important;
 }
 
-.menu,
-.reproductor{
-
-    width:100%;
-
-}
-```
-
-}
-
-@media(max-width:768px){
-
-```
-.overlay h1{
-
-    font-size:2.3rem;
-
-}
-
-.overlay p{
-
-    font-size:1rem;
-
-}
-```
-
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+    .player-container {
+        flex-direction: column;
+    }
+    .player-sidebar {
+        width: 100%;
+        height: 50vh;
+    }
+    body {
+        overflow: auto;
+        height: auto;
+    }
 }
