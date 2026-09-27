@@ -1,14 +1,36 @@
 {
   "name": "GT-GELM Producciones",
   "short_name": "GT-GELM",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#070712",
-  "theme_color": "#070712",
+  "description": "GT-GELM Producciones — Historias, cultura y patrimonio de Guatemala convertidos en música.",
   "lang": "es",
-  "description": "Reproductor GT-GELM de historias de Guatemala convertidas en música.",
+  "dir": "ltr",
+
+  "start_url": "./",
+  "scope": "./",
+
+  "display": "standalone",
+  "orientation": "portrait",
+
+  "theme_color": "#090014",
+  "background_color": "#090014",
+
+  "categories": [
+    "music",
+    "entertainment"
+  ],
+
   "icons": [
-    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }
