@@ -3,130 +3,137 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#070712">
-  <meta name="description" content="GT-GELM Producciones — reproductor musical de historias de Guatemala.">
+  <meta name="theme-color" content="#05040b">
+  <meta name="description" content="GT-GELM Producciones — reproductor de música e historias de Guatemala.">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/icon-192.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
-  <title>GT-GELM Producciones · Player V2</title>
+  <title>GT-GELM Producciones · Reproductor v4</title>
 </head>
 <body>
-  <div class="ambient ambient-a"></div>
-  <div class="ambient ambient-b"></div>
-
-  <main class="app-shell">
+  <div class="app-shell">
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark">G</div>
         <div>
           <strong>GT-GELM</strong>
-          <span>PRODUCCIONES · V2</span>
+          <small>PRODUCCIONES · REPRODUCTOR v4</small>
         </div>
       </div>
-      <div class="top-actions">
-        <a class="top-link" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener">▶ YouTube</a>
-        <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar apariencia">◐</button>
+
+      <div class="topbar-actions">
+        <button id="libraryBtn" class="ghost-btn" type="button" aria-expanded="false">☰ Biblioteca</button>
+        <a class="ghost-btn" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener">▶ YouTube</a>
+        <button id="themeBtn" class="ghost-btn" type="button" title="Cambiar brillo">◐</button>
       </div>
     </header>
 
-    <section class="player-layout">
-      <section class="player-card" aria-label="Reproductor GT-GELM">
-        <div class="player-badge">● GT-GELM</div>
-
-        <div class="cover-wrap">
-          <img id="cover" class="cover" src="assets/img/default-cover.svg" alt="Portada GT-GELM" loading="eager">
-          <div class="cover-glow"></div>
-          <div class="cover-corner">♫</div>
+    <main>
+      <section class="panel hero-card">
+        <div class="cover-frame">
+          <img id="cover" src="img/banner-principal-gtgelm.png" alt="Portada GT-GELM" loading="eager">
+          <span class="live-pill">● GT-GELM</span>
+          <span id="status" class="status-pill">LISTO</span>
         </div>
 
         <div class="now-playing">
-          <span class="eyebrow">AHORA SUENA</span>
-          <h1 id="title">Cargando…</h1>
-          <p id="meta">GT-GELM · 000 · HISTORIAS</p>
-        </div>
+          <div class="eyebrow" id="meta">GT-GELM · 048 · CULTURA</div>
+          <h1 id="title">Guatemala Nunca Se Rinde</h1>
+          <p>GT-GELM Producciones · Historias de Guatemala convertidas en música</p>
 
-        <div class="main-controls">
-          <button class="control" id="prev" type="button" title="Anterior">⏮</button>
-          <button class="control play" id="play" type="button" title="Reproducir / pausar">▶</button>
-          <button class="control" id="next" type="button" title="Siguiente">⏭</button>
-          <button class="control" id="shuffle" type="button" title="Aleatorio" aria-pressed="true">🔀</button>
-          <button class="control" id="repeat" type="button" title="Repetir" aria-pressed="false">🔁</button>
-        </div>
-
-        <div class="timeline">
-          <span id="currentTime">00:00</span>
-          <input id="seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Posición de la canción">
-          <span id="duration">00:00</span>
-        </div>
-
-        <div class="volume-row">
-          <span>🔊</span>
-          <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volumen">
-          <button class="small-btn" id="mute" type="button">Silencio</button>
-        </div>
-
-        <div class="player-actions">
-          <button class="action-btn" id="audioDirect" type="button">🎵 Audio GT-GELM</button>
-          <button class="action-btn" id="youtubeBtn" type="button">▶ YouTube</button>
-          <button class="action-btn" id="libraryBtn" type="button" aria-expanded="false" aria-controls="libraryPanel">☰ Biblioteca</button>
-        </div>
-
-        <section class="library-panel" id="libraryPanel" hidden>
-          <div class="library-head">
-            <div>
-              <span class="eyebrow">BIBLIOTECA</span>
-              <h2>GT-GELM · <span id="count">0</span></h2>
-            </div>
-            <button class="close-btn" id="closeLibrary" type="button">✕</button>
+          <div class="transport">
+            <button class="control-btn" id="prev" title="Anterior" type="button">⏮</button>
+            <button class="control-btn primary" id="play" title="Reproducir / pausar" type="button">▶</button>
+            <button class="control-btn" id="next" title="Siguiente" type="button">⏭</button>
+            <button class="control-btn" id="shuffle" title="Aleatorio" type="button">🔀</button>
+            <button class="control-btn" id="repeat" title="Repetir" type="button">🔁</button>
           </div>
-          <div class="search-wrap">
-            <span>⌕</span>
-            <input id="search" type="search" placeholder="Buscar historia, canción o número…" autocomplete="off">
-          </div>
-          <div class="filters" role="tablist" aria-label="Filtros">
-            <button class="filter active" data-filter="all" type="button">Todas</button>
-            <button class="filter" data-filter="historias" type="button">Historias</button>
-            <button class="filter" data-filter="pmt" type="button">PMT</button>
-            <button class="filter" data-filter="cultura" type="button">Cultura</button>
-          </div>
-          <div class="song-list" id="songList"></div>
-        </section>
 
-        <section class="media-panel" id="youtubePanel" hidden>
-          <div class="panel-head">
-            <div>
-              <span class="eyebrow">VIDEO</span>
-              <h2 id="videoTitle">YouTube</h2>
-            </div>
-            <div class="panel-head-actions">
-              <a id="openYoutube" class="small-btn link-btn" href="#" target="_blank" rel="noopener">Abrir</a>
-              <button class="close-btn" id="closeYoutube" type="button">✕</button>
-            </div>
+          <div class="progress-row">
+            <span id="currentTime">00:00</span>
+            <input id="seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Progreso">
+            <span id="duration">00:00</span>
           </div>
-          <div class="video-frame-wrap" id="videoWrap"></div>
-          <p class="panel-note" id="videoNote"></p>
-        </section>
 
-        <section class="lyrics-panel" id="lyricsPanel">
-          <div class="panel-head">
-            <div>
-              <span class="eyebrow">TEXTO</span>
-              <h2>Letra de la canción</h2>
-            </div>
-            <button class="small-btn" id="lyricsToggle" type="button" aria-expanded="false">Mostrar</button>
+          <div class="volume-row">
+            <span aria-hidden="true">🔊</span>
+            <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volumen">
+            <button class="tiny-btn" id="mute" type="button">Silencio</button>
           </div>
-          <pre id="lyrics" hidden>Letra no disponible todavía en el repositorio.</pre>
-        </section>
+
+          <div class="action-row">
+            <button class="tiny-btn action-primary" id="audioDirect" type="button">🎵 Audio GT-GELM</button>
+            <button class="tiny-btn" id="youtubeBtn" type="button">▶ YouTube</button>
+            <button class="tiny-btn" id="saveOffline" type="button">⬇ Guardar offline</button>
+            <button class="tiny-btn" id="installBtn" type="button" hidden>＋ Instalar</button>
+          </div>
+
+          <audio id="audio" preload="metadata"></audio>
+        </div>
       </section>
+
+      <section class="panel lyrics-panel">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">TEXTO</div>
+            <h2>Letra de la canción</h2>
+          </div>
+          <button id="lyricsToggle" class="tiny-btn" type="button" aria-expanded="true">Ocultar</button>
+        </div>
+        <div id="lyrics" class="lyrics-box">La letra aparecerá aquí al seleccionar una canción.</div>
+      </section>
+
+      <section id="youtubePanel" class="panel youtube-panel" hidden>
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">VIDEO</div>
+            <h2 id="videoTitle">YouTube GT-GELM</h2>
+          </div>
+          <button id="closeYoutube" class="tiny-btn" type="button">Cerrar</button>
+        </div>
+        <div id="videoWrap" class="video-wrap"></div>
+        <div class="video-footer">
+          <span id="videoNote">El reproductor busca primero un ID guardado en youtube.json.</span>
+          <a id="openYoutube" class="tiny-btn" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener">Abrir</a>
+        </div>
+      </section>
+    </main>
+
+    <section id="libraryPanel" class="library-overlay" hidden aria-label="Biblioteca GT-GELM">
+      <div class="library-card">
+        <div class="library-head">
+          <div>
+            <div class="eyebrow">BIBLIOTECA</div>
+            <h2>GT-GELM · <span id="count">0</span></h2>
+          </div>
+          <button id="closeLibrary" class="tiny-btn" type="button">Cerrar</button>
+        </div>
+
+        <div class="search-box">
+          <span>⌕</span>
+          <input id="search" type="search" placeholder="Buscar historia, canción o número..." autocomplete="off">
+        </div>
+
+        <div class="filters" role="tablist" aria-label="Categorías">
+          <button class="filter active" data-filter="all" type="button">Todas</button>
+          <button class="filter" data-filter="historias" type="button">Historias</button>
+          <button class="filter" data-filter="pmt" type="button">PMT</button>
+          <button class="filter" data-filter="cultura" type="button">Cultura</button>
+        </div>
+
+        <div id="songList" class="song-list" aria-live="polite">
+          <div class="empty-list">Cargando colección histórica...</div>
+        </div>
+
+        <div class="library-footer">
+          <small>El audio se resuelve automáticamente desde Cloudflare.</small>
+        </div>
+      </div>
     </section>
 
-    <footer class="footer">
-      <span>GT-GELM · Historias de Guatemala convertidas en música</span>
-      <span>Audio servido desde Cloudflare Workers</span>
-    </footer>
-  </main>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
 
-  <audio id="audio" preload="metadata"></audio>
-  <script src="app.js" defer></script>
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
