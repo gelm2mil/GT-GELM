@@ -1,143 +1,138 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#070712">
-  <meta name="description" content="GT-GELM Producciones — historias de Guatemala convertidas en música.">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="GT-GELM">
-  <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icons/icon-192.png" type="image/png">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <link rel="stylesheet" href="./styles.css">
-  <title>GT-GELM Producciones · V3 PRO MAX</title>
+  <meta name="theme-color" content="#080014">
+  <meta name="description" content="GT-GELM Producciones — reproductor oficial de música e historias de Guatemala.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+  <title>GT-GELM Producciones · Reproductor v2</title>
 </head>
 <body>
-  <div class="ambient ambient-a"></div>
-  <div class="ambient ambient-b"></div>
-
-  <main class="app-shell">
+  <div class="app-shell">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true">G</div>
+        <div class="brand-mark">G</div>
         <div>
           <strong>GT-GELM</strong>
-          <span>PRODUCCIONES · V3 PRO MAX</span>
+          <small>PRODUCCIONES · v2</small>
         </div>
       </div>
-      <div class="top-actions">
-        <button class="top-link" id="installBtn" type="button" hidden>＋ Instalar</button>
-        <a class="top-link" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener">▶ YouTube</a>
-        <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar apariencia">◐</button>
+      <div class="topbar-actions">
+        <a class="ghost-btn" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener">▶ YouTube</a>
+        <button id="themeBtn" class="ghost-btn" type="button" title="Cambiar brillo">◐</button>
       </div>
     </header>
 
-    <section class="player-layout">
-      <section class="player-card" aria-label="Reproductor GT-GELM">
-        <div class="player-badge">● GT-GELM</div>
+    <div class="layout">
+      <main>
+        <section class="panel hero-card">
+          <div class="cover-frame">
+            <img id="current-cover" src="img/banner-principal-gtgelm.png" alt="Portada GT-GELM" loading="eager">
+            <span class="live-pill">● GT-GELM</span>
+            <span id="statusPill" class="status-pill">LISTO</span>
+          </div>
 
-        <div class="cover-wrap">
-          <img id="cover" class="cover" src="./assets/img/default-cover.svg" alt="Portada GT-GELM" loading="eager">
-          <div class="cover-glow"></div>
-          <div class="cover-corner" aria-hidden="true">♫</div>
-        </div>
+          <div class="now-playing">
+            <div class="eyebrow" id="current-meta">Selecciona una canción</div>
+            <h1 id="current-title">GT-GELM Producciones</h1>
+            <p id="current-author">Historias de Guatemala convertidas en música</p>
 
-        <div class="now-playing">
-          <span class="eyebrow">AHORA SUENA</span>
-          <h1 id="title">Cargando…</h1>
-          <p id="meta">GT-GELM · 048 · CULTURA</p>
-        </div>
-
-        <div class="main-controls">
-          <button class="control" id="prev" type="button" title="Anterior" aria-label="Anterior">⏮</button>
-          <button class="control play" id="play" type="button" title="Reproducir / pausar" aria-label="Reproducir / pausar">▶</button>
-          <button class="control" id="next" type="button" title="Siguiente" aria-label="Siguiente">⏭</button>
-          <button class="control" id="shuffle" type="button" title="Aleatorio" aria-label="Aleatorio" aria-pressed="true">🔀</button>
-          <button class="control" id="repeat" type="button" title="Repetir" aria-label="Repetir" aria-pressed="false">🔁</button>
-        </div>
-
-        <div class="timeline">
-          <span id="currentTime">00:00</span>
-          <input id="seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Posición de la canción">
-          <span id="duration">00:00</span>
-        </div>
-
-        <div class="volume-row">
-          <span aria-hidden="true">🔊</span>
-          <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volumen">
-          <button class="small-btn" id="mute" type="button" aria-pressed="false">Silencio</button>
-        </div>
-
-        <div class="player-actions">
-          <button class="action-btn" id="audioDirect" type="button">🎵 Audio GT-GELM</button>
-          <button class="action-btn" id="youtubeBtn" type="button">▶ YouTube</button>
-          <button class="action-btn" id="libraryBtn" type="button" aria-expanded="false" aria-controls="libraryPanel">☰ Biblioteca</button>
-          <button class="action-btn" id="saveOffline" type="button">💾 Guardar</button>
-        </div>
-
-        <section class="library-panel" id="libraryPanel" hidden>
-          <div class="library-head">
-            <div>
-              <span class="eyebrow">BIBLIOTECA</span>
-              <h2>GT-GELM · <span id="count">118</span></h2>
-              <p class="library-subtitle">118 canciones · el audio vive en Cloudflare</p>
+            <div class="transport">
+              <button class="control-btn" id="prevBtn" title="Anterior" type="button">⏮</button>
+              <button class="control-btn primary" id="playBtn" title="Reproducir / pausar" type="button">▶</button>
+              <button class="control-btn" id="nextBtn" title="Siguiente" type="button">⏭</button>
+              <button class="control-btn" id="shuffleBtn" title="Aleatorio" type="button">🔀</button>
+              <button class="control-btn" id="repeatBtn" title="Repetir" type="button">🔁</button>
             </div>
-            <button class="close-btn" id="closeLibrary" type="button" aria-label="Cerrar biblioteca">✕</button>
+
+            <div class="progress-row">
+              <span id="currentTime">00:00</span>
+              <input id="seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Progreso">
+              <span id="duration">00:00</span>
+            </div>
+
+            <div class="volume-row">
+              <span aria-hidden="true">🔊</span>
+              <input id="volume" type="range" min="0" max="1" value="0.8" step="0.01" aria-label="Volumen">
+              <button class="tiny-btn" id="muteBtn" type="button">Silencio</button>
+              <button class="tiny-btn" id="openAudioBtn" type="button" title="Abrir audio">↗ Audio</button>
+            </div>
+
+            <audio id="main-audio" preload="metadata"></audio>
           </div>
-          <div class="search-wrap">
-            <span aria-hidden="true">⌕</span>
-            <input id="search" type="search" placeholder="Buscar historia, canción o número…" autocomplete="off">
-          </div>
-          <div class="filters" role="tablist" aria-label="Filtros">
-            <button class="filter active" data-filter="all" type="button">Todas</button>
-            <button class="filter" data-filter="historias" type="button">Historias</button>
-            <button class="filter" data-filter="pmt" type="button">PMT</button>
-            <button class="filter" data-filter="cultura" type="button">Cultura</button>
-          </div>
-          <div class="song-list" id="songList"></div>
         </section>
 
-        <section class="media-panel" id="youtubePanel" hidden>
-          <div class="panel-head">
-            <div>
-              <span class="eyebrow">VIDEO</span>
-              <h2 id="videoTitle">YouTube</h2>
-            </div>
-            <div class="panel-head-actions">
-              <a id="openYoutube" class="small-btn link-btn" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener">Abrir</a>
-              <button class="close-btn" id="closeYoutube" type="button" aria-label="Cerrar YouTube">✕</button>
-            </div>
-          </div>
-          <div class="video-frame-wrap" id="videoWrap"></div>
-          <p class="panel-note" id="videoNote"></p>
+        <section class="mode-tabs" aria-label="Modo multimedia">
+          <button id="audioModeBtn" class="mode-tab active" type="button">🎵 Audio GT-GELM</button>
+          <button id="youtubeModeBtn" class="mode-tab" type="button">▶ YouTube</button>
         </section>
 
-        <section class="lyrics-panel" id="lyricsPanel">
-          <div class="panel-head">
+        <section id="youtubePanel" class="panel youtube-panel hidden">
+          <div class="section-head">
             <div>
-              <span class="eyebrow">TEXTO</span>
+              <div class="eyebrow">VIDEO</div>
+              <h2 id="youtubeTitle">YouTube GT-GELM</h2>
+            </div>
+            <a id="youtubeExternal" class="tiny-btn link-btn" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener">Abrir</a>
+          </div>
+          <div class="youtube-frame-wrap">
+            <iframe id="youtubeFrame"
+                    title="YouTube GT-GELM"
+                    src=""
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen></iframe>
+            <div id="youtubeEmpty" class="empty-state">Esta canción todavía no tiene video de YouTube configurado.</div>
+          </div>
+        </section>
+
+        <section class="panel lyrics-panel">
+          <div class="section-head">
+            <div>
+              <div class="eyebrow">TEXTO</div>
               <h2>Letra de la canción</h2>
             </div>
-            <button class="small-btn" id="lyricsToggle" type="button" aria-expanded="false">Mostrar</button>
+            <button id="lyricsToggle" class="tiny-btn" type="button">Ocultar</button>
           </div>
-          <pre id="lyrics" hidden>Letra no disponible todavía en el repositorio.</pre>
+          <div id="lyricsBox" class="lyrics-box">La letra aparecerá aquí al seleccionar una canción.</div>
         </section>
-      </section>
-    </section>
+      </main>
 
-    <footer class="footer">
-      <span>GT-GELM · Historias de Guatemala convertidas en música</span>
-      <span>V3 PRO MAX · Audio servido desde Cloudflare Workers</span>
-    </footer>
-  </main>
+      <aside class="panel sidebar">
+        <div class="sidebar-header">
+          <div>
+            <div class="eyebrow">BIBLIOTECA</div>
+            <h2>GT-GELM · <span id="songCount">0</span></h2>
+          </div>
+          <span class="version-badge">v2</span>
+        </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+        <div class="search-box">
+          <span>⌕</span>
+          <input id="searchInput" type="search" placeholder="Buscar historia, canción o número..." autocomplete="off">
+        </div>
 
-  <audio id="audio" preload="metadata" crossorigin="anonymous"></audio>
+        <div class="filters" role="tablist" aria-label="Categorías">
+          <button class="filter active" data-filter="all" type="button">Todas</button>
+          <button class="filter" data-filter="historias" type="button">Historias</button>
+          <button class="filter" data-filter="pmt" type="button">PMT</button>
+          <button class="filter" data-filter="cultura" type="button">Cultura</button>
+        </div>
 
-  <script src="./config.js"></script>
-  <script src="./app.js" defer></script>
+        <div id="playlist" class="playlist" aria-live="polite">
+          <div class="loading-item">Cargando colección histórica...</div>
+        </div>
+
+        <div class="sidebar-footer">
+          <button id="installBtn" class="ghost-btn full" type="button" hidden>＋ Instalar GT-GELM</button>
+          <p>El audio se resuelve automáticamente desde el alojamiento Cloudflare configurado en <code>config.js</code>.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
