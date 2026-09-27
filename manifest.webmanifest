@@ -3,11 +3,12 @@
   "short_name": "GT-GELM",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#03030a",
-  "theme_color": "#080014",
-  "description": "Reproductor GT-GELM de música e historias de Guatemala.",
+  "background_color": "#070712",
+  "theme_color": "#070712",
+  "lang": "es",
+  "description": "Reproductor GT-GELM de historias de Guatemala convertidas en música.",
   "icons": [
-    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"}
+    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
   ]
 }
