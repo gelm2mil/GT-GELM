@@ -1,138 +1,72 @@
-const CACHE_NAME = "gt-gelm-player-v2-shell-v1";
+const SHELL_CACHE = 'gt-gelm-v3-pro-max-shell-v1';
+const AUDIO_CACHE = 'gt-gelm-v3-pro-max-audio-v1';
 
 const APP_SHELL = [
-  "./",
-  "./index.html",
-  "./app.js",
-  "./styles.css",
-  "./config.js",
-  "./songs.json",
-  "./youtube.json",
-  "./manifest.webmanifest"
+  './',
+  './index.html',
+  './app.js',
+  './styles.css',
+  './config.js',
+  './songs.json',
+  './youtube.json',
+  './cover-map.json',
+  './lyrics-map.json',
+  './manifest.webmanifest',
+  './assets/img/default-cover.svg',
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
-/* ================================
-   INSTALL
-   ================================ */
-
-self.addEventListener("install", event => {
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(SHELL_CACHE)
       .then(cache => cache.addAll(APP_SHELL))
       .then(() => self.skipWaiting())
   );
 });
 
-
-/* ================================
-   ACTIVATE
-   ================================ */
-
-self.addEventListener("activate", event => {
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys()
-      .then(keys => {
-        return Promise.all(
-          keys
-            .filter(key => key !== CACHE_NAME)
-            .filter(key => key.startsWith("gt-gelm-"))
-            .map(key => caches.delete(key))
-        );
-      })
-      .then(() => self.clients.claim())
+    caches.keys().then(keys => Promise.all(
+      keys
+        .filter(key => ![SHELL_CACHE, AUDIO_CACHE].includes(key))
+        .map(key => caches.delete(key))
+    )).then(() => self.clients.claim())
   );
 });
 
-
-/* ================================
-   FETCH
-   ================================ */
-
-self.addEventListener("fetch", event => {
-
+self.addEventListener('fetch', event => {
   const request = event.request;
-
-  /* Solo trabajamos con solicitudes GET */
-  if (request.method !== "GET") {
-    return;
-  }
+  if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
+  if (url.origin !== location.origin) return;
 
-  /*
-     Los MP3 están alojados en Cloudflare.
-     NO intentamos interceptarlos aquí.
-     El reproductor seguirá utilizando directamente
-     las URL configuradas en songs.json.
-  */
-  if (
-    url.hostname.includes("workers.dev") &&
-    url.pathname.toLowerCase().endsWith(".mp3")
-  ) {
-    return;
-  }
-
-
-  /*
-     Para nuestra propia aplicación:
-     primero intentamos la red y,
-     si no hay conexión,
-     utilizamos la copia almacenada.
-  */
-  if (url.origin === self.location.origin) {
-
+  if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
         .then(response => {
-
-          /*
-             Guardamos únicamente respuestas válidas.
-          */
-          if (
-            response &&
-            response.status === 200 &&
-            response.type === "basic"
-          ) {
-            const copy = response.clone();
-
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(request, copy);
-              });
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(SHELL_CACHE).then(cache => cache.put('./index.html', clone)).catch(() => {});
           }
-
           return response;
         })
-        .catch(() => {
-
-          return caches.match(request)
-            .then(cached => {
-
-              if (cached) {
-                return cached;
-              }
-
-              /*
-                 Si es navegación y no hay red,
-                 intentamos cargar la aplicación.
-              */
-              if (request.mode === "navigate") {
-                return caches.match("./index.html");
-              }
-
-              return new Response(
-                "Recurso no disponible sin conexión.",
-                {
-                  status: 503,
-                  statusText: "Offline"
-                }
-              );
-            });
-
-        })
+        .catch(() => caches.match('./index.html'))
     );
-
     return;
   }
 
+  event.respondWith(
+    caches.match(request).then(cached => {
+      const network = fetch(request).then(response => {
+        if (response && response.ok) {
+          const clone = response.clone();
+          caches.open(SHELL_CACHE).then(cache => cache.put(request, clone)).catch(() => {});
+        }
+        return response;
+      }).catch(() => cached);
+      return cached || network;
+    })
+  );
 });

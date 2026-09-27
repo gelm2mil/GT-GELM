@@ -1,28 +1,44 @@
-# GT-GELM Reproductor
+# GT-GELM PLAYER V3 PRO MAX
 
-Nuevo reproductor para GitHub Pages usando como origen de audio el Cloudflare Worker:
+## Objetivo
+Versión completa y amarrada del reproductor GT-GELM, preparada para GitHub Pages y para instalación como PWA en teléfono.
 
-`https://divine-king-c86b.chapin7839.workers.dev/`
+## Importante
+- **NO incluye los 118 MP3**. El audio se resuelve desde el Worker existente de Cloudflare.
+- `songs.json` conserva los 118 nombres limpios y el reproductor construye la URL automáticamente con `AUDIO_BASE`.
+- `config.js` concentra la configuración sensible del reproductor.
+- `manifest.webmanifest`, `sw.js` e iconos ya están coordinados entre sí.
+- `youtube.json`, `cover-map.json` y `lyrics-map.json` son archivos de datos independientes para que futuras mejoras no rompan el reproductor.
 
-## Estructura
+## Archivos
+- `index.html` — estructura del PWA.
+- `app.js` — lógica completa del reproductor.
+- `styles.css` — diseño oscuro/neón responsive.
+- `config.js` — URL Cloudflare y opciones principales.
+- `songs.json` — catálogo 001–118.
+- `youtube.json` — videos de YouTube conocidos.
+- `cover-map.json` — portadas conocidas; existe fallback automático.
+- `lyrics-map.json` — asociación de letras conocidas.
+- `manifest.webmanifest` — instalación PWA.
+- `sw.js` — caché del shell y soporte de almacenamiento local.
+- `icons/` — iconos de instalación.
+- `assets/img/default-cover.svg` — portada de respaldo.
 
-- `index.html` — interfaz.
-- `styles.css` — diseño neon/dark responsive.
-- `app.js` — reproductor, búsqueda, filtros, cola y letras.
-- `songs.json` — catálogo inicial de 118 MP3.
-- `assets/img/default-cover.svg` — portada temporal.
-- `lyrics/` — aquí irán las letras con el mismo nombre base del MP3, por ejemplo:
-  `lyrics/020-bohemio.txt`
-- `manifest.webmanifest` y `sw.js` — base PWA.
+## Despliegue
+Sube el contenido de esta carpeta al repositorio `GT-GELM` sin borrar la carpeta donde estén tus 118 canciones remotas, porque esas canciones no forman parte del repositorio.
+
+En GitHub Pages, abre la URL publicada y comprueba primero:
+1. Canción inicial 048.
+2. Siguiente/anterior.
+3. Biblioteca.
+4. Audio directo.
+5. YouTube.
+6. Letra.
+7. Instalación PWA.
 
 ## Audio
+El reproductor utiliza:
+`https://divine-king-c86b.chapin7839.workers.dev/`
 
-Las canciones se resuelven así:
-
-`https://divine-king-c86b.chapin7839.workers.dev/` + nombre exacto del archivo.
-
-## Próximo paso
-
-Cuando estén listas las portadas, se pueden agregar en `assets/img/` y actualizar el campo `cover` de `songs.json`.
-
-Cuando estén listas las letras, se colocan en `lyrics/` con el mismo nombre base del MP3. El reproductor intentará cargarlas automáticamente.
+Ejemplo interno para la pista 020:
+`https://divine-king-c86b.chapin7839.workers.dev/020-bohemio.mp3`

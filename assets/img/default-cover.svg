@@ -1,12 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
   <defs>
-    <radialGradient id="g" cx="35%" cy="25%" r="80%"><stop offset="0" stop-color="#173c52"/><stop offset=".5" stop-color="#100b27"/><stop offset="1" stop-color="#05050a"/></radialGradient>
-    <linearGradient id="n" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00f0ff"/><stop offset=".48" stop-color="#7a2cff"/><stop offset="1" stop-color="#ff00c8"/></linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#00d9ff"/>
+      <stop offset=".45" stop-color="#445cff"/>
+      <stop offset="1" stop-color="#e500d9"/>
+    </linearGradient>
+    <radialGradient id="bg"><stop stop-color="#14293a"/><stop offset="1" stop-color="#070712"/></radialGradient>
   </defs>
-  <rect width="1200" height="1200" fill="url(#g)"/>
-  <rect x="115" y="115" width="970" height="970" rx="210" fill="none" stroke="url(#n)" stroke-width="26"/>
-  <circle cx="970" cy="970" r="125" fill="#111022" stroke="#00f0ff" stroke-width="16" opacity=".9"/>
-  <text x="600" y="590" text-anchor="middle" fill="#eaffff" font-family="Segoe UI, Arial" font-size="190" font-weight="900" letter-spacing="8">GT-GELM</text>
-  <text x="600" y="690" text-anchor="middle" fill="#92a4b0" font-family="Segoe UI, Arial" font-size="42" letter-spacing="12">PRODUCCIONES</text>
-  <text x="970" y="1015" text-anchor="middle" fill="#00f0ff" font-family="Segoe UI, Arial" font-size="70" font-weight="900">♫</text>
+  <rect width="1000" height="1000" rx="80" fill="#05050c"/>
+  <rect x="42" y="42" width="916" height="916" rx="70" fill="url(#bg)" stroke="url(#g)" stroke-width="16"/>
+  <rect x="112" y="112" width="776" height="776" rx="56" fill="none" stroke="url(#g)" stroke-width="12"/>
+  <text x="500" y="485" text-anchor="middle" fill="#f5fbff" font-family="Arial,Helvetica,sans-serif" font-size="145" font-weight="900">GT-GELM</text>
+  <text x="500" y="565" text-anchor="middle" fill="#9da7bb" font-family="Arial,Helvetica,sans-serif" font-size="35" letter-spacing="14">PRODUCCIONES</text>
+  <circle cx="780" cy="780" r="72" fill="#080914" stroke="#00e5ff" stroke-width="12"/>
+  <text x="780" y="805" text-anchor="middle" fill="#00e5ff" font-family="Arial,Helvetica,sans-serif" font-size="70">♪</text>
 </svg>
