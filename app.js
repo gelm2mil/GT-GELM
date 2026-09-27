@@ -1,10 +1,18 @@
 const AUDIO_BASE = 'https://divine-king-c86b.chapin7839.workers.dev/';
-const DEFAULT_COVER = 'assets/img/default-cover.svg';
+const DEFAULT_COVER = 'img/banner-principal-gtgelm.png';
 const YOUTUBE_CHANNEL = 'https://www.youtube.com/@GT-GELM';
 const REPO_RAW = 'https://raw.githubusercontent.com/gelm2mil/GT-GELM/main/';
+
+// Canción inicial: 048 - Guatemala Nunca Se Rinde
 const DEFAULT_SONG_ID = 48;
 
+
+/* =========================================================
+   ELEMENTOS DEL DOM
+   ========================================================= */
+
 const $ = (id) => document.getElementById(id);
+
 const audio = $('audio');
 const titleEl = $('title');
 const metaEl = $('meta');
@@ -16,288 +24,1669 @@ const durationEl = $('duration');
 const songList = $('songList');
 const search = $('search');
 const countEl = $('count');
+
 const libraryPanel = $('libraryPanel');
 const libraryBtn = $('libraryBtn');
+
 const youtubePanel = $('youtubePanel');
 const videoWrap = $('videoWrap');
 const videoTitle = $('videoTitle');
 const videoNote = $('videoNote');
 const openYoutube = $('openYoutube');
+
 const lyrics = $('lyrics');
+
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
 
 const state = {
   songs: [],
   filtered: [],
   index: -1,
+
   shuffle: true,
   repeat: false,
+
   filter: 'all',
   query: '',
+
   youtube: {},
+
   currentLyricsUrl: ''
 };
 
-function fmt(sec){
-  if(!Number.isFinite(sec)) return '00:00';
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+
+function fmt(sec) {
+  if (!Number.isFinite(sec)) {
+    return '00:00';
+  }
+
   const s = Math.max(0, Math.floor(sec));
-  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+  const m = Math.floor(s / 60);
+  const r = s % 60;
+
+  return `${String(m).padStart(2, '0')}:${String(r).padStart(2, '0')}`;
 }
 
-function slugify(value){
+
+/* =========================================================
+   SLUGIFY
+   ========================================================= */
+
+function slugify(value) {
   return String(value)
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/\.mp3$/i,'')
-    .replace(/^\d{3}-?/,'')
-    .replace(/[^a-z0-9]+/g,'-')
-    .replace(/^-+|-+$/g,'');
+    .replace(/\.mp3$/i, '')
+    .replace(/^\d{3}-?/, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-function humanTitle(file){
-  return String(file||'')
-    .replace(/\.mp3$/i,'')
-    .replace(/^\d{3}-?/,'')
-    .replace(/[-_]+/g,' ')
+
+/* =========================================================
+   TÍTULO HUMANO
+   ========================================================= */
+
+function humanTitle(file) {
+  return String(file || '')
+    .replace(/\.mp3$/i, '')
+    .replace(/^\d{3}-?/, '')
+    .replace(/[-_]+/g, ' ')
     .trim()
     .replace(/\b\w/g, c => c.toUpperCase());
 }
 
-function categoryOf(song){
+
+/* =========================================================
+   LIMPIEZA ESPECIAL PARA BUSCAR PORTADAS
+   ========================================================= */
+
+function cleanCoverName(value) {
+
+  return String(value || '')
+    .replace(/\.mp3$/i, '')
+    .replace(/^\d{3}-?/, '')
+
+    // Elimina sufijos frecuentes de los nombres de audio
+    .replace(/-gt-gelm-mp3-\d+k$/i, '')
+    .replace(/-gt-gelm-mp3$/i, '')
+    .replace(/-gt-gelm$/i, '')
+    .replace(/-mp3-\d+k$/i, '')
+    .replace(/-mp3$/i, '')
+
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+
+    .toLowerCase()
+
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+
+/* =========================================================
+   CATEGORÍAS
+   ========================================================= */
+
+function categoryOf(song) {
+
   const t = `${song.title} ${song.file}`.toLowerCase();
-  if(/pmt|policia|tránsito|transito|chimaltenango/.test(t)) return 'pmt';
-  if(/guatemala|xinka|kiche|k'iche|iqu|ixcan|ixc[aá]n|maya|atl[ií]an|quiche|zul|tradiciones|cantos/.test(t)) return 'cultura';
+
+  if (
+    /pmt|policia|tránsito|transito|chimaltenango/.test(t)
+  ) {
+    return 'pmt';
+  }
+
+  if (
+    /guatemala|xinka|kiche|k'iche|iqu|ixcan|ixc[aá]n|maya|atl[ií]an|quiche|zul|tradiciones|cantos/.test(t)
+  ) {
+    return 'cultura';
+  }
+
   return 'historias';
 }
 
-function normalizeSongs(data){
-  const rows = Array.isArray(data) ? data : (data.songs || []);
-  return rows.map((s,i) => {
-    const file = String(s.file || s.filename || '');
-    return {
-      id: Number(s.id ?? i+1),
-      file,
-      title: s.title || humanTitle(file),
-      category: s.category || categoryOf({title:s.title || humanTitle(file), file}),
-      url: /^https?:\/\//i.test(file) ? file : AUDIO_BASE + encodeURI(file),
-      cover: s.cover || '',
-      youtube: s.youtube || ''
-    };
-  }).filter(s => s.file);
+
+/* =========================================================
+   NORMALIZAR CANCIONES
+   ========================================================= */
+
+function normalizeSongs(data) {
+
+  const rows = Array.isArray(data)
+    ? data
+    : (data.songs || []);
+
+  return rows
+    .map((s, i) => {
+
+      const file = String(
+        s.file ||
+        s.filename ||
+        ''
+      );
+
+      return {
+
+        id: Number(
+          s.id ?? i + 1
+        ),
+
+        file,
+
+        title:
+          s.title ||
+          humanTitle(file),
+
+        category:
+          s.category ||
+          categoryOf({
+            title:
+              s.title ||
+              humanTitle(file),
+            file
+          }),
+
+        url:
+          /^https?:\/\//i.test(file)
+            ? file
+            : AUDIO_BASE + encodeURI(file),
+
+        cover:
+          s.cover ||
+          '',
+
+        youtube:
+          s.youtube ||
+          ''
+      };
+
+    })
+    .filter(s => s.file);
 }
 
-function applyFilters(){
-  const q = state.query.trim().toLowerCase();
-  state.filtered = state.songs.filter(s => {
-    const categoryOk = state.filter === 'all' || s.category === state.filter;
-    const qOk = !q || `${s.id} ${s.title} ${s.file}`.toLowerCase().includes(q);
+
+/* =========================================================
+   FILTROS
+   ========================================================= */
+
+function applyFilters() {
+
+  const q = state.query
+    .trim()
+    .toLowerCase();
+
+  state.filtered = state.songs.filter(song => {
+
+    const categoryOk =
+      state.filter === 'all' ||
+      song.category === state.filter;
+
+    const qOk =
+      !q ||
+      `${song.id} ${song.title} ${song.file}`
+        .toLowerCase()
+        .includes(q);
+
     return categoryOk && qOk;
   });
-  countEl.textContent = state.songs.length;
+
+  countEl.textContent =
+    state.songs.length;
+
   renderList();
 }
 
-function renderList(){
+
+/* =========================================================
+   LISTADO
+   ========================================================= */
+
+function renderList() {
+
   songList.innerHTML = '';
-  if(!state.filtered.length){
-    songList.innerHTML = '<div class="panel-note">No hay coincidencias.</div>';
+
+  if (!state.filtered.length) {
+
+    songList.innerHTML =
+      '<div class="panel-note">No hay coincidencias.</div>';
+
     return;
   }
-  const frag = document.createDocumentFragment();
+
+  const frag =
+    document.createDocumentFragment();
+
   state.filtered.forEach(song => {
-    const idx = state.songs.findIndex(x => x.id === song.id);
-    const row = document.createElement('button');
+
+    const idx =
+      state.songs.findIndex(
+        x => x.id === song.id
+      );
+
+    const row =
+      document.createElement('button');
+
     row.type = 'button';
-    row.className = `song-row ${idx===state.index?'active':''}`;
+
+    row.className =
+      `song-row ${
+        idx === state.index
+          ? 'active'
+          : ''
+      }`;
+
     row.innerHTML = `
-      <span class="song-id">${String(song.id).padStart(3,'0')}</span>
-      <span><span class="song-title">${escapeHtml(song.title)}</span><small class="song-file">${escapeHtml(song.file)}</small></span>
-      <span class="song-play">▶</span>`;
-    row.addEventListener('click', () => playSong(idx, true));
+      <span class="song-id">
+        ${String(song.id).padStart(3, '0')}
+      </span>
+
+      <span>
+        <span class="song-title">
+          ${escapeHtml(song.title)}
+        </span>
+
+        <small class="song-file">
+          ${escapeHtml(song.file)}
+        </small>
+      </span>
+
+      <span class="song-play">
+        ▶
+      </span>
+    `;
+
+    row.addEventListener(
+      'click',
+      () => playSong(idx, true)
+    );
+
     frag.appendChild(row);
   });
+
   songList.appendChild(frag);
 }
 
-function escapeHtml(v){
-  return String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+
+/* =========================================================
+   ESCAPE HTML
+   ========================================================= */
+
+function escapeHtml(v) {
+
+  return String(v).replace(
+    /[&<>'"]/g,
+    c =>
+      ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[c])
+  );
 }
 
-function chooseCover(song){
+
+/* =========================================================
+   CANDIDATOS DE PORTADA
+   ========================================================= */
+
+function coverCandidates(song) {
+
   const candidates = [];
-  if(song.cover) candidates.push(song.cover);
-  const base = song.file.replace(/\.mp3$/i,'');
-  const slug = slugify(song.file);
-  candidates.push(`img/${base}.jpg`,`img/${base}.png`,`img/${base}.webp`);
-  candidates.push(`img/${slug}.jpg`,`img/${slug}.png`,`img/${slug}.webp`);
-  return candidates[0] || DEFAULT_COVER;
-}
 
-function loadCover(song){
-  coverEl.onerror = () => { coverEl.onerror = null; coverEl.src = DEFAULT_COVER; };
-  coverEl.src = chooseCover(song);
-}
+  const add = (path) => {
 
-function youtubeIdFor(song){
-  const raw = song.youtube || state.youtube[String(song.id)] || '';
-  if(/^[-_A-Za-z0-9]{11}$/.test(raw)) return raw;
-  const m = String(raw).match(/(?:youtu\.be\/|v=|embed\/)([-_A-Za-z0-9]{11})/);
-  return m ? m[1] : '';
-}
+    if (
+      path &&
+      !candidates.includes(path)
+    ) {
+      candidates.push(path);
+    }
+  };
 
-function renderYoutube(song, openPanel=false){
-  const id = youtubeIdFor(song);
-  const url = id ? `https://www.youtube.com/watch?v=${id}` : `${YOUTUBE_CHANNEL}/search?query=${encodeURIComponent(song.title)}`;
-  openYoutube.href = url;
-  videoTitle.textContent = `${song.title} · YouTube`;
-  videoWrap.innerHTML = '';
-  if(id){
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1`;
-    iframe.title = song.title;
-    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-    iframe.allowFullscreen = true;
-    videoWrap.appendChild(iframe);
-    videoNote.textContent = 'Video configurado para esta canción.';
-  }else{
-    videoWrap.innerHTML = '<div style="height:100%;display:grid;place-items:center;color:#8d95aa;font:14px system-ui;padding:24px;text-align:center">Esta canción todavía no tiene un video configurado.<br>Usa “Abrir” para buscarla en el canal de GT-GELM.</div>';
-    videoNote.textContent = 'El reproductor busca primero un ID guardado en youtube.json.';
+
+  /* -----------------------------------------
+     1. Portada definida directamente
+     ----------------------------------------- */
+
+  if (song.cover) {
+    add(song.cover);
   }
-  if(openPanel) youtubePanel.hidden = false;
+
+
+  /* -----------------------------------------
+     2. Nombre original del MP3
+     ----------------------------------------- */
+
+  const file =
+    String(song.file || '');
+
+  const base =
+    file.replace(/\.mp3$/i, '');
+
+  const noNum =
+    base.replace(/^\d{3}-?/, '');
+
+
+  /* -----------------------------------------
+     3. Nombre limpio para portada
+     ----------------------------------------- */
+
+  const cleanFile =
+    cleanCoverName(file);
+
+  const cleanTitle =
+    cleanCoverName(song.title || '');
+
+
+  /* -----------------------------------------
+     4. Variantes directas
+     ----------------------------------------- */
+
+  const directNames = [
+    base,
+    noNum,
+    cleanFile,
+    cleanTitle
+  ];
+
+
+  directNames.forEach(name => {
+
+    if (!name) return;
+
+    [
+      'png',
+      'jpg',
+      'webp'
+    ].forEach(ext => {
+
+      add(`img/${name}.${ext}`);
+
+    });
+  });
+
+
+  /* -----------------------------------------
+     5. Slug normal
+     ----------------------------------------- */
+
+  const slugFile =
+    slugify(file);
+
+  const slugTitle =
+    slugify(song.title || '');
+
+
+  [
+    slugFile,
+    slugTitle
+  ].forEach(name => {
+
+    if (!name) return;
+
+    [
+      'png',
+      'jpg',
+      'webp'
+    ].forEach(ext => {
+
+      add(`img/${name}.${ext}`);
+
+    });
+  });
+
+
+  /* -----------------------------------------
+     6. Versiones MAYÚSCULAS
+     ----------------------------------------- */
+
+  const upperNames = [
+    cleanFile,
+    cleanTitle,
+    slugFile,
+    slugTitle
+  ]
+    .filter(Boolean)
+    .map(name =>
+      name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+    );
+
+
+  upperNames.forEach(name => {
+
+    if (!name) return;
+
+    [
+      'png',
+      'jpg',
+      'webp'
+    ].forEach(ext => {
+
+      add(`img/${name}.${ext}`);
+
+    });
+  });
+
+
+  /* -----------------------------------------
+     7. Variantes especiales
+     ----------------------------------------- */
+
+  const special = [
+
+    cleanFile
+      .replace(/-gt-gelm$/i, ''),
+
+    cleanTitle
+      .replace(/-gt-gelm$/i, '')
+
+  ];
+
+
+  special.forEach(name => {
+
+    if (!name) return;
+
+    const upper =
+      name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+    if (!upper) return;
+
+    [
+      'png',
+      'jpg',
+      'webp'
+    ].forEach(ext => {
+
+      add(`img/${upper}.${ext}`);
+
+    });
+  });
+
+
+  /* -----------------------------------------
+     8. Portada general
+     ----------------------------------------- */
+
+  add(DEFAULT_COVER);
+
+
+  return candidates;
 }
 
-async function loadLyrics(song){
-  lyrics.hidden = true;
-  $('lyricsToggle').textContent = 'Mostrar';
-  state.currentLyricsUrl = '';
-  const base = song.file.replace(/\.mp3$/i,'');
-  const noNum = base.replace(/^\d{3}-?/,'');
-  const upper = noNum.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'');
+
+/* =========================================================
+   SELECCIÓN DE PORTADA
+   ========================================================= */
+
+function chooseCover(song) {
+
+  const candidates =
+    coverCandidates(song);
+
+  return (
+    candidates[0] ||
+    DEFAULT_COVER
+  );
+}
+
+
+/* =========================================================
+   CARGAR PORTADA REAL
+   ========================================================= */
+
+function loadCover(song) {
+
+  const candidates =
+    coverCandidates(song);
+
+  let position = 0;
+
+
+  function tryNext() {
+
+    if (
+      position >=
+      candidates.length
+    ) {
+
+      coverEl.onerror = null;
+
+      coverEl.src =
+        DEFAULT_COVER;
+
+      return;
+    }
+
+
+    const candidate =
+      candidates[position++];
+
+
+    coverEl.onerror =
+      tryNext;
+
+
+    coverEl.src =
+      candidate;
+  }
+
+
+  tryNext();
+}
+
+
+/* =========================================================
+   YOUTUBE
+   ========================================================= */
+
+function youtubeIdFor(song) {
+
+  const raw =
+    song.youtube ||
+    state.youtube[String(song.id)] ||
+    '';
+
+  if (
+    /^[-_A-Za-z0-9]{11}$/.test(raw)
+  ) {
+
+    return raw;
+  }
+
+
+  const m =
+    String(raw).match(
+      /(?:youtu\.be\/|v=|embed\/)([-_A-Za-z0-9]{11})/
+    );
+
+
+  return m
+    ? m[1]
+    : '';
+}
+
+
+/* =========================================================
+   PANEL YOUTUBE
+   ========================================================= */
+
+function renderYoutube(
+  song,
+  openPanel = false
+) {
+
+  const id =
+    youtubeIdFor(song);
+
+
+  const url =
+    id
+      ? `https://www.youtube.com/watch?v=${id}`
+      : `${YOUTUBE_CHANNEL}/search?query=${encodeURIComponent(song.title)}`;
+
+
+  openYoutube.href =
+    url;
+
+
+  videoTitle.textContent =
+    `${song.title} · YouTube`;
+
+
+  videoWrap.innerHTML =
+    '';
+
+
+  if (id) {
+
+    const iframe =
+      document.createElement('iframe');
+
+
+    iframe.src =
+      `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1`;
+
+
+    iframe.title =
+      song.title;
+
+
+    iframe.allow =
+      'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+
+
+    iframe.allowFullscreen =
+      true;
+
+
+    videoWrap.appendChild(
+      iframe
+    );
+
+
+    videoNote.textContent =
+      'Video configurado para esta canción.';
+
+  } else {
+
+    videoWrap.innerHTML =
+      `
+      <div
+        style="
+          height:100%;
+          display:grid;
+          place-items:center;
+          color:#8d95aa;
+          font:14px system-ui;
+          padding:24px;
+          text-align:center
+        "
+      >
+        Esta canción todavía no tiene
+        un video configurado.
+        <br>
+        Usa “Abrir” para buscarla
+        en el canal de GT-GELM.
+      </div>
+      `;
+
+
+    videoNote.textContent =
+      'El reproductor busca primero un ID guardado en youtube.json.';
+  }
+
+
+  if (openPanel) {
+
+    youtubePanel.hidden =
+      false;
+  }
+}
+
+
+/* =========================================================
+   LETRAS
+   ========================================================= */
+
+async function loadLyrics(song) {
+
+  lyrics.hidden =
+    true;
+
+
+  $('lyricsToggle').textContent =
+    'Mostrar';
+
+
+  state.currentLyricsUrl =
+    '';
+
+
+  const base =
+    song.file.replace(
+      /\.mp3$/i,
+      ''
+    );
+
+
+  const noNum =
+    base.replace(
+      /^\d{3}-?/,
+      ''
+    );
+
+
+  const upper =
+    noNum
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase()
+      .replace(/[^A-Z0-9]+/g, '_')
+      .replace(/^_|_$/g, '');
+
+
+  const titleUpper =
+    slugify(song.title)
+      .replace(/-/g, '_')
+      .toUpperCase();
+
+
   const candidates = [
+
     `lyrics/${base}.txt`,
+
     `lyrics/${noNum}.txt`,
+
     `lyrics/${upper}.txt`,
-    `lyrics/${slugify(song.title).replace(/-/g,'_')}.txt`,
+
+    `lyrics/${titleUpper}.txt`,
+
+    `lyrics/${slugify(song.title).replace(/-/g, '_')}.txt`,
+
     `lyrics/${slugify(song.title)}.txt`
+
   ];
-  for(const path of candidates){
-    try{
-      const r = await fetch(path, {cache:'no-store'});
-      if(r.ok){
-        const text = await r.text();
-        if(text.trim()){
-          lyrics.textContent = text;
-          state.currentLyricsUrl = path;
-          lyrics.hidden = false;
-          $('lyricsToggle').textContent = 'Ocultar';
-          $('lyricsToggle').setAttribute('aria-expanded', 'true');
+
+
+  for (
+    const path of candidates
+  ) {
+
+    try {
+
+      const r =
+        await fetch(
+          path,
+          {
+            cache: 'no-store'
+          }
+        );
+
+
+      if (r.ok) {
+
+        const text =
+          await r.text();
+
+
+        if (text.trim()) {
+
+          lyrics.textContent =
+            text;
+
+
+          state.currentLyricsUrl =
+            path;
+
+
+          lyrics.hidden =
+            false;
+
+
+          $('lyricsToggle').textContent =
+            'Ocultar';
+
+
+          $('lyricsToggle')
+            .setAttribute(
+              'aria-expanded',
+              'true'
+            );
+
+
           return;
         }
       }
-    }catch{}
+
+    } catch {}
   }
-  lyrics.textContent = 'Letra no disponible todavía en el repositorio.';
+
+
+  lyrics.textContent =
+    'Letra no disponible todavía en el repositorio.';
 }
 
-function updateMeta(song){
-  titleEl.textContent = humanTitle(song.title || song.file);
-  metaEl.textContent = `GT-GELM · ${String(song.id).padStart(3,'0')} · ${String(song.category).toUpperCase()}`;
-  document.title = `${humanTitle(song.title || song.file)} · GT-GELM`;
+
+/* =========================================================
+   METADATOS
+   ========================================================= */
+
+function updateMeta(song) {
+
+  titleEl.textContent =
+    humanTitle(
+      song.title ||
+      song.file
+    );
+
+
+  metaEl.textContent =
+    `GT-GELM · ${String(song.id).padStart(3, '0')} · ${String(song.category).toUpperCase()}`;
+
+
+  document.title =
+    `${humanTitle(song.title || song.file)} · GT-GELM`;
 }
 
-async function playSong(index, userInitiated=false){
-  const song = state.songs[index];
-  if(!song) return;
-  state.index = index;
+
+/* =========================================================
+   REPRODUCIR CANCIÓN
+   ========================================================= */
+
+async function playSong(
+  index,
+  userInitiated = false
+) {
+
+  const song =
+    state.songs[index];
+
+
+  if (!song) return;
+
+
+  state.index =
+    index;
+
+
   updateMeta(song);
+
+
   loadCover(song);
-  audio.src = song.url;
+
+
+  audio.src =
+    song.url;
+
+
   audio.load();
-  try{ await audio.play(); }catch(e){ if(userInitiated) console.warn('El navegador bloqueó el autoplay:', e); }
-  localStorage.setItem('gt-gelm-last-id', String(song.id));
+
+
+  try {
+
+    await audio.play();
+
+  } catch (e) {
+
+    if (userInitiated) {
+
+      console.warn(
+        'El navegador bloqueó el autoplay:',
+        e
+      );
+    }
+  }
+
+
+  localStorage.setItem(
+    'gt-gelm-last-id',
+    String(song.id)
+  );
+
+
   renderList();
-  renderYoutube(song, false);
+
+
+  renderYoutube(
+    song,
+    false
+  );
+
+
   loadLyrics(song);
+
+
   setMediaSession(song);
 }
 
-function pickNext(){
-  if(!state.songs.length) return -1;
-  if(state.shuffle){
-    if(state.songs.length===1) return 0;
-    let next = state.index;
-    while(next===state.index) next = Math.floor(Math.random()*state.songs.length);
+
+/* =========================================================
+   SIGUIENTE
+   ========================================================= */
+
+function pickNext() {
+
+  if (!state.songs.length) {
+    return -1;
+  }
+
+
+  if (state.shuffle) {
+
+    if (
+      state.songs.length === 1
+    ) {
+
+      return 0;
+    }
+
+
+    let next =
+      state.index;
+
+
+    while (
+      next === state.index
+    ) {
+
+      next =
+        Math.floor(
+          Math.random() *
+          state.songs.length
+        );
+    }
+
+
     return next;
   }
-  return (state.index + 1) % state.songs.length;
-}
-function pickPrev(){ return state.songs.length ? (state.index - 1 + state.songs.length) % state.songs.length : -1; }
-function next(){
-  if(state.repeat && state.index >= 0) return playSong(state.index);
-  const n = pickNext(); if(n>=0) playSong(n);
-}
-function prev(){ const p = pickPrev(); if(p>=0) playSong(p); }
 
-function setMediaSession(song){
-  if(!('mediaSession' in navigator)) return;
-  try{
-    navigator.mediaSession.metadata = new MediaMetadata({title: humanTitle(song.title || song.file), artist:'GT-GELM', album:'GT-GELM Producciones', artwork:[
-      {src: chooseCover(song), sizes:'512x512', type:'image/png'}
-    ]});
-    navigator.mediaSession.setActionHandler('play', ()=>audio.play());
-    navigator.mediaSession.setActionHandler('pause', ()=>audio.pause());
-    navigator.mediaSession.setActionHandler('previoustrack', prev);
-    navigator.mediaSession.setActionHandler('nexttrack', next);
-  }catch{}
+
+  return (
+    state.index + 1
+  ) %
+  state.songs.length;
 }
 
-$('play').addEventListener('click', ()=> audio.paused ? audio.play() : audio.pause());
-$('prev').addEventListener('click', prev);
-$('next').addEventListener('click', next);
-$('shuffle').addEventListener('click', ()=>{state.shuffle=!state.shuffle; $('shuffle').setAttribute('aria-pressed', String(state.shuffle));});
-$('repeat').addEventListener('click', ()=>{state.repeat=!state.repeat; $('repeat').setAttribute('aria-pressed', String(state.repeat));});
-$('mute').addEventListener('click', ()=>{audio.muted=!audio.muted; $('mute').textContent = audio.muted ? 'Activar sonido' : 'Silencio';});
-$('audioDirect').addEventListener('click', ()=>{const s=state.songs[state.index]; if(s) window.open(s.url,'_blank','noopener');});
-$('youtubeBtn').addEventListener('click', ()=>{const s=state.songs[state.index]; if(s) renderYoutube(s,true);});
-$('closeYoutube').addEventListener('click', ()=>youtubePanel.hidden=true);
-$('openYoutube').addEventListener('click', ()=>setTimeout(()=>{youtubePanel.hidden=true},100));
-$('libraryBtn').addEventListener('click', ()=>{libraryPanel.hidden=!libraryPanel.hidden; libraryBtn.setAttribute('aria-expanded', String(!libraryPanel.hidden));});
-$('closeLibrary').addEventListener('click', ()=>{libraryPanel.hidden=true; libraryBtn.setAttribute('aria-expanded','false');});
-$('themeBtn').addEventListener('click', ()=>document.body.classList.toggle('light'));
-$('lyricsToggle').addEventListener('click', ()=>{lyrics.hidden=!lyrics.hidden; $('lyricsToggle').textContent=lyrics.hidden?'Mostrar':'Ocultar'; $('lyricsToggle').setAttribute('aria-expanded', String(!lyrics.hidden));});
-search.addEventListener('input', e=>{state.query=e.target.value; applyFilters();});
-document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click', ()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); state.filter=btn.dataset.filter; applyFilters();}));
 
-seek.addEventListener('input', ()=>{if(Number.isFinite(audio.duration)) audio.currentTime=(Number(seek.value)/100)*audio.duration;});
-volume.addEventListener('input', ()=>audio.volume=Number(volume.value));
-audio.volume=.85;
-audio.addEventListener('loadedmetadata', ()=>{durationEl.textContent=fmt(audio.duration);});
-audio.addEventListener('timeupdate', ()=>{currentTimeEl.textContent=fmt(audio.currentTime); if(audio.duration){seek.value=(audio.currentTime/audio.duration)*100;}});
-audio.addEventListener('play', ()=>{ $('play').textContent='⏸'; });
-audio.addEventListener('pause', ()=>{ $('play').textContent='▶'; });
-audio.addEventListener('ended', next);
-audio.addEventListener('error', ()=>{ metaEl.textContent = 'No se pudo cargar el audio · revisa la dirección Cloudflare'; });
+/* =========================================================
+   ANTERIOR
+   ========================================================= */
 
-async function boot(){
-  try{
-    const [songsRes, ytRes] = await Promise.all([
-      fetch('songs.json', {cache:'no-store'}),
-      fetch('youtube.json', {cache:'no-store'}).catch(()=>null)
-    ]);
-    if(!songsRes.ok) throw new Error(`songs.json ${songsRes.status}`);
-    state.songs = normalizeSongs(await songsRes.json());
-    if(ytRes && ytRes.ok) state.youtube = await ytRes.json();
+function pickPrev() {
+
+  return state.songs.length
+
+    ? (
+        state.index - 1 +
+        state.songs.length
+      ) %
+      state.songs.length
+
+    : -1;
+}
+
+
+/* =========================================================
+   NEXT
+   ========================================================= */
+
+function next() {
+
+  if (
+    state.repeat &&
+    state.index >= 0
+  ) {
+
+    return playSong(
+      state.index
+    );
+  }
+
+
+  const n =
+    pickNext();
+
+
+  if (n >= 0) {
+
+    playSong(n);
+  }
+}
+
+
+/* =========================================================
+   PREV
+   ========================================================= */
+
+function prev() {
+
+  const p =
+    pickPrev();
+
+
+  if (p >= 0) {
+
+    playSong(p);
+  }
+}
+
+
+/* =========================================================
+   MEDIA SESSION
+   ========================================================= */
+
+function setMediaSession(song) {
+
+  if (
+    !('mediaSession' in navigator)
+  ) {
+
+    return;
+  }
+
+
+  try {
+
+    navigator.mediaSession.metadata =
+      new MediaMetadata({
+
+        title:
+          humanTitle(
+            song.title ||
+            song.file
+          ),
+
+        artist:
+          'GT-GELM',
+
+        album:
+          'GT-GELM Producciones',
+
+        artwork: [
+
+          {
+            src:
+              chooseCover(song),
+
+            sizes:
+              '512x512',
+
+            type:
+              'image/png'
+          }
+
+        ]
+      });
+
+
+    navigator.mediaSession
+      .setActionHandler(
+        'play',
+        () => audio.play()
+      );
+
+
+    navigator.mediaSession
+      .setActionHandler(
+        'pause',
+        () => audio.pause()
+      );
+
+
+    navigator.mediaSession
+      .setActionHandler(
+        'previoustrack',
+        prev
+      );
+
+
+    navigator.mediaSession
+      .setActionHandler(
+        'nexttrack',
+        next
+      );
+
+  } catch {}
+}
+
+
+/* =========================================================
+   BOTONES PRINCIPALES
+   ========================================================= */
+
+$('play')
+  .addEventListener(
+    'click',
+    () =>
+      audio.paused
+        ? audio.play()
+        : audio.pause()
+  );
+
+
+$('prev')
+  .addEventListener(
+    'click',
+    prev
+  );
+
+
+$('next')
+  .addEventListener(
+    'click',
+    next
+  );
+
+
+$('shuffle')
+  .addEventListener(
+    'click',
+    () => {
+
+      state.shuffle =
+        !state.shuffle;
+
+
+      $('shuffle')
+        .setAttribute(
+          'aria-pressed',
+          String(
+            state.shuffle
+          )
+        );
+    }
+  );
+
+
+$('repeat')
+  .addEventListener(
+    'click',
+    () => {
+
+      state.repeat =
+        !state.repeat;
+
+
+      $('repeat')
+        .setAttribute(
+          'aria-pressed',
+          String(
+            state.repeat
+          )
+        );
+    }
+  );
+
+
+$('mute')
+  .addEventListener(
+    'click',
+    () => {
+
+      audio.muted =
+        !audio.muted;
+
+
+      $('mute').textContent =
+        audio.muted
+          ? 'Activar sonido'
+          : 'Silencio';
+    }
+  );
+
+
+/* =========================================================
+   AUDIO DIRECTO
+   ========================================================= */
+
+$('audioDirect')
+  .addEventListener(
+    'click',
+    () => {
+
+      const s =
+        state.songs[
+          state.index
+        ];
+
+
+      if (s) {
+
+        window.open(
+          s.url,
+          '_blank',
+          'noopener'
+        );
+      }
+    }
+  );
+
+
+/* =========================================================
+   YOUTUBE
+   ========================================================= */
+
+$('youtubeBtn')
+  .addEventListener(
+    'click',
+    () => {
+
+      const s =
+        state.songs[
+          state.index
+        ];
+
+
+      if (s) {
+
+        renderYoutube(
+          s,
+          true
+        );
+      }
+    }
+  );
+
+
+$('closeYoutube')
+  .addEventListener(
+    'click',
+    () => {
+
+      youtubePanel.hidden =
+        true;
+    }
+  );
+
+
+$('openYoutube')
+  .addEventListener(
+    'click',
+    () => {
+
+      setTimeout(
+        () => {
+
+          youtubePanel.hidden =
+            true;
+
+        },
+        100
+      );
+    }
+  );
+
+
+/* =========================================================
+   BIBLIOTECA
+   ========================================================= */
+
+$('libraryBtn')
+  .addEventListener(
+    'click',
+    () => {
+
+      libraryPanel.hidden =
+        !libraryPanel.hidden;
+
+
+      libraryBtn.setAttribute(
+        'aria-expanded',
+        String(
+          !libraryPanel.hidden
+        )
+      );
+    }
+  );
+
+
+$('closeLibrary')
+  .addEventListener(
+    'click',
+    () => {
+
+      libraryPanel.hidden =
+        true;
+
+
+      libraryBtn.setAttribute(
+        'aria-expanded',
+        'false'
+      );
+    }
+  );
+
+
+/* =========================================================
+   TEMA CLARO / OSCURO
+   ========================================================= */
+
+$('themeBtn')
+  .addEventListener(
+    'click',
+    () => {
+
+      document.body.classList.toggle(
+        'light'
+      );
+    }
+  );
+
+
+/* =========================================================
+   LETRAS MOSTRAR / OCULTAR
+   ========================================================= */
+
+$('lyricsToggle')
+  .addEventListener(
+    'click',
+    () => {
+
+      lyrics.hidden =
+        !lyrics.hidden;
+
+
+      $('lyricsToggle').textContent =
+        lyrics.hidden
+          ? 'Mostrar'
+          : 'Ocultar';
+
+
+      $('lyricsToggle')
+        .setAttribute(
+          'aria-expanded',
+          String(
+            !lyrics.hidden
+          )
+        );
+    }
+  );
+
+
+/* =========================================================
+   BUSCADOR
+   ========================================================= */
+
+search.addEventListener(
+  'input',
+  e => {
+
+    state.query =
+      e.target.value;
+
     applyFilters();
-    const defaultIndex = state.songs.findIndex(s=>s.id===DEFAULT_SONG_ID);
-    await playSong(defaultIndex>=0?defaultIndex:0,false);
-  }catch(err){
-    titleEl.textContent='No se pudo cargar la biblioteca';
-    metaEl.textContent=String(err.message||err);
+  }
+);
+
+
+/* =========================================================
+   FILTROS
+   ========================================================= */
+
+document
+  .querySelectorAll('.filter')
+  .forEach(btn => {
+
+    btn.addEventListener(
+      'click',
+      () => {
+
+        document
+          .querySelectorAll('.filter')
+          .forEach(x =>
+            x.classList.remove(
+              'active'
+            )
+          );
+
+
+        btn.classList.add(
+          'active'
+        );
+
+
+        state.filter =
+          btn.dataset.filter;
+
+
+        applyFilters();
+      }
+    );
+  });
+
+
+/* =========================================================
+   BARRA DE TIEMPO
+   ========================================================= */
+
+seek.addEventListener(
+  'input',
+  () => {
+
+    if (
+      Number.isFinite(
+        audio.duration
+      )
+    ) {
+
+      audio.currentTime =
+        (
+          Number(seek.value) /
+          100
+        ) *
+        audio.duration;
+    }
+  }
+);
+
+
+/* =========================================================
+   VOLUMEN
+   ========================================================= */
+
+volume.addEventListener(
+  'input',
+  () => {
+
+    audio.volume =
+      Number(volume.value);
+  }
+);
+
+
+/* Volumen inicial */
+audio.volume = 0.85;
+
+
+/* =========================================================
+   DURACIÓN
+   ========================================================= */
+
+audio.addEventListener(
+  'loadedmetadata',
+  () => {
+
+    durationEl.textContent =
+      fmt(audio.duration);
+  }
+);
+
+
+/* =========================================================
+   TIEMPO DE REPRODUCCIÓN
+   ========================================================= */
+
+audio.addEventListener(
+  'timeupdate',
+  () => {
+
+    currentTimeEl.textContent =
+      fmt(audio.currentTime);
+
+
+    if (
+      audio.duration
+    ) {
+
+      seek.value =
+        (
+          audio.currentTime /
+          audio.duration
+        ) *
+        100;
+    }
+  }
+);
+
+
+/* =========================================================
+   ESTADO PLAY / PAUSE
+   ========================================================= */
+
+audio.addEventListener(
+  'play',
+  () => {
+
+    $('play').textContent =
+      '⏸';
+  }
+);
+
+
+audio.addEventListener(
+  'pause',
+  () => {
+
+    $('play').textContent =
+      '▶';
+  }
+);
+
+
+/* =========================================================
+   SIGUIENTE AUTOMÁTICO
+   ========================================================= */
+
+audio.addEventListener(
+  'ended',
+  next
+);
+
+
+/* =========================================================
+   ERROR DE AUDIO
+   ========================================================= */
+
+audio.addEventListener(
+  'error',
+  () => {
+
+    metaEl.textContent =
+      'No se pudo cargar el audio · revisa la dirección Cloudflare';
+  }
+);
+
+
+/* =========================================================
+   CARGAR BIBLIOTECA
+   ========================================================= */
+
+async function boot() {
+
+  try {
+
+    const [
+      songsRes,
+      ytRes
+    ] = await Promise.all([
+
+      fetch(
+        'songs.json',
+        {
+          cache: 'no-store'
+        }
+      ),
+
+      fetch(
+        'youtube.json',
+        {
+          cache: 'no-store'
+        }
+      ).catch(
+        () => null
+      )
+
+    ]);
+
+
+    if (
+      !songsRes.ok
+    ) {
+
+      throw new Error(
+        `songs.json ${songsRes.status}`
+      );
+    }
+
+
+    state.songs =
+      normalizeSongs(
+        await songsRes.json()
+      );
+
+
+    if (
+      ytRes &&
+      ytRes.ok
+    ) {
+
+      state.youtube =
+        await ytRes.json();
+    }
+
+
+    applyFilters();
+
+
+    /* -----------------------------------------
+       INICIO EN LA CANCIÓN 048
+       ----------------------------------------- */
+
+    const defaultIndex =
+      state.songs.findIndex(
+        s =>
+          s.id ===
+          DEFAULT_SONG_ID
+      );
+
+
+    await playSong(
+      defaultIndex >= 0
+        ? defaultIndex
+        : 0,
+      false
+    );
+
+  } catch (err) {
+
+    titleEl.textContent =
+      'No se pudo cargar la biblioteca';
+
+
+    metaEl.textContent =
+      String(
+        err.message ||
+        err
+      );
+
+
     console.error(err);
   }
 }
 
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+
+/* =========================================================
+   SERVICE WORKER
+   ========================================================= */
+
+if (
+  'serviceWorker' in navigator
+) {
+
+  navigator.serviceWorker
+    .register('sw.js')
+    .catch(
+      () => {}
+    );
 }
+
+
+/* =========================================================
+   INICIAR
+   ========================================================= */
 
 boot();
