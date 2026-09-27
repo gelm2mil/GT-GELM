@@ -1,9 +1,0 @@
-{
-  "name": "GT-GELM Producciones",
-  "short_name": "GT-GELM",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#05050a",
-  "theme_color": "#05050a",
-  "icons": [{"src":"assets/img/gt-gelm-mark.svg","sizes":"128x128","type":"image/svg+xml","purpose":"any maskable"}]
-}
