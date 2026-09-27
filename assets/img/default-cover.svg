@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200">
+  <defs>
+    <radialGradient id="g" cx="35%" cy="25%" r="80%"><stop offset="0" stop-color="#173c52"/><stop offset=".5" stop-color="#100b27"/><stop offset="1" stop-color="#05050a"/></radialGradient>
+    <linearGradient id="n" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#00f0ff"/><stop offset=".48" stop-color="#7a2cff"/><stop offset="1" stop-color="#ff00c8"/></linearGradient>
+  </defs>
+  <rect width="1200" height="1200" fill="url(#g)"/>
+  <rect x="115" y="115" width="970" height="970" rx="210" fill="none" stroke="url(#n)" stroke-width="26"/>
+  <circle cx="970" cy="970" r="125" fill="#111022" stroke="#00f0ff" stroke-width="16" opacity=".9"/>
+  <text x="600" y="590" text-anchor="middle" fill="#eaffff" font-family="Segoe UI, Arial" font-size="190" font-weight="900" letter-spacing="8">GT-GELM</text>
+  <text x="600" y="690" text-anchor="middle" fill="#92a4b0" font-family="Segoe UI, Arial" font-size="42" letter-spacing="12">PRODUCCIONES</text>
+  <text x="970" y="1015" text-anchor="middle" fill="#00f0ff" font-family="Segoe UI, Arial" font-size="70" font-weight="900">♫</text>
+</svg>
