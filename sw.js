@@ -1,4 +1,4 @@
-const CACHE = 'gt-gelm-player-v4-shell';
+const CACHE = 'gt-gelm-player-v3-gtidentity';
 const SHELL = [
   './',
   './index.html',
@@ -7,7 +7,9 @@ const SHELL = [
   './songs.json',
   './youtube.json',
   './manifest.webmanifest',
-  './assets/img/default-cover.svg'
+  './assets/img/default-cover.svg',
+  './img/gt-gelm-logo.webp',
+  './gt-gelm-logo.png'
 ];
 
 self.addEventListener('install', event => {

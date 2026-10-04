@@ -1,8 +1,8 @@
 const AUDIO_BASE = 'https://divine-king-c86b.chapin7839.workers.dev/';
-const DEFAULT_COVER = 'assets/img/default-cover.svg';
+const DEFAULT_COVER = 'img/gt-gelm-logo.webp';
 const YOUTUBE_CHANNEL = 'https://www.youtube.com/@GT-GELM';
 const REPO_RAW = 'https://raw.githubusercontent.com/gelm2mil/GT-GELM/main/';
-const DEFAULT_SONG_ID = 48;
+const DEFAULT_SONG_ID = 0; // 0 = iniciar aleatoriamente
 
 const $ = (id) => document.getElementById(id);
 const audio = $('audio');
@@ -24,9 +24,6 @@ const videoTitle = $('videoTitle');
 const videoNote = $('videoNote');
 const openYoutube = $('openYoutube');
 const lyrics = $('lyrics');
-const installBtn = $('installBtn');
-
-let deferredInstallPrompt = null;
 
 const state = {
   songs: [],
@@ -126,13 +123,7 @@ function escapeHtml(v){
 }
 
 function chooseCover(song){
-  const candidates = [];
-  if(song.cover) candidates.push(song.cover);
-  const base = song.file.replace(/\.mp3$/i,'');
-  const slug = slugify(song.file);
-  candidates.push(`img/${base}.jpg`,`img/${base}.png`,`img/${base}.webp`);
-  candidates.push(`img/${slug}.jpg`,`img/${slug}.png`,`img/${slug}.webp`);
-  return candidates[0] || DEFAULT_COVER;
+  return DEFAULT_COVER;
 }
 
 function loadCover(song){
@@ -280,49 +271,6 @@ audio.addEventListener('pause', ()=>{ $('play').textContent='▶'; });
 audio.addEventListener('ended', next);
 audio.addEventListener('error', ()=>{ metaEl.textContent = 'No se pudo cargar el audio · revisa la dirección Cloudflare'; });
 
-
-function isStandalone(){
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-}
-
-function setupInstall(){
-  if(!installBtn) return;
-
-  if(isStandalone()){
-    installBtn.hidden = true;
-    return;
-  }
-
-  window.addEventListener('beforeinstallprompt', event => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    installBtn.hidden = false;
-  });
-
-  window.addEventListener('appinstalled', () => {
-    deferredInstallPrompt = null;
-    installBtn.hidden = true;
-  });
-
-  installBtn.addEventListener('click', async () => {
-    if(!deferredInstallPrompt){
-      // Some browsers do not expose beforeinstallprompt; they can still
-      // install from the browser's own menu.
-      metaEl.textContent = 'Usa el menú del navegador para instalar GT-GELM';
-      return;
-    }
-
-    const promptEvent = deferredInstallPrompt;
-    deferredInstallPrompt = null;
-    installBtn.hidden = true;
-
-    try{
-      await promptEvent.prompt();
-      await promptEvent.userChoice;
-    }catch{}
-  });
-}
-
 async function boot(){
   try{
     const [songsRes, ytRes] = await Promise.all([
@@ -333,16 +281,18 @@ async function boot(){
     state.songs = normalizeSongs(await songsRes.json());
     if(ytRes && ytRes.ok) state.youtube = await ytRes.json();
     applyFilters();
-    const defaultIndex = state.songs.findIndex(s=>s.id===DEFAULT_SONG_ID);
-    await playSong(defaultIndex>=0?defaultIndex:0,false);
+    let startIndex = state.songs.length ? Math.floor(Math.random() * state.songs.length) : -1;
+    if (DEFAULT_SONG_ID > 0) {
+      const configured = state.songs.findIndex(s=>s.id===DEFAULT_SONG_ID);
+      if (configured >= 0) startIndex = configured;
+    }
+    await playSong(startIndex,false);
   }catch(err){
     titleEl.textContent='No se pudo cargar la biblioteca';
     metaEl.textContent=String(err.message||err);
     console.error(err);
   }
 }
-
-setupInstall();
 
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('sw.js').catch(()=>{});
