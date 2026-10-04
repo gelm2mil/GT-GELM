@@ -138,24 +138,23 @@ function youtubeIdFor(song){
   return m ? m[1] : '';
 }
 
+const YOUTUBE_PLAYLIST_ID = 'PLCpjvwkGKPGk';
+
 function renderYoutube(song, openPanel=false){
-  const id = youtubeIdFor(song);
-  const url = id ? `https://www.youtube.com/watch?v=${id}` : `${YOUTUBE_CHANNEL}/search?query=${encodeURIComponent(song.title)}`;
-  openYoutube.href = url;
-  videoTitle.textContent = `${song.title} · YouTube`;
+  // YouTube se carga por playlist, no por ID individual de cada canción.
+  // El audio principal de GT-GELM permanece independiente y sigue sonando.
+  openYoutube.href = `https://www.youtube.com/playlist?list=${YOUTUBE_PLAYLIST_ID}`;
+  videoTitle.textContent = 'GT-GELM · YouTube';
   videoWrap.innerHTML = '';
-  if(id){
-    const iframe = document.createElement('iframe');
-    iframe.src = `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1`;
-    iframe.title = song.title;
-    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-    iframe.allowFullscreen = true;
-    videoWrap.appendChild(iframe);
-    videoNote.textContent = 'Video configurado para esta canción.';
-  }else{
-    videoWrap.innerHTML = '<div style="height:100%;display:grid;place-items:center;color:#8d95aa;font:14px system-ui;padding:24px;text-align:center">Esta canción todavía no tiene un video configurado.<br>Usa “Abrir” para buscarla en el canal de GT-GELM.</div>';
-    videoNote.textContent = 'El reproductor busca primero un ID guardado en youtube.json.';
-  }
+
+  const iframe = document.createElement('iframe');
+  iframe.src = `https://www.youtube-nocookie.com/embed/videoseries?list=${YOUTUBE_PLAYLIST_ID}&rel=0&modestbranding=1`;
+  iframe.title = 'GT-GELM · Playlist de YouTube';
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  iframe.allowFullscreen = true;
+  videoWrap.appendChild(iframe);
+  videoNote.textContent = 'Playlist oficial de GT-GELM. El reproductor de audio continúa por separado.';
+
   if(openPanel) youtubePanel.hidden = false;
 }
 
