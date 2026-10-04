@@ -1,8 +1,8 @@
 const AUDIO_BASE = 'https://divine-king-c86b.chapin7839.workers.dev/';
-const DEFAULT_COVER = 'assets/img/default-cover.svg';
+const DEFAULT_COVER = 'img/gt-gelm-logo.webp';
 const YOUTUBE_CHANNEL = 'https://www.youtube.com/@GT-GELM';
 const REPO_RAW = 'https://raw.githubusercontent.com/gelm2mil/GT-GELM/main/';
-const DEFAULT_SONG_ID = 48;
+const DEFAULT_SONG_ID = 0; // 0 = iniciar aleatoriamente
 
 const $ = (id) => document.getElementById(id);
 const audio = $('audio');
@@ -123,13 +123,7 @@ function escapeHtml(v){
 }
 
 function chooseCover(song){
-  const candidates = [];
-  if(song.cover) candidates.push(song.cover);
-  const base = song.file.replace(/\.mp3$/i,'');
-  const slug = slugify(song.file);
-  candidates.push(`img/${base}.jpg`,`img/${base}.png`,`img/${base}.webp`);
-  candidates.push(`img/${slug}.jpg`,`img/${slug}.png`,`img/${slug}.webp`);
-  return candidates[0] || DEFAULT_COVER;
+  return DEFAULT_COVER;
 }
 
 function loadCover(song){
@@ -146,7 +140,7 @@ function youtubeIdFor(song){
 
 function renderYoutube(song, openPanel=false){
   const id = youtubeIdFor(song);
-  const url = YOUTUBE_CHANNEL;
+  const url = id ? `https://www.youtube.com/watch?v=${id}` : `${YOUTUBE_CHANNEL}/search?query=${encodeURIComponent(song.title)}`;
   openYoutube.href = url;
   videoTitle.textContent = `${song.title} · YouTube`;
   videoWrap.innerHTML = '';
@@ -287,8 +281,12 @@ async function boot(){
     state.songs = normalizeSongs(await songsRes.json());
     if(ytRes && ytRes.ok) state.youtube = await ytRes.json();
     applyFilters();
-    const defaultIndex = state.songs.findIndex(s=>s.id===DEFAULT_SONG_ID);
-    await playSong(defaultIndex>=0?defaultIndex:0,false);
+    let startIndex = state.songs.length ? Math.floor(Math.random() * state.songs.length) : -1;
+    if (DEFAULT_SONG_ID > 0) {
+      const configured = state.songs.findIndex(s=>s.id===DEFAULT_SONG_ID);
+      if (configured >= 0) startIndex = configured;
+    }
+    await playSong(startIndex,false);
   }catch(err){
     titleEl.textContent='No se pudo cargar la biblioteca';
     metaEl.textContent=String(err.message||err);
