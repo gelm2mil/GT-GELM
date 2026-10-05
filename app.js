@@ -265,8 +265,8 @@ volume.addEventListener('input', ()=>audio.volume=Number(volume.value));
 audio.volume=.85;
 audio.addEventListener('loadedmetadata', ()=>{durationEl.textContent=fmt(audio.duration);});
 audio.addEventListener('timeupdate', ()=>{currentTimeEl.textContent=fmt(audio.currentTime); if(audio.duration){seek.value=(audio.currentTime/audio.duration)*100;}});
-audio.addEventListener('play', ()=>{ $('play').textContent='⏸'; });
-audio.addEventListener('pause', ()=>{ $('play').textContent='▶'; });
+audio.addEventListener('play', ()=>{ $('play').textContent='⏸︎'; });
+audio.addEventListener('pause', ()=>{ $('play').textContent='▶︎'; });
 audio.addEventListener('ended', next);
 audio.addEventListener('error', ()=>{ metaEl.textContent = 'No se pudo cargar el audio · revisa la dirección Cloudflare'; });
 
