@@ -34,7 +34,8 @@ const state = {
   filter: 'all',
   query: '',
   youtube: {},
-  currentLyricsUrl: ''
+  currentLyricsUrl: '',
+  deferredInstallPrompt: null
 };
 
 function fmt(sec){
@@ -208,7 +209,6 @@ async function playSong(index, userInitiated=false){
   try{ await audio.play(); }catch(e){ if(userInitiated) console.warn('El navegador bloqueó el autoplay:', e); }
   localStorage.setItem('gt-gelm-last-id', String(song.id));
   renderList();
-  renderYoutube(song, false);
   loadLyrics(song);
   setMediaSession(song);
 }
@@ -229,6 +229,68 @@ function next(){
   const n = pickNext(); if(n>=0) playSong(n);
 }
 function prev(){ const p = pickPrev(); if(p>=0) playSong(p); }
+
+
+function isStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.navigator.standalone === true;
+}
+
+function isIOS(){
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+function setupInstall(){
+  const btn = $('installBtn');
+  if(!btn) return;
+
+  if(isStandalone()){
+    btn.hidden = true;
+    return;
+  }
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    state.deferredInstallPrompt = event;
+    btn.hidden = false;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    state.deferredInstallPrompt = null;
+    btn.hidden = true;
+  });
+
+  btn.addEventListener('click', async () => {
+    if(state.deferredInstallPrompt){
+      const promptEvent = state.deferredInstallPrompt;
+      state.deferredInstallPrompt = null;
+      try{
+        await promptEvent.prompt();
+        const choice = await promptEvent.userChoice;
+        if(choice && choice.outcome === 'accepted') btn.hidden = true;
+      }catch(err){
+        console.warn('No se pudo abrir el instalador:', err);
+      }
+      return;
+    }
+
+    if(isIOS()){
+      alert(
+        'Para instalar GT-GELM en iPhone/iPad:\n\n' +
+        '1. Toca Compartir.\n' +
+        '2. Selecciona “Agregar a pantalla de inicio”.\n' +
+        '3. Confirma “Agregar”.'
+      );
+      return;
+    }
+
+    alert(
+      'GT-GELM está preparado como aplicación instalable.\n\n' +
+      'Si no aparece el instalador automático, abre el menú del navegador ' +
+      'y busca “Instalar aplicación”, “Instalar GT-GELM” o “Agregar a pantalla de inicio”.'
+    );
+  });
+}
 
 function setMediaSession(song){
   if(!('mediaSession' in navigator)) return;
@@ -272,6 +334,7 @@ audio.addEventListener('error', ()=>{ metaEl.textContent = 'No se pudo cargar el
 
 async function boot(){
   try{
+    setupInstall();
     const [songsRes, ytRes] = await Promise.all([
       fetch('songs.json', {cache:'no-store'}),
       fetch('youtube.json', {cache:'no-store'}).catch(()=>null)
