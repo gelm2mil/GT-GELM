@@ -138,7 +138,7 @@ function youtubeIdFor(song){
   return m ? m[1] : '';
 }
 
-const YOUTUBE_PLAYLIST_ID = 'PLCpjvwkGKPGk';
+const YOUTUBE_PLAYLIST_ID = 'PLJGpqFTRWh98';
 
 function renderYoutube(song, openPanel=false){
   // YouTube se carga por playlist, no por ID individual de cada canción.
