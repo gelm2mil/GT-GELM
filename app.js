@@ -35,7 +35,8 @@ const state = {
   query: '',
   youtube: {},
   currentLyricsUrl: '',
-  deferredInstallPrompt: null
+  deferredInstallPrompt: null,
+  seeking: false
 };
 
 function fmt(sec){
@@ -244,10 +245,15 @@ function setupInstall(){
   const btn = $('installBtn');
   if(!btn) return;
 
+  // Si ya está instalada como PWA, no mostramos el botón.
   if(isStandalone()){
     btn.hidden = true;
     return;
   }
+
+  // El botón queda visible como acceso a instalación.
+  // Si el navegador ofrece el instalador automático, usaremos el prompt real.
+  btn.hidden = false;
 
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
@@ -264,10 +270,13 @@ function setupInstall(){
     if(state.deferredInstallPrompt){
       const promptEvent = state.deferredInstallPrompt;
       state.deferredInstallPrompt = null;
+
       try{
         await promptEvent.prompt();
         const choice = await promptEvent.userChoice;
-        if(choice && choice.outcome === 'accepted') btn.hidden = true;
+        if(choice && choice.outcome === 'accepted'){
+          btn.hidden = true;
+        }
       }catch(err){
         console.warn('No se pudo abrir el instalador:', err);
       }
@@ -284,10 +293,13 @@ function setupInstall(){
       return;
     }
 
+    // Algunos navegadores (incluido Samsung Browser en determinadas versiones)
+    // no exponen beforeinstallprompt. En ese caso la instalación se hace desde
+    // el menú del navegador.
     alert(
-      'GT-GELM está preparado como aplicación instalable.\n\n' +
-      'Si no aparece el instalador automático, abre el menú del navegador ' +
-      'y busca “Instalar aplicación”, “Instalar GT-GELM” o “Agregar a pantalla de inicio”.'
+      'Para instalar GT-GELM:\n\n' +
+      'Abre el menú del navegador y busca “Instalar aplicación”, ' +
+      '“Instalar GT-GELM” o “Agregar a pantalla de inicio”.'
     );
   });
 }
@@ -302,6 +314,25 @@ function setMediaSession(song){
     navigator.mediaSession.setActionHandler('pause', ()=>audio.pause());
     navigator.mediaSession.setActionHandler('previoustrack', prev);
     navigator.mediaSession.setActionHandler('nexttrack', next);
+
+    const safeAction = (name, handler) => {
+      try{ navigator.mediaSession.setActionHandler(name, handler); }catch{}
+    };
+
+    safeAction('seekbackward', (details)=>{
+      const skip = Number(details.seekOffset) || 10;
+      audio.currentTime = Math.max(0, audio.currentTime - skip);
+    });
+
+    safeAction('seekforward', (details)=>{
+      const skip = Number(details.seekOffset) || 10;
+      audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + skip);
+    });
+
+    safeAction('seekto', (details)=>{
+      if(!Number.isFinite(details.seekTime) || !Number.isFinite(audio.duration)) return;
+      audio.currentTime = Math.min(audio.duration, Math.max(0, details.seekTime));
+    });
   }catch{}
 }
 
@@ -322,13 +353,59 @@ $('lyricsToggle').addEventListener('click', ()=>{lyrics.hidden=!lyrics.hidden; $
 search.addEventListener('input', e=>{state.query=e.target.value; applyFilters();});
 document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click', ()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); state.filter=btn.dataset.filter; applyFilters();}));
 
-seek.addEventListener('input', ()=>{if(Number.isFinite(audio.duration)) audio.currentTime=(Number(seek.value)/100)*audio.duration;});
+seek.addEventListener('pointerdown', ()=>{ state.seeking = true; });
+seek.addEventListener('pointerup', ()=>{
+  state.seeking = false;
+  if(Number.isFinite(audio.duration)){
+    audio.currentTime = (Number(seek.value)/100) * audio.duration;
+    currentTimeEl.textContent = fmt(audio.currentTime);
+  }
+});
+seek.addEventListener('input', ()=>{
+  if(Number.isFinite(audio.duration)){
+    const position = (Number(seek.value)/100) * audio.duration;
+    currentTimeEl.textContent = fmt(position);
+  }
+});
+seek.addEventListener('change', ()=>{
+  if(Number.isFinite(audio.duration)){
+    audio.currentTime = (Number(seek.value)/100) * audio.duration;
+    currentTimeEl.textContent = fmt(audio.currentTime);
+  }
+});
 volume.addEventListener('input', ()=>audio.volume=Number(volume.value));
 audio.volume=.85;
-audio.addEventListener('loadedmetadata', ()=>{durationEl.textContent=fmt(audio.duration);});
-audio.addEventListener('timeupdate', ()=>{currentTimeEl.textContent=fmt(audio.currentTime); if(audio.duration){seek.value=(audio.currentTime/audio.duration)*100;}});
-audio.addEventListener('play', ()=>{ $('play').textContent='⏸︎'; });
-audio.addEventListener('pause', ()=>{ $('play').textContent='▶︎'; });
+audio.addEventListener('loadedmetadata', ()=>{
+  durationEl.textContent=fmt(audio.duration);
+  seek.value=0;
+});
+audio.addEventListener('timeupdate', ()=>{
+  currentTimeEl.textContent=fmt(audio.currentTime);
+  if(audio.duration && !state.seeking){
+    seek.value=(audio.currentTime/audio.duration)*100;
+  }
+  if('mediaSession' in navigator && Number.isFinite(audio.duration) && audio.duration > 0){
+    try{
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        playbackRate: audio.playbackRate || 1,
+        position: Math.min(audio.currentTime, audio.duration)
+      });
+    }catch{}
+  }
+});
+audio.addEventListener('play', ()=>{
+  $('play').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"></rect><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"></rect></svg>';
+  if('mediaSession' in navigator){
+    try{ navigator.mediaSession.playbackState = 'playing'; }catch{}
+  }
+});
+audio.addEventListener('pause', ()=>{
+  $('play').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13L19 12 8 5.5Z" fill="currentColor"></path></svg>';
+  if('mediaSession' in navigator){
+    try{ navigator.mediaSession.playbackState = 'paused'; }catch{}
+  }
+});
 audio.addEventListener('ended', next);
 audio.addEventListener('error', ()=>{ metaEl.textContent = 'No se pudo cargar el audio · revisa la dirección Cloudflare'; });
 

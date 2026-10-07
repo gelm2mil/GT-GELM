@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="top-actions">
-        <a class="top-link" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener">▶ YouTube</a>
+        <a class="top-link" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener"><span class="btn-symbol" aria-hidden="true">▶</span> YouTube</a>
         <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar apariencia">◐</button>
       </div>
     </header>
@@ -46,11 +46,21 @@
         </div>
 
         <div class="main-controls">
-          <button class="control" id="prev" type="button" title="Anterior">⏮︎</button>
-          <button class="control play" id="play" type="button" title="Reproducir / pausar">▶︎</button>
-          <button class="control" id="next" type="button" title="Siguiente">⏭︎</button>
-          <button class="control" id="shuffle" type="button" title="Aleatorio" aria-pressed="true">🔀︎</button>
-          <button class="control" id="repeat" type="button" title="Repetir" aria-pressed="false">🔁︎</button>
+          <button class="control" id="prev" type="button" title="Anterior" aria-label="Anterior">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M18 7 10 12l8 5V7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+          </button>
+          <button class="control play" id="play" type="button" title="Reproducir / pausar" aria-label="Reproducir / pausar">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13L19 12 8 5.5Z" fill="currentColor"></path></svg>
+          </button>
+          <button class="control" id="next" type="button" title="Siguiente" aria-label="Siguiente">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6v12M6 7l8 5-8 5V7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+          </button>
+          <button class="control" id="shuffle" type="button" title="Aleatorio" aria-label="Aleatorio" aria-pressed="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h2.5c4 0 5 10 11 10H20M17 5l3 2-3 2M4 17h2.5c1.6 0 2.7-.9 3.6-2.1M14.5 9.1C15.5 7.8 16.4 7 20 7M17 15l3 2-3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
+          <button class="control" id="repeat" type="button" title="Repetir" aria-label="Repetir" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l-2-2m2 2-2 2M17 17H7l2 2m-2-2 2-2M5 10V8a1 1 0 0 1 1-1M19 14v2a1 1 0 0 1-1 1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          </button>
         </div>
 
         <div class="timeline">
@@ -60,16 +70,16 @@
         </div>
 
         <div class="volume-row">
-          <span>🔊</span>
+          <span class="volume-icon" aria-hidden="true">◖)))</span>
           <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volumen">
           <button class="small-btn" id="mute" type="button">Silencio</button>
         </div>
 
         <div class="player-actions">
-          <button class="action-btn" id="audioDirect" type="button">🎵 Audio GT-GELM</button>
-          <button class="action-btn" id="youtubeBtn" type="button">▶ YouTube</button>
-          <button class="action-btn" id="installBtn" type="button">＋ Instalar GT-GELM</button>
-          <button class="action-btn" id="libraryBtn" type="button" aria-expanded="false" aria-controls="libraryPanel">☰ Biblioteca</button>
+          <button class="action-btn" id="audioDirect" type="button"><span class="btn-symbol" aria-hidden="true">♫</span> Audio GT-GELM</button>
+          <button class="action-btn" id="youtubeBtn" type="button"><span class="btn-symbol" aria-hidden="true">▶</span> YouTube</button>
+          <button class="action-btn" id="installBtn" type="button"><span class="btn-symbol" aria-hidden="true">＋</span> Instalar GT-GELM</button>
+          <button class="action-btn" id="libraryBtn" type="button" aria-expanded="false" aria-controls="libraryPanel"><span class="btn-symbol" aria-hidden="true">☰</span> Biblioteca</button>
         </div>
 
         <section class="library-panel" id="libraryPanel" hidden>

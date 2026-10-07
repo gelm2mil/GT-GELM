@@ -59,3 +59,79 @@ body.light{--bg:#eef2ff;--text:#101221;--muted:#5f6577;--panel:#fff}.light .play
 .brand-copy small{display:block;color:#8f93a8;font-size:9px;letter-spacing:.03em;margin-top:3px}
 .social-btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 @media(max-width:620px){.brand-logo{width:42px;height:42px;border-radius:13px}.brand-copy strong{font-size:17px}.brand-copy small{font-size:8px}.social-btn{display:inline-flex}}
+/* ==============================
+   GT-GELM · CONTROLES NEON
+   Iconos vectoriales monocromos:
+   evita los emojis naranja del teclado móvil.
+   ============================== */
+.control{
+  color:#bffcff;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+  transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease, color .16s ease, background .16s ease;
+}
+.control svg{
+  width:23px;
+  height:23px;
+  display:block;
+  margin:auto;
+  color:currentColor;
+}
+.control.play svg{width:27px;height:27px}
+.control:hover,
+.control:active,
+.control:focus-visible{
+  color:#ffffff;
+  border-color:rgba(0,232,255,.72);
+  box-shadow:0 0 12px rgba(0,232,255,.28),0 0 26px rgba(105,65,255,.18);
+  outline:none;
+}
+.control.play{
+  color:#ffffff;
+  box-shadow:0 0 16px rgba(0,232,255,.26),0 0 34px rgba(105,65,255,.22);
+}
+.control[aria-pressed="true"]{
+  color:#8fffff;
+  border-color:rgba(0,232,255,.68);
+  background:linear-gradient(145deg,rgba(0,232,255,.12),rgba(105,65,255,.18));
+  box-shadow:0 0 10px rgba(0,232,255,.28),0 0 24px rgba(105,65,255,.18);
+}
+.volume-icon{
+  color:#7ef8ff;
+  font-size:13px;
+  letter-spacing:-2px;
+  text-shadow:0 0 9px rgba(0,232,255,.5);
+  white-space:nowrap;
+}
+.btn-symbol{
+  color:#74f7ff;
+  margin-right:3px;
+  text-shadow:0 0 8px rgba(0,232,255,.48);
+}
+.action-btn{
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease, color .16s ease;
+}
+.action-btn:hover,
+.action-btn:active,
+.action-btn:focus-visible{
+  color:#ffffff;
+  border-color:rgba(0,232,255,.58);
+  box-shadow:0 0 12px rgba(0,232,255,.22),0 0 24px rgba(105,65,255,.14);
+  outline:none;
+}
+@media(max-width:620px){
+  .main-controls{gap:8px}
+  .control{width:45px;height:45px;border-radius:14px;font-size:0}
+  .control.play{width:55px;height:55px}
+  .control svg{width:22px;height:22px}
+  .control.play svg{width:27px;height:27px}
+  .player-actions .action-btn{
+    border-color:rgba(0,232,255,.28);
+    box-shadow:0 0 9px rgba(0,232,255,.10);
+  }
+  .timeline input,
+  .volume-row input{
+    touch-action:none;
+  }
+}
