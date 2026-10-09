@@ -135,3 +135,315 @@ body.light{--bg:#eef2ff;--text:#101221;--muted:#5f6577;--panel:#fff}.light .play
     touch-action:none;
   }
 }
+
+
+/* =========================================================
+   GT-GELM · PULSO MUSICAL V3
+   Visualizador reactivo al audio:
+   cyan → azul → violeta → magenta → rosado → corazón rojo.
+   ========================================================= */
+.music-pulse{
+  width:min(690px,92vw);
+  margin:2px auto 10px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  min-height:72px;
+  padding:0 1px;
+  position:relative;
+  isolation:isolate;
+}
+.pulse-icon{
+  flex:0 0 58px;
+  width:58px;
+  height:58px;
+  position:relative;
+  z-index:3;
+  border-radius:50%;
+  color:#00e8ff;
+  background:rgba(5,10,23,.94);
+  border:4px solid #00e8ff;
+  box-shadow:0 0 12px rgba(0,232,255,.55),0 0 30px rgba(0,232,255,.25),inset 0 0 18px rgba(0,232,255,.12);
+  display:grid;
+  place-items:center;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.pulse-icon svg{width:34px;height:34px;display:block;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.pulse-icon svg path{fill:none}
+.pulse-icon svg circle:first-child{fill:none}
+.pulse-icon svg circle:not(:first-child){fill:currentColor;stroke:none}
+.pulse-track{flex:1 1 auto;min-width:0;height:62px;position:relative;overflow:hidden}
+#pulseCanvas{display:block;width:100%;height:100%;background:transparent}
+.pulse-heart{
+  flex:0 0 36px;
+  width:36px;
+  height:36px;
+  display:grid;
+  place-items:center;
+  color:#ff294d;
+  font-size:27px;
+  line-height:1;
+  text-shadow:0 0 6px rgba(255,41,77,.75),0 0 18px rgba(255,41,77,.55);
+  opacity:.72;
+  transform-origin:center;
+  transition:opacity .2s ease,transform .2s ease;
+}
+.music-pulse.is-playing .pulse-icon{
+  animation:pulseIconBreath .92s ease-in-out infinite;
+  box-shadow:0 0 14px rgba(0,232,255,.78),0 0 34px rgba(0,232,255,.34),inset 0 0 20px rgba(0,232,255,.16);
+}
+.music-pulse.is-playing .pulse-heart{
+  opacity:1;
+  animation:pulseHeartBeat .82s ease-in-out infinite;
+}
+@keyframes pulseIconBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
+@keyframes pulseHeartBeat{0%,100%{transform:scale(1)}14%{transform:scale(1.14)}28%{transform:scale(1)}}
+@media (max-width:620px){
+  .music-pulse{width:92vw;min-height:62px;gap:6px}
+  .pulse-icon{flex-basis:50px;width:50px;height:50px;border-width:3px}
+  .pulse-icon svg{width:29px;height:29px}
+  .pulse-track{height:52px}
+  .pulse-heart{flex-basis:28px;width:28px;height:28px;font-size:22px}
+}
+@media (prefers-reduced-motion:reduce){
+  .music-pulse.is-playing .pulse-icon,.music-pulse.is-playing .pulse-heart{animation:none}
+}
+
+
+/* =========================================================
+   GT-GELM · DISEÑO FINAL V7 — PULSO + CORAZÓN
+   Referencia visual: cyan → azul → violeta → magenta → rojo.
+   El audio nunca pasa por Web Audio: la reproducción permanece intacta.
+   ========================================================= */
+.topbar{align-items:center}
+.brand{gap:12px;min-width:0}
+.brand-pulse{position:relative;width:min(650px,52vw);height:76px;margin-left:4px;display:flex;align-items:center;overflow:visible}
+.brand-pulse svg{width:100%;height:76px;display:block;overflow:visible}
+.brand-pulse .wave-main,.brand-pulse .wave-glow{fill:none;stroke:url(#topPulseGradient);stroke-linecap:round;stroke-linejoin:round}
+.brand-pulse .wave-main{stroke-width:4.5;filter:url(#topPulseGlow)}
+.brand-pulse .wave-glow{stroke-width:10;opacity:.30;filter:url(#topPulseGlow)}
+.brand-heart{position:absolute;right:-18px;top:50%;width:92px;height:108px;object-fit:contain;transform:translateY(-50%);mix-blend-mode:screen;filter:drop-shadow(0 0 10px rgba(0,232,255,.35)) drop-shadow(0 0 16px rgba(255,41,77,.38));animation:brandHeartIdle 1.35s ease-in-out infinite;transform-origin:55% 62%}
+.brand-pulse.is-playing .brand-heart{animation:brandHeartBeat .86s ease-in-out infinite}
+.brand-pulse.is-playing .wave-main{filter:url(#topPulseGlow) drop-shadow(0 0 8px rgba(0,232,255,.32))}
+.brand-pulse.is-playing .wave-glow{opacity:.62}
+@keyframes waveGlowTravel{to{stroke-dashoffset:-720}}
+@keyframes brandHeartBeat{0%,100%{transform:translateY(-50%) scale(1)}12%{transform:translateY(-50%) scale(1.13)}25%{transform:translateY(-50%) scale(1)}40%{transform:translateY(-50%) scale(1.07)}55%{transform:translateY(-50%) scale(1)}}
+@keyframes brandHeartIdle{0%,100%{transform:translateY(-50%) scale(1)}50%{transform:translateY(-50%) scale(1.025)}}
+
+.brand-pulse .wave-traveler,.bottom-wave .wave-traveler{
+  fill:none;
+  stroke:url(#topPulseGradient);
+  stroke-width:7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:105 895;
+  stroke-dashoffset:0;
+  opacity:.95;
+  filter:url(#topPulseGlow);
+  pointer-events:none;
+}
+.bottom-wave .wave-traveler{stroke:url(#bottomPulseGradient);filter:url(#bottomPulseGlow);stroke-width:8}
+.brand-pulse.is-playing .wave-traveler,.music-pulse.is-playing .bottom-wave .wave-traveler{animation:pulseTraveler 1.05s linear infinite}
+@keyframes pulseTraveler{from{stroke-dashoffset:0}to{stroke-dashoffset:-1000}}
+
+.music-pulse{width:min(1000px,96%);min-height:126px;margin:5px auto 2px;display:flex;align-items:center;gap:12px;padding:0;position:relative;isolation:isolate}
+.pulse-icon{flex:0 0 64px;width:64px;height:64px;border:4px solid var(--cyan);background:rgba(5,10,23,.92);box-shadow:0 0 14px rgba(0,232,255,.68),0 0 34px rgba(0,232,255,.24),inset 0 0 18px rgba(0,232,255,.13)}
+.pulse-icon svg{width:37px;height:37px}
+.pulse-track{height:126px;flex:1;min-width:0;overflow:visible;position:relative}
+.bottom-wave{width:100%;height:126px;display:block;overflow:visible}
+.bottom-wave .wave-main,.bottom-wave .wave-glow{fill:none;stroke:url(#bottomPulseGradient);stroke-linecap:round;stroke-linejoin:round}
+.bottom-wave .wave-main{stroke-width:5.2;filter:url(#bottomPulseGlow)}
+.bottom-wave .wave-glow{stroke-width:12;opacity:.34;filter:url(#bottomPulseGlow)}
+.music-pulse.is-playing .bottom-wave .wave-main{filter:url(#bottomPulseGlow) drop-shadow(0 0 8px rgba(0,232,255,.32))}
+.music-pulse.is-playing .bottom-wave .wave-glow{opacity:.62}
+.pulse-heart-outline{flex:0 0 86px;width:86px;height:100px;display:grid;place-items:center;position:relative}
+.pulse-heart-outline img{width:86px;height:100px;object-fit:contain;display:block;mix-blend-mode:screen;filter:drop-shadow(0 0 9px rgba(0,232,255,.22)) drop-shadow(0 0 18px rgba(255,41,77,.5));transform-origin:55% 62%;animation:bottomHeartIdle 1.35s ease-in-out infinite}
+.music-pulse.is-playing .pulse-heart-outline img{animation:bottomHeartBeat .86s ease-in-out infinite}
+@keyframes bottomHeartBeat{0%,100%{transform:scale(1)}12%{transform:scale(1.16)}25%{transform:scale(1)}42%{transform:scale(1.08)}58%{transform:scale(1)}}
+@keyframes bottomHeartIdle{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+
+@media(max-width:900px){
+  .brand-pulse{width:min(520px,50vw);height:62px}.brand-pulse svg{height:62px}.brand-heart{width:74px;height:88px;right:-14px}
+}
+@media(max-width:620px){
+  .brand-pulse{position:absolute;left:64px;top:48px;width:calc(100vw - 88px);height:48px;margin:0}.brand-pulse svg{height:48px}.brand-heart{width:50px;height:62px;right:-10px}.topbar{margin-bottom:56px}
+  .music-pulse{width:100%;min-height:92px;gap:5px}.pulse-icon{flex-basis:50px;width:50px;height:50px;border-width:3px}.pulse-icon svg{width:29px;height:29px}.pulse-track,.bottom-wave{height:92px}.pulse-heart-outline{flex-basis:58px;width:58px;height:70px}.pulse-heart-outline img{width:58px;height:70px}
+}
+@media(prefers-reduced-motion:reduce){
+  .brand-pulse.is-playing .brand-heart,.brand-pulse.is-playing .wave-main,.brand-pulse.is-playing .wave-glow,.brand-pulse.is-playing .wave-traveler,.music-pulse.is-playing .bottom-wave .wave-main,.music-pulse.is-playing .bottom-wave .wave-glow,.music-pulse.is-playing .bottom-wave .wave-traveler,.music-pulse.is-playing .pulse-heart-outline img{animation:none}
+}
+
+
+/* GT-GELM · PRUEBA NEÓN V9 — corazón anatómico vivo + colores definidos */
+.brand-pulse .wave-main,.brand-pulse .wave-glow,.brand-pulse .wave-traveler,
+.bottom-wave .wave-main,.bottom-wave .wave-glow,.bottom-wave .wave-traveler{
+  stroke-linecap:butt;
+  stroke-linejoin:miter;
+  stroke-miterlimit:3;
+}
+.brand-pulse .wave-main{stroke-width:5.8;filter:url(#topPulseGlow) drop-shadow(0 0 3px rgba(0,245,255,.72));}
+.brand-pulse .wave-glow{stroke-width:15;opacity:.44;filter:url(#topPulseGlow);}
+.brand-pulse .wave-traveler{stroke-width:8.5;filter:url(#topPulseGlow) drop-shadow(0 0 7px rgba(255,23,68,.82));}
+.bottom-wave .wave-main{stroke-width:6.8;filter:url(#bottomPulseGlow) drop-shadow(0 0 4px rgba(0,245,255,.7));}
+.bottom-wave .wave-glow{stroke-width:17;opacity:.44;filter:url(#bottomPulseGlow);}
+.bottom-wave .wave-traveler{stroke-width:9.5;filter:url(#bottomPulseGlow) drop-shadow(0 0 8px rgba(255,23,68,.82));}
+.brand-pulse.is-playing .wave-glow,.music-pulse.is-playing .bottom-wave .wave-glow{opacity:.82;}
+.brand-pulse.is-playing .wave-main,.music-pulse.is-playing .bottom-wave .wave-main{
+  filter:url(#topPulseGlow) drop-shadow(0 0 8px rgba(0,245,255,.62)) drop-shadow(0 0 7px rgba(240,0,255,.48));
+}
+
+/* Corazón recortado, grande y sin el fondo/ECG incrustado de la imagen anterior. */
+.heart-live{position:relative;display:block;isolation:isolate;overflow:visible;flex:none;}
+.brand-heart-shell{
+  position:absolute;right:-28px;top:50%;width:122px;height:132px;
+  transform:translateY(-50%);transform-origin:55% 62%;z-index:4;
+  filter:drop-shadow(0 0 10px rgba(0,232,255,.32)) drop-shadow(0 0 17px rgba(255,35,62,.42));
+}
+.brand-heart,.bottom-heart-image{
+  position:relative;z-index:1;width:100%;height:100%;display:block;object-fit:contain;
+  mix-blend-mode:normal;transform-origin:55% 62%;
+  filter:drop-shadow(0 0 7px rgba(0,232,255,.42)) drop-shadow(0 0 10px rgba(255,35,62,.40));
+}
+.heart-flow{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(112deg,transparent 0%,rgba(0,245,255,.02) 17%,rgba(0,168,255,.68) 29%,rgba(37,75,255,.34) 41%,rgba(139,34,255,.18) 49%,rgba(240,0,255,.52) 59%,rgba(255,23,68,.76) 72%,rgba(255,59,34,.42) 81%,transparent 100%);
+  background-size:260% 100%;background-position:100% 50%;
+  -webkit-mask-image:url('heart-neon.png');mask-image:url('heart-neon.png');
+  -webkit-mask-size:contain;mask-size:contain;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  mix-blend-mode:screen;opacity:.12;filter:brightness(1.25) saturate(1.35);
+}
+.brand-pulse.is-playing .brand-heart-shell{animation:brandHeartBeat .86s ease-in-out infinite;}
+.brand-pulse.is-playing .heart-flow{opacity:.64;animation:heartColorFlow 2.15s linear infinite;}
+@keyframes brandHeartBeat{
+  0%,100%{transform:translateY(-50%) scale(1)}
+  12%{transform:translateY(-50%) scale(1.085)}
+  24%{transform:translateY(-50%) scale(1)}
+  40%{transform:translateY(-50%) scale(1.045)}
+  55%{transform:translateY(-50%) scale(1)}
+}
+@keyframes heartColorFlow{
+  0%{background-position:100% 50%;filter:brightness(1.08) saturate(1.15)}
+  50%{filter:brightness(1.45) saturate(1.5)}
+  100%{background-position:0% 50%;filter:brightness(1.08) saturate(1.15)}
+}
+
+.pulse-heart-outline{
+  flex:0 0 112px;width:112px;height:126px;display:grid;place-items:center;
+  position:relative;overflow:visible;isolation:isolate;
+}
+.bottom-heart-shell{
+  width:108px;height:124px;transform-origin:55% 62%;
+  filter:drop-shadow(0 0 10px rgba(0,232,255,.34)) drop-shadow(0 0 17px rgba(255,35,62,.46));
+}
+.bottom-heart-image{filter:drop-shadow(0 0 8px rgba(0,232,255,.42)) drop-shadow(0 0 12px rgba(255,35,62,.46));}
+.music-pulse.is-playing .bottom-heart-shell{animation:bottomHeartBeat .86s ease-in-out infinite;}
+.music-pulse.is-playing .bottom-heart-shell .heart-flow{opacity:.68;animation:heartColorFlow 2.15s linear infinite;}
+@keyframes bottomHeartBeat{
+  0%,100%{transform:scale(1)}12%{transform:scale(1.09)}24%{transform:scale(1)}40%{transform:scale(1.045)}55%{transform:scale(1)}
+}
+@media(max-width:900px){
+  .brand-pulse{width:min(520px,50vw);height:62px}.brand-pulse svg{height:62px}
+  .brand-heart-shell{width:108px;height:118px;right:-25px}
+  .pulse-heart-outline{flex-basis:98px;width:98px;height:112px}.bottom-heart-shell{width:96px;height:110px}
+}
+@media(max-width:620px){
+  .brand-pulse{position:absolute;left:64px;top:48px;width:calc(100vw - 88px);height:48px;margin:0}
+  .brand-pulse svg{height:48px}.brand-heart-shell{width:70px;height:80px;right:-17px}.topbar{margin-bottom:56px}
+  .music-pulse{width:100%;min-height:98px;gap:5px}
+  .pulse-icon{flex-basis:50px;width:50px;height:50px;border-width:3px}.pulse-icon svg{width:29px;height:29px}
+  .pulse-track,.bottom-wave{height:96px}
+  .pulse-heart-outline{flex-basis:72px;width:72px;height:86px}.bottom-heart-shell{width:72px;height:84px}
+}
+@media(prefers-reduced-motion:reduce){
+  .brand-pulse.is-playing .brand-heart-shell,.brand-pulse.is-playing .heart-flow,
+  .brand-pulse .wave-traveler,.bottom-wave .wave-traveler,
+  .music-pulse.is-playing .bottom-heart-shell,.music-pulse.is-playing .bottom-heart-shell .heart-flow{animation:none!important;}
+}
+
+
+/* GT-GELM · NEON PULSE V3 — identidad, corazón oscuro y notas a ambos extremos */
+.brand{gap:11px;flex:0 0 auto;align-items:center}
+.brand-copy{min-width:0;display:flex;flex-direction:column;gap:3px}
+.brand-copy strong{display:block;font-family:Georgia,'Times New Roman',serif;font-size:clamp(18px,2vw,27px);font-weight:900;letter-spacing:.075em;color:#f3fbff;text-shadow:0 0 5px #fff,0 0 12px rgba(0,194,255,.95),0 0 26px rgba(0,115,255,.5)}
+.brand-copy span{display:block;white-space:nowrap;color:#d8f8ff;font-size:clamp(7px,.78vw,10px);font-weight:800;letter-spacing:.16em;text-shadow:0 0 6px rgba(0,232,255,.9),0 0 14px rgba(0,126,255,.65)}
+.topbar{gap:18px;align-items:center}
+.brand-pulse{flex:1 1 360px;width:auto;max-width:490px;min-width:170px;height:62px;margin:0 10px 0 4px}
+.brand-pulse svg{height:62px}
+.brand-pulse .wave-main{stroke-width:3.2;filter:url(#topPulseGlow)}
+.brand-pulse .wave-glow{stroke-width:8;opacity:.25;filter:url(#topPulseGlow)}
+.brand-pulse .wave-traveler{stroke-width:5;opacity:.9}
+.brand-heart-shell{width:68px;height:78px;right:-9px}
+.brand-heart,.bottom-heart-image{filter:drop-shadow(0 0 7px rgba(0,145,255,.5)) drop-shadow(0 0 11px rgba(255,24,66,.55))}
+.heart-flow{background:linear-gradient(105deg,transparent 0%,rgba(0,120,255,.1) 22%,rgba(0,210,255,.28) 34%,rgba(116,34,255,.16) 48%,rgba(255,0,74,.18) 62%,rgba(255,48,18,.32) 78%,transparent 100%);opacity:.12}
+.brand-pulse.is-playing .heart-flow,.music-pulse.is-playing .heart-flow{opacity:.4}
+.music-pulse{width:min(1000px,98%);min-height:112px;gap:10px;padding:0 4px;justify-content:space-between}
+.pulse-icon{flex:0 0 58px;width:58px;height:58px;border-width:3px;border-radius:50%;display:grid;place-items:center;color:#00edff;box-shadow:0 0 11px rgba(0,232,255,.55),0 0 24px rgba(0,232,255,.2),inset 0 0 12px rgba(0,232,255,.1)}
+.pulse-icon svg{width:32px;height:32px;stroke-width:2.2}
+.pulse-track{height:112px;flex:1 1 auto;min-width:0;overflow:visible;position:relative}
+.bottom-wave{height:112px}
+.bottom-wave .wave-main{stroke-width:3.35;filter:url(#bottomPulseGlow)}
+.bottom-wave .wave-glow{stroke-width:8.5;opacity:.27;filter:url(#bottomPulseGlow)}
+.bottom-wave .wave-traveler{stroke-width:5.4;opacity:.92}
+.music-pulse.is-playing .bottom-wave .wave-glow{opacity:.48}
+.pulse-heart-outline{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;flex:none;width:118px;height:132px;display:grid;place-items:center;pointer-events:none;overflow:visible}
+.bottom-heart-shell{width:112px;height:128px;filter:drop-shadow(0 0 8px rgba(0,118,255,.55)) drop-shadow(0 0 12px rgba(255,18,60,.38))}
+.bottom-heart-image{width:100%;height:100%;object-fit:contain;mix-blend-mode:screen;filter:drop-shadow(0 0 5px rgba(0,180,255,.45)) drop-shadow(0 0 8px rgba(255,24,52,.42))}
+.pulse-icon-end{border-color:#ff3b70;color:#ff4c80;box-shadow:0 0 11px rgba(255,28,100,.55),0 0 24px rgba(255,28,100,.2),inset 0 0 12px rgba(255,28,100,.1)}
+.music-pulse.is-playing .pulse-icon-end{animation:pulseIconBreath .92s ease-in-out infinite;box-shadow:0 0 14px rgba(255,28,100,.75),0 0 32px rgba(255,28,100,.28)}
+.music-pulse.is-playing .pulse-icon{animation:pulseIconBreath .92s ease-in-out infinite}
+.music-pulse.is-playing .pulse-icon-end{animation-delay:.18s}
+.music-pulse.is-playing .bottom-wave .wave-main{filter:url(#bottomPulseGlow) drop-shadow(0 0 5px rgba(255,20,90,.26))}
+@media(max-width:900px){
+ .brand-pulse{max-width:360px;height:54px}.brand-pulse svg{height:54px}.brand-heart-shell{width:58px;height:66px;right:-8px}
+ .music-pulse{min-height:98px}.pulse-track,.bottom-wave{height:98px}.pulse-heart-outline{width:98px;height:112px}.bottom-heart-shell{width:94px;height:108px}
+}
+@media(max-width:620px){
+ .topbar{position:relative;flex-wrap:wrap;gap:8px;margin-bottom:62px!important;align-items:flex-start}
+ .brand{gap:8px}.brand-mark{width:38px;height:38px;border-radius:12px;font-size:18px}.brand-copy strong{font-size:17px}.brand-copy span{font-size:6.5px;letter-spacing:.10em}
+ .brand-pulse{position:absolute;left:0;right:0;top:47px;width:100%;max-width:none;height:44px;margin:0;min-width:0}
+ .brand-pulse svg{height:44px}.brand-heart-shell{width:47px;height:55px;right:0}
+ .top-actions{margin-left:auto}.music-pulse{width:100%;min-height:78px;gap:5px;padding:0}
+ .pulse-icon{flex-basis:43px;width:43px;height:43px;border-width:2px}.pulse-icon svg{width:25px;height:25px}
+ .pulse-track,.bottom-wave{height:78px}.bottom-wave .wave-main{stroke-width:3}.bottom-wave .wave-glow{stroke-width:7;opacity:.25}.bottom-wave .wave-traveler{stroke-width:4.5}
+ .pulse-heart-outline{width:70px;height:82px}.bottom-heart-shell{width:69px;height:80px}
+}
+@media(prefers-reduced-motion:reduce){.music-pulse.is-playing .pulse-icon,.music-pulse.is-playing .pulse-icon-end{animation:none!important}}
+
+/* GT-GELM NEON PULSE V4 — cabecera cinematográfica con G holográfica */
+.neon-banner{position:relative;width:100%;margin:0 auto 18px;min-height:350px;overflow:hidden;isolation:isolate;border-radius:22px;background:radial-gradient(ellipse at 52% 57%,rgba(22,24,71,.34),transparent 37%),radial-gradient(ellipse at 12% 70%,rgba(0,153,255,.10),transparent 28%),radial-gradient(ellipse at 87% 70%,rgba(255,20,74,.09),transparent 29%),linear-gradient(180deg,rgba(4,5,16,.94),rgba(3,4,13,.78));}
+.neon-banner::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,230,255,.035),transparent 32%,rgba(255,0,180,.035) 70%,rgba(255,25,65,.045));z-index:-1}
+.banner-topline{position:absolute;z-index:10;left:clamp(16px,4vw,38px);right:clamp(12px,3vw,28px);top:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.hero-brand{gap:12px;align-items:center;min-width:0}
+.hero-brand .brand-mark{width:48px;height:48px;flex:0 0 48px;border-radius:13px;font-size:23px;border:2px solid #00eaff;box-shadow:0 0 12px rgba(0,232,255,.65),inset 0 0 12px rgba(0,232,255,.1)}
+.hero-brand .brand-copy strong{font-family:Georgia,'Times New Roman',serif;font-size:clamp(21px,3vw,34px);line-height:1.05;letter-spacing:.075em;color:#f7fbff;text-shadow:0 0 5px #fff,0 0 13px #008dff,0 0 27px rgba(0,112,255,.72)}
+.hero-brand .brand-copy span{font-size:clamp(7px,.9vw,11px);line-height:1.5;letter-spacing:.18em;color:#d9f8ff;text-shadow:0 0 7px #00bfff,0 0 14px rgba(0,143,255,.6)}
+.neon-banner .top-actions{gap:8px}
+.neon-banner .top-link,.neon-banner .icon-btn{padding:9px 12px;border-radius:12px;background:rgba(4,7,20,.75);border-color:rgba(140,172,255,.16);font-size:12px;backdrop-filter:blur(8px)}
+.neon-banner .icon-btn{width:38px;padding:8px}
+.hero-vitals{position:absolute;inset:0;min-height:350px}
+.hero-ecg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.hero-ecg-glow,.hero-ecg-line,.hero-ecg-traveler{fill:none;stroke:url(#heroEcgGradient);stroke-linecap:round;stroke-linejoin:miter;vector-effect:non-scaling-stroke}
+.hero-ecg-glow{stroke-width:5.8;opacity:.38;filter:url(#heroEcgGlow)}
+.hero-ecg-line{stroke-width:1.8;filter:url(#heroEcgGlow)}
+.hero-ecg-traveler{stroke-width:2.5;stroke-dasharray:80 920;stroke-dashoffset:1000;opacity:.95;filter:url(#heroEcgGlow)}
+.neon-banner.is-playing .hero-ecg-traveler{animation:heroEnergyRun 2.8s linear infinite}
+@keyframes heroEnergyRun{to{stroke-dashoffset:0}}
+.hero-note{fill:none;stroke:#00f2ff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.hero-note .hero-note-inner{stroke-width:1.5;opacity:.9}
+.hero-note path{fill:rgba(0,238,255,.1)}
+.hero-note-right{stroke:#ff397f}
+.hero-note-right path{fill:rgba(255,35,99,.1)}
+.hero-g-ring{position:absolute;z-index:2;left:50%;top:51%;width:min(37%,390px);height:90%;transform:translate(-50%,-50%);overflow:visible;opacity:.98;filter:drop-shadow(0 0 12px rgba(34,86,255,.2))}
+.halo-heart{position:absolute;z-index:5;left:50%;top:56%;width:clamp(142px,22%,235px);height:clamp(168px,27%,275px);transform:translate(-50%,-50%);display:block;filter:drop-shadow(0 0 9px rgba(0,142,255,.5)) drop-shadow(0 0 16px rgba(255,27,67,.35));pointer-events:none}
+.halo-heart img{width:100%;height:100%;object-fit:contain;display:block;mix-blend-mode:screen;filter:contrast(1.08) saturate(1.16)}
+.neon-banner.is-playing .halo-heart{animation:heroHeartBeat .86s ease-in-out infinite}
+@keyframes heroHeartBeat{0%,100%{transform:translate(-50%,-50%) scale(1)}12%{transform:translate(-50%,-50%) scale(1.055)}23%{transform:translate(-50%,-50%) scale(1)}39%{transform:translate(-50%,-50%) scale(1.028)}52%{transform:translate(-50%,-50%) scale(1)}}
+/* ECG del reproductor: trazo fino y degradado completo, sin perder legibilidad */
+.bottom-wave .wave-main{stroke-width:2.1!important;filter:url(#bottomPulseGlow) drop-shadow(0 0 2px rgba(115,90,255,.4))!important}
+.bottom-wave .wave-glow{stroke-width:5.2!important;opacity:.25!important;filter:url(#bottomPulseGlow)!important}
+.bottom-wave .wave-traveler{stroke-width:2.8!important;opacity:.9!important}
+.music-pulse.is-playing .bottom-wave .wave-glow{opacity:.42!important}
+@media(max-width:900px){.neon-banner,.hero-vitals{min-height:310px}.hero-g-ring{width:42%;height:84%}.halo-heart{width:clamp(130px,24%,205px);height:clamp(155px,29%,235px)}.banner-topline{left:20px;right:18px}.hero-ecg-glow{stroke-width:5}.hero-ecg-line{stroke-width:1.7}}
+@media(max-width:620px){.neon-banner{min-height:250px;margin-bottom:12px;border-radius:18px}.hero-vitals{min-height:250px}.banner-topline{top:12px;left:12px;right:10px;align-items:flex-start;gap:6px}.hero-brand{gap:7px}.hero-brand .brand-mark{width:36px;height:36px;flex-basis:36px;border-radius:10px;font-size:18px}.hero-brand .brand-copy strong{font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em}.hero-brand .brand-copy span{font-size:6px;letter-spacing:.09em;white-space:normal;max-width:205px}.neon-banner .top-actions{gap:4px}.neon-banner .top-link{font-size:0;padding:8px 9px}.neon-banner .top-link .btn-symbol{font-size:13px}.neon-banner .icon-btn{width:32px;padding:7px}.hero-g-ring{width:48%;height:76%;top:57%}.halo-heart{top:60%;width:clamp(108px,31%,160px);height:clamp(130px,37%,185px)}.hero-ecg-glow{stroke-width:4}.hero-ecg-line{stroke-width:1.45}.hero-ecg-traveler{stroke-width:2}.hero-note{stroke-width:2.8}.hero-note circle:first-child{r:34px}.hero-note circle.hero-note-inner{r:27px}.hero-note path{transform:scale(.78)}.bottom-wave .wave-main{stroke-width:1.8!important}.bottom-wave .wave-glow{stroke-width:4.2!important}.bottom-wave .wave-traveler{stroke-width:2.4!important}}
+@media(prefers-reduced-motion:reduce){.neon-banner.is-playing .hero-ecg-traveler,.neon-banner.is-playing .halo-heart{animation:none!important}}

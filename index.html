@@ -8,24 +8,59 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon-192.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
-  <title>GT-GELM Producciones · Player V2</title>
+  <title>GT-GELM · Neon Pulse V4</title>
 </head>
 <body>
   <div class="ambient ambient-a"></div>
   <div class="ambient ambient-b"></div>
 
   <main class="app-shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">G</div>
-        <div>
-          <strong>GT-GELM</strong>
-          <span>PRODUCCIONES · V2</span>
+    <header class="neon-banner" aria-label="GT-GELM · Guatemala tu nombre inmortal">
+      <div class="banner-topline">
+        <div class="brand hero-brand">
+          <div class="brand-mark">G</div>
+          <div class="brand-copy">
+            <strong>GT-GELM</strong>
+            <span>GUATEMALA TU NOMBRE INMORTAL</span>
+          </div>
+        </div>
+        <div class="top-actions">
+          <a class="top-link" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener"><span class="btn-symbol" aria-hidden="true">▶</span> YouTube</a>
+          <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar apariencia">◐</button>
         </div>
       </div>
-      <div class="top-actions">
-        <a class="top-link" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener"><span class="btn-symbol" aria-hidden="true">▶</span> YouTube</a>
-        <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar apariencia">◐</button>
+
+      <div class="hero-vitals" id="heroVitals" aria-label="Signos vitales neón GT-GELM">
+        <svg class="hero-ecg" viewBox="0 0 1200 330" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="heroEcgGradient" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#00f5ff"/><stop offset="22%" stop-color="#168cff"/>
+              <stop offset="43%" stop-color="#6245ff"/><stop offset="58%" stop-color="#ed20ff"/>
+              <stop offset="76%" stop-color="#ff285d"/><stop offset="100%" stop-color="#ff2438"/>
+            </linearGradient>
+            <filter id="heroEcgGlow" x="-15%" y="-80%" width="130%" height="260%">
+              <feGaussianBlur stdDeviation="3.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="heroIconGlow" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path class="hero-ecg-glow" d="M110 205 H185 L202 205 L218 174 L236 238 L255 112 L278 267 L301 205 H360 L382 205 L399 177 L418 230 L438 205 H488 L512 205 L532 150 L552 258 L574 205 H626 L648 205 L669 127 L692 276 L714 205 H760 L782 205 L802 177 L821 229 L842 205 H900 L920 205 L940 148 L961 260 L983 205 H1030 L1050 205 L1068 177 L1087 229 L1100 205"/>
+          <path class="hero-ecg-line" d="M110 205 H185 L202 205 L218 174 L236 238 L255 112 L278 267 L301 205 H360 L382 205 L399 177 L418 230 L438 205 H488 L512 205 L532 150 L552 258 L574 205 H626 L648 205 L669 127 L692 276 L714 205 H760 L782 205 L802 177 L821 229 L842 205 H900 L920 205 L940 148 L961 260 L983 205 H1030 L1050 205 L1068 177 L1087 229 L1100 205"/>
+          <path class="hero-ecg-traveler" pathLength="1000" d="M110 205 H185 L202 205 L218 174 L236 238 L255 112 L278 267 L301 205 H360 L382 205 L399 177 L418 230 L438 205 H488 L512 205 L532 150 L552 258 L574 205 H626 L648 205 L669 127 L692 276 L714 205 H760 L782 205 L802 177 L821 229 L842 205 H900 L920 205 L940 148 L961 260 L983 205 H1030 L1050 205 L1068 177 L1087 229 L1100 205"/>
+          <g class="hero-note hero-note-left" filter="url(#heroIconGlow)" transform="translate(68 205)">
+            <circle r="43"/><circle r="34" class="hero-note-inner"/><path d="M-8 13V-13L14 -19V7 M-8 13a8 6 0 1 1-7-6 7 5 0 0 1 7 6 M14 7a8 6 0 1 1-7-6 7 5 0 0 1 7 6"/>
+          </g>
+          <g class="hero-note hero-note-right" filter="url(#heroIconGlow)" transform="translate(1132 205)">
+            <circle r="43"/><circle r="34" class="hero-note-inner"/><path d="M-8 13V-13L14 -19V7 M-8 13a8 6 0 1 1-7-6 7 5 0 0 1 7 6 M14 7a8 6 0 1 1-7-6 7 5 0 0 1 7 6"/>
+          </g>
+        </svg>
+        <svg class="hero-g-ring" viewBox="0 0 360 310" aria-hidden="true">
+          <defs><linearGradient id="heroGGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00efff"/><stop offset="45%" stop-color="#3b55ff"/><stop offset="72%" stop-color="#b52cff"/><stop offset="100%" stop-color="#ff2d9b"/></linearGradient><filter id="heroGGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+          <path d="M250 50 A128 128 0 1 0 274 222 L204 222 L204 174 L252 174" fill="none" stroke="url(#heroGGradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#heroGGlow)"/>
+          <path d="M250 50 A128 128 0 1 0 274 222 L204 222 L204 174 L252 174" fill="none" stroke="url(#heroGGradient)" stroke-width="1.2" opacity=".95"/>
+        </svg>
+        <span class="hero-heart halo-heart" aria-hidden="true"><img src="heart-neon.png" alt=""></span>
       </div>
     </header>
 
@@ -37,6 +72,39 @@
           <img id="cover" class="cover" src="assets/img/default-cover.svg" alt="Portada GT-GELM" loading="eager">
           <div class="cover-glow"></div>
           <div class="cover-corner">♫</div>
+        </div>
+        <!-- GT-GELM · PULSO MUSICAL PRINCIPAL -->
+        <div class="music-pulse" id="musicPulse" aria-label="Pulso musical detenido" aria-live="polite">
+          <div class="pulse-icon" aria-hidden="true">
+            <svg viewBox="0 0 64 64">
+              <circle cx="32" cy="32" r="28"></circle>
+              <path d="M27 39V22l15-4v17"></path>
+              <circle cx="23" cy="41" r="6"></circle>
+              <circle cx="38" cy="37" r="6"></circle>
+            </svg>
+          </div>
+          <div class="pulse-track">
+            <svg class="bottom-wave" viewBox="0 0 1000 150" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="bottomPulseGradient" gradientUnits="userSpaceOnUse" x1="-1000" y1="0" x2="1000" y2="0">
+                  <stop offset="0%" stop-color="#00f5ff"/><stop offset="18%" stop-color="#00a8ff"/>
+                  <stop offset="34%" stop-color="#254bff"/><stop offset="49%" stop-color="#8b22ff"/>
+                  <stop offset="64%" stop-color="#f000ff"/><stop offset="80%" stop-color="#ff1744"/><stop offset="100%" stop-color="#ff3b22"/>
+                  <animateTransform attributeName="gradientTransform" type="translate" values="-1000 0;1000 0;-1000 0" dur="3.8s" repeatCount="indefinite"/>
+                </linearGradient>
+                <filter id="bottomPulseGlow" x="-20%" y="-80%" width="140%" height="260%">
+                  <feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+              </defs>
+              <path class="wave-glow" d="M0 75 H58 L78 75 L94 42 L112 111 L132 10 L152 140 L174 75 H230 L250 75 L268 50 L286 100 L304 75 H360 L380 75 L398 35 L416 118 L436 75 H492 L512 75 L530 10 L550 140 L570 75 H626 L646 75 L664 44 L682 106 L700 75 H760 L780 75 L798 24 L818 130 L838 75 H894 L914 75 L932 43 L950 108 L968 75 H1000"/>
+              <path class="wave-main" d="M0 75 H58 L78 75 L94 42 L112 111 L132 10 L152 140 L174 75 H230 L250 75 L268 50 L286 100 L304 75 H360 L380 75 L398 35 L416 118 L436 75 H492 L512 75 L530 10 L550 140 L570 75 H626 L646 75 L664 44 L682 106 L700 75 H760 L780 75 L798 24 L818 130 L838 75 H894 L914 75 L932 43 L950 108 L968 75 H1000"/>
+              <path class="wave-traveler" pathLength="1000" d="M0 75 H58 L78 75 L94 42 L112 111 L132 10 L152 140 L174 75 H230 L250 75 L268 50 L286 100 L304 75 H360 L380 75 L398 35 L416 118 L436 75 H492 L512 75 L530 10 L550 140 L570 75 H626 L646 75 L664 44 L682 106 L700 75 H760 L780 75 L798 24 L818 130 L838 75 H894 L914 75 L932 43 L950 108 L968 75 H1000"/>
+            </svg>
+          </div>
+          <div class="pulse-heart-outline" aria-hidden="true"><span class="heart-live bottom-heart-shell"><img class="bottom-heart-image" src="heart-neon.png" alt=""><span class="heart-flow"></span></span></div>
+          <div class="pulse-icon pulse-icon-end" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"></circle><path d="M27 39V22l15-4v17"></path><circle cx="23" cy="41" r="6"></circle><circle cx="38" cy="37" r="6"></circle></svg>
+          </div>
         </div>
 
         <div class="now-playing">

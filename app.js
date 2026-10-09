@@ -39,6 +39,7 @@ const state = {
   seeking: false
 };
 
+
 function fmt(sec){
   if(!Number.isFinite(sec)) return '00:00';
   const s = Math.max(0, Math.floor(sec));
@@ -394,13 +395,39 @@ audio.addEventListener('timeupdate', ()=>{
     }catch{}
   }
 });
+
+// =========================================================
+// GT-GELM · PULSO MUSICAL V7
+// Visual seguro: solo anima la interfaz. No intercepta el audio.
+// =========================================================
+const musicPulse = $('musicPulse');
+const brandPulse = $('brandPulse'); // Compatibilidad con versiones anteriores
+const heroVitals = $('heroVitals');
+
+function setMusicPulse(playing){
+  const active = Boolean(playing);
+  [musicPulse, brandPulse, heroVitals].forEach(el=>{
+    if(!el) return;
+    el.classList.toggle('is-playing', active);
+  });
+  if(musicPulse) musicPulse.setAttribute('aria-label', active ? 'Pulso musical activo' : 'Pulso musical detenido');
+}
+
+// Puente visual: solo activa/desactiva clases CSS, no procesa ni altera el audio.
+function startPulseVisualizer(){ setMusicPulse(true); }
+function stopPulseVisualizer(){ setMusicPulse(false); }
+
+setMusicPulse(!audio.paused && !audio.ended);
+
 audio.addEventListener('play', ()=>{
+  startPulseVisualizer();
   $('play').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"></rect><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"></rect></svg>';
   if('mediaSession' in navigator){
     try{ navigator.mediaSession.playbackState = 'playing'; }catch{}
   }
 });
 audio.addEventListener('pause', ()=>{
+  stopPulseVisualizer();
   $('play').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13L19 12 8 5.5Z" fill="currentColor"></path></svg>';
   if('mediaSession' in navigator){
     try{ navigator.mediaSession.playbackState = 'paused'; }catch{}
@@ -413,7 +440,9 @@ async function boot(){
   try{
     setupInstall();
     const [songsRes, ytRes] = await Promise.all([
-      fetch('songs.json', {cache:'no-store'}),
+      fetch('songs.json', {cache:'no-store'}).catch(() =>
+        fetch(REPO_RAW + 'songs.json', {cache:'no-store'})
+      ),
       fetch('youtube.json', {cache:'no-store'}).catch(()=>null)
     ]);
     if(!songsRes.ok) throw new Error(`songs.json ${songsRes.status}`);
