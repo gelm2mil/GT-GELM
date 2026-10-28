@@ -208,6 +208,7 @@ async function playSong(index, userInitiated=false){
   loadCover(song);
   audio.src = song.url;
   audio.load();
+  setTimeout(()=>{ if(state.index===index) cacheAudio(song.url); }, 20000);
   try{ await audio.play(); }catch(e){ if(userInitiated) console.warn('El navegador bloqueó el autoplay:', e); }
   localStorage.setItem('gt-gelm-last-id', String(song.id));
   renderList();
