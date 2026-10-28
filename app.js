@@ -463,7 +463,11 @@ async function boot(){
 }
 
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});
+}
+function cacheAudio(url){
+  const sw = navigator.serviceWorker && navigator.serviceWorker.controller;
+  if(sw) sw.postMessage({type:'cache-audio', url});
 }
 
 boot();
