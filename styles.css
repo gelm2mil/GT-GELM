@@ -447,3 +447,94 @@ body.light{--bg:#eef2ff;--text:#101221;--muted:#5f6577;--panel:#fff}.light .play
 @media(max-width:900px){.neon-banner,.hero-vitals{min-height:310px}.hero-g-ring{width:42%;height:84%}.halo-heart{width:clamp(130px,24%,205px);height:clamp(155px,29%,235px)}.banner-topline{left:20px;right:18px}.hero-ecg-glow{stroke-width:5}.hero-ecg-line{stroke-width:1.7}}
 @media(max-width:620px){.neon-banner{min-height:250px;margin-bottom:12px;border-radius:18px}.hero-vitals{min-height:250px}.banner-topline{top:12px;left:12px;right:10px;align-items:flex-start;gap:6px}.hero-brand{gap:7px}.hero-brand .brand-mark{width:36px;height:36px;flex-basis:36px;border-radius:10px;font-size:18px}.hero-brand .brand-copy strong{font-size:clamp(15px,4.5vw,21px);letter-spacing:.04em}.hero-brand .brand-copy span{font-size:6px;letter-spacing:.09em;white-space:normal;max-width:205px}.neon-banner .top-actions{gap:4px}.neon-banner .top-link{font-size:0;padding:8px 9px}.neon-banner .top-link .btn-symbol{font-size:13px}.neon-banner .icon-btn{width:32px;padding:7px}.hero-g-ring{width:48%;height:76%;top:57%}.halo-heart{top:60%;width:clamp(108px,31%,160px);height:clamp(130px,37%,185px)}.hero-ecg-glow{stroke-width:4}.hero-ecg-line{stroke-width:1.45}.hero-ecg-traveler{stroke-width:2}.hero-note{stroke-width:2.8}.hero-note circle:first-child{r:34px}.hero-note circle.hero-note-inner{r:27px}.hero-note path{transform:scale(.78)}.bottom-wave .wave-main{stroke-width:1.8!important}.bottom-wave .wave-glow{stroke-width:4.2!important}.bottom-wave .wave-traveler{stroke-width:2.4!important}}
 @media(prefers-reduced-motion:reduce){.neon-banner.is-playing .hero-ecg-traveler,.neon-banner.is-playing .halo-heart{animation:none!important}}
+
+
+
+
+/* =========================================
+   GT-GELM · FOOTER VERDE FOSFORESCENTE
+   ========================================= */
+
+.footer {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px 24px;
+  margin-top: 28px;
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 255, 70, 0.09) 0%,
+      rgba(0, 0, 0, 0.96) 72%
+    );
+
+  border-top: 1px solid rgba(0, 255, 70, 0.45);
+  border-bottom: 1px solid rgba(0, 255, 70, 0.35);
+
+  color: #00ff41;
+  font-size: 12px;
+  letter-spacing: 0.15px;
+
+  box-shadow:
+    0 -5px 22px rgba(0, 255, 70, 0.08),
+    0 0 24px rgba(0, 255, 70, 0.10);
+}
+
+/* Línea superior luminosa */
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+
+  background: #00ff41;
+  border-radius: 0 0 20px 20px;
+
+  box-shadow:
+    0 0 5px #00ff41,
+    0 0 12px rgba(0, 255, 65, 0.85),
+    0 0 24px rgba(0, 255, 65, 0.35);
+}
+
+/* Textos fosforescentes */
+.footer span {
+  color: #00ff41;
+  text-shadow:
+    0 0 3px rgba(0, 255, 65, 0.7),
+    0 0 9px rgba(0, 255, 65, 0.25);
+}
+
+/* Adaptación para teléfonos */
+@media (max-width: 600px) {
+  .footer {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 18px 12px;
+    gap: 10px;
+    font-size: 11px;
+  }
+
+  .footer span {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Accesibilidad: no añadir animaciones innecesarias */
+@media (prefers-reduced-motion: reduce) {
+  .footer,
+  .footer::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
