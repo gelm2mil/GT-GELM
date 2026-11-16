@@ -1,10 +1,15 @@
+/* =========================================================
+   GT-GELM BLACK PLAYER · Motor de reproducción
+   Prioridad: reproducción estable, biblioteca y controles.
+   ========================================================= */
+
 const AUDIO_BASE = 'https://divine-king-c86b.chapin7839.workers.dev/';
 const DEFAULT_COVER = 'img/gt-gelm-logo.webp';
-const YOUTUBE_CHANNEL = 'https://www.youtube.com/@GT-GELM';
 const REPO_RAW = 'https://raw.githubusercontent.com/gelm2mil/GT-GELM/main/';
-const DEFAULT_SONG_ID = 0; // 0 = iniciar aleatoriamente
+const DEFAULT_SONG_ID = 0;
 
 const $ = (id) => document.getElementById(id);
+
 const audio = $('audio');
 const titleEl = $('title');
 const metaEl = $('meta');
@@ -18,10 +23,6 @@ const search = $('search');
 const countEl = $('count');
 const libraryPanel = $('libraryPanel');
 const libraryBtn = $('libraryBtn');
-const youtubePanel = $('youtubePanel');
-const videoWrap = $('videoWrap');
-const videoTitle = $('videoTitle');
-const videoNote = $('videoNote');
 const openYoutube = $('openYoutube');
 const lyrics = $('lyrics');
 
@@ -36,228 +37,485 @@ const state = {
   youtube: {},
   currentLyricsUrl: '',
   deferredInstallPrompt: null,
-  seeking: false
+  seeking: false,
+  switching: false,
+  requestId: 0,
+  shuffleBag: [],
+  userStartedPlayback: false
 };
 
+function fmt(sec) {
+  if (!Number.isFinite(sec)) return '00:00';
 
-function fmt(sec){
-  if(!Number.isFinite(sec)) return '00:00';
   const s = Math.max(0, Math.floor(sec));
-  return `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
+
+  return `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 }
 
-function slugify(value){
+function slugify(value) {
   return String(value)
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/\.mp3$/i,'')
-    .replace(/^\d{3}-?/,'')
-    .replace(/[^a-z0-9]+/g,'-')
-    .replace(/^-+|-+$/g,'');
+    .replace(/\.mp3$/i, '')
+    .replace(/^\d{3}-?/, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-function humanTitle(file){
-  return String(file||'')
-    .replace(/\.mp3$/i,'')
-    .replace(/^\d{3}-?/,'')
-    .replace(/[-_]+/g,' ')
+function humanTitle(file) {
+  return String(file || '')
+    .replace(/\.mp3$/i, '')
+    .replace(/^\d{3}-?/, '')
+    .replace(/[-_]+/g, ' ')
     .trim()
     .replace(/\b\w/g, c => c.toUpperCase());
 }
 
-function categoryOf(song){
+function categoryOf(song) {
   const t = `${song.title} ${song.file}`.toLowerCase();
-  if(/pmt|policia|tránsito|transito|chimaltenango/.test(t)) return 'pmt';
-  if(/guatemala|xinka|kiche|k'iche|iqu|ixcan|ixc[aá]n|maya|atl[ií]an|quiche|zul|tradiciones|cantos/.test(t)) return 'cultura';
+
+  if (/pmt|policia|tránsito|transito|chimaltenango/.test(t)) {
+    return 'pmt';
+  }
+
+  if (/guatemala|xinka|kiche|k'iche|iqu|ixcan|ixc[aá]n|maya|atl[ií]an|quiche|zul|tradiciones|cantos/.test(t)) {
+    return 'cultura';
+  }
+
   return 'historias';
 }
 
-function normalizeSongs(data){
+function normalizeSongs(data) {
   const rows = Array.isArray(data) ? data : (data.songs || []);
-  return rows.map((s,i) => {
+
+  return rows.map((s, i) => {
     const file = String(s.file || s.filename || '');
+    const encodedFile = file.split('/').map(encodeURIComponent).join('/');
+
     return {
-      id: Number(s.id ?? i+1),
+      id: Number(s.id ?? i + 1),
       file,
       title: s.title || humanTitle(file),
-      category: s.category || categoryOf({title:s.title || humanTitle(file), file}),
-      url: /^https?:\/\//i.test(file) ? file : AUDIO_BASE + encodeURI(file),
+      category: String(
+        s.category || categoryOf({
+          title: s.title || humanTitle(file),
+          file
+        })
+      ).toLowerCase(),
+      url: /^https?:\/\//i.test(file)
+        ? file
+        : AUDIO_BASE + encodedFile,
       cover: s.cover || '',
       youtube: s.youtube || ''
     };
-  }).filter(s => s.file);
+  }).filter(s => s.file && s.url);
 }
 
-function applyFilters(){
+function applyFilters() {
   const q = state.query.trim().toLowerCase();
+
   state.filtered = state.songs.filter(s => {
-    const categoryOk = state.filter === 'all' || s.category === state.filter;
-    const qOk = !q || `${s.id} ${s.title} ${s.file}`.toLowerCase().includes(q);
+    const categoryOk =
+      state.filter === 'all' || s.category === state.filter;
+
+    const qOk =
+      !q || `${s.id} ${s.title} ${s.file}`.toLowerCase().includes(q);
+
     return categoryOk && qOk;
   });
-  countEl.textContent = state.songs.length;
+
+  if (countEl) {
+    countEl.textContent = state.songs.length;
+  }
+
   renderList();
 }
 
-function renderList(){
+function renderList() {
+  if (!songList) return;
+
   songList.innerHTML = '';
-  if(!state.filtered.length){
-    songList.innerHTML = '<div class="panel-note">No hay coincidencias.</div>';
+
+  if (!state.filtered.length) {
+    songList.innerHTML =
+      '<div class="panel-note">No hay coincidencias.</div>';
     return;
   }
+
   const frag = document.createDocumentFragment();
+
   state.filtered.forEach(song => {
     const idx = state.songs.findIndex(x => x.id === song.id);
+
     const row = document.createElement('button');
     row.type = 'button';
-    row.className = `song-row ${idx===state.index?'active':''}`;
+    row.dataset.index = String(idx);
+    row.className = `song-row ${idx === state.index ? 'active' : ''}`;
+
     row.innerHTML = `
-      <span class="song-id">${String(song.id).padStart(3,'0')}</span>
-      <span><span class="song-title">${escapeHtml(song.title)}</span><small class="song-file">${escapeHtml(song.file)}</small></span>
-      <span class="song-play">▶</span>`;
-    row.addEventListener('click', () => playSong(idx, true));
+      <span class="song-id">${String(song.id).padStart(3, '0')}</span>
+      <span>
+        <span class="song-title">${escapeHtml(song.title)}</span>
+        <small class="song-file">${escapeHtml(song.file)}</small>
+      </span>
+      <span class="song-play">▶</span>
+    `;
+
+    row.addEventListener('click', () => {
+      playSong(idx, true, 'user');
+    });
+
     frag.appendChild(row);
   });
+
   songList.appendChild(frag);
 }
 
-function escapeHtml(v){
-  return String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+function escapeHtml(v) {
+  return String(v).replace(/[&<>'"]/g, c => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    "'": '&#39;',
+    '"': '&quot;'
+  }[c]));
 }
 
-function chooseCover(song){
-  return DEFAULT_COVER;
+function chooseCover(song) {
+  return song && song.cover ? song.cover : DEFAULT_COVER;
 }
 
-function loadCover(song){
-  coverEl.onerror = () => { coverEl.onerror = null; coverEl.src = DEFAULT_COVER; };
+function loadCover(song) {
+  if (!coverEl) return;
+
+  coverEl.onerror = () => {
+    coverEl.onerror = null;
+    coverEl.src = DEFAULT_COVER;
+  };
+
   coverEl.src = chooseCover(song);
 }
 
-function youtubeIdFor(song){
-  const raw = song.youtube || state.youtube[String(song.id)] || '';
-  if(/^[-_A-Za-z0-9]{11}$/.test(raw)) return raw;
-  const m = String(raw).match(/(?:youtu\.be\/|v=|embed\/)([-_A-Za-z0-9]{11})/);
-  return m ? m[1] : '';
-}
+/* =========================================================
+   YOUTUBE · ABRIR EN PESTAÑA NUEVA
+   Sin iframe ni reproductor incrustado.
+   ========================================================= */
 
 const YOUTUBE_PLAYLIST_ID = 'PLJGpqFTRWh98';
 
-function renderYoutube(song, openPanel=false){
-  // YouTube se carga por playlist, no por ID individual de cada canción.
-  // El audio principal de GT-GELM permanece independiente y sigue sonando.
-  openYoutube.href = `https://www.youtube.com/playlist?list=${YOUTUBE_PLAYLIST_ID}`;
-  videoTitle.textContent = 'GT-GELM · YouTube';
-  videoWrap.innerHTML = '';
+function renderYoutube() {
+  const url =
+    `https://www.youtube.com/playlist?list=${YOUTUBE_PLAYLIST_ID}`;
 
-  const iframe = document.createElement('iframe');
-  iframe.src = `https://www.youtube-nocookie.com/embed/videoseries?list=${YOUTUBE_PLAYLIST_ID}&rel=0&modestbranding=1`;
-  iframe.title = 'GT-GELM · Playlist de YouTube';
-  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-  iframe.allowFullscreen = true;
-  videoWrap.appendChild(iframe);
-  videoNote.textContent = 'Playlist oficial de GT-GELM. El reproductor de audio continúa por separado.';
+  if (openYoutube) {
+    openYoutube.href = url;
+    openYoutube.target = '_blank';
+    openYoutube.rel = 'noopener noreferrer';
+  }
 
-  if(openPanel) youtubePanel.hidden = false;
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
-async function loadLyrics(song){
+/* =========================================================
+   LETRAS
+   ========================================================= */
+
+let lyricsRequest = 0;
+
+async function loadLyrics(song) {
+  const request = ++lyricsRequest;
+
+  if (!lyrics) return;
+
   lyrics.hidden = true;
-  $('lyricsToggle').textContent = 'Mostrar';
+
+  const toggle = $('lyricsToggle');
+
+  if (toggle) {
+    toggle.textContent = 'Mostrar';
+    toggle.setAttribute('aria-expanded', 'false');
+  }
+
   state.currentLyricsUrl = '';
-  const base = song.file.replace(/\.mp3$/i,'');
-  const noNum = base.replace(/^\d{3}-?/,'');
-  const upper = noNum.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'_').replace(/^_|_$/g,'');
+
+  const base = song.file.replace(/\.mp3$/i, '');
+  const noNum = base.replace(/^\d{3}-?/, '');
+
+  const upper = noNum
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, '_')
+    .replace(/^_|_$/g, '');
+
   const candidates = [
     `lyrics/${base}.txt`,
     `lyrics/${noNum}.txt`,
     `lyrics/${upper}.txt`,
-    `lyrics/${slugify(song.title).replace(/-/g,'_')}.txt`,
+    `lyrics/${slugify(song.title).replace(/-/g, '_')}.txt`,
     `lyrics/${slugify(song.title)}.txt`
   ];
-  for(const path of candidates){
-    try{
-      const r = await fetch(path, {cache:'no-store'});
-      if(r.ok){
+
+  for (const path of candidates) {
+    try {
+      const r = await fetch(path, { cache: 'no-store' });
+
+      if (request !== lyricsRequest) return;
+
+      if (r.ok) {
         const text = await r.text();
-        if(text.trim()){
+
+        if (request !== lyricsRequest) return;
+
+        if (text.trim()) {
           lyrics.textContent = text;
           state.currentLyricsUrl = path;
-          lyrics.hidden = false;
-          $('lyricsToggle').textContent = 'Ocultar';
-          $('lyricsToggle').setAttribute('aria-expanded', 'true');
           return;
         }
       }
-    }catch{}
+    } catch (_) {
+      // La letra es opcional; no debe detener el audio.
+    }
   }
-  lyrics.textContent = 'Letra no disponible todavía en el repositorio.';
+
+  if (request === lyricsRequest) {
+    lyrics.textContent =
+      'Letra no disponible todavía en el repositorio.';
+  }
 }
 
-function updateMeta(song){
+/* =========================================================
+   INFORMACIÓN DE CANCIÓN
+   ========================================================= */
+
+function updateMeta(song) {
   titleEl.textContent = humanTitle(song.title || song.file);
-  metaEl.textContent = `GT-GELM · ${String(song.id).padStart(3,'0')} · ${String(song.category).toUpperCase()}`;
-  document.title = `${humanTitle(song.title || song.file)} · GT-GELM`;
+
+  metaEl.textContent =
+    `GT-GELM · ${String(song.id).padStart(3, '0')} · ${String(song.category).toUpperCase()}`;
+
+  document.title =
+    `${humanTitle(song.title || song.file)} · GT-GELM`;
 }
 
-async function playSong(index, userInitiated=false){
-  const song = state.songs[index];
-  if(!song) return;
-  state.index = index;
-  updateMeta(song);
-  loadCover(song);
-  audio.src = song.url;
-  audio.load();
-  setTimeout(()=>{ if(state.index===index) cacheAudio(song.url); }, 20000);
-  try{ await audio.play(); }catch(e){ if(userInitiated) console.warn('El navegador bloqueó el autoplay:', e); }
-  localStorage.setItem('gt-gelm-last-id', String(song.id));
-  renderList();
-  loadLyrics(song);
-  setMediaSession(song);
+function updatePlayButton(playing) {
+  const btn = $('play');
+
+  if (!btn) return;
+
+  btn.innerHTML = playing
+    ? '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"></rect><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"></rect></svg>'
+    : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13L19 12 8 5.5Z" fill="currentColor"></path></svg>';
+
+  btn.setAttribute('aria-label', playing ? 'Pausar' : 'Reproducir');
+  btn.title = playing ? 'Pausar' : 'Reproducir';
 }
 
-function pickNext(){
-  if(!state.songs.length) return -1;
-  if(state.shuffle){
-    if(state.songs.length===1) return 0;
-    let next = state.index;
-    while(next===state.index) next = Math.floor(Math.random()*state.songs.length);
-    return next;
+function updateActiveRow() {
+  if (!songList) return;
+
+  songList.querySelectorAll('.song-row').forEach(row => {
+    const idx = Number(row.dataset.index);
+    row.classList.toggle('active', idx === state.index);
+  });
+}
+
+/* =========================================================
+   ALEATORIO Y ORDEN
+   ========================================================= */
+
+function refillShuffleBag() {
+  state.shuffleBag = state.songs
+    .map((_, i) => i)
+    .filter(i => i !== state.index);
+
+  for (let i = state.shuffleBag.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [state.shuffleBag[i], state.shuffleBag[j]] =
+      [state.shuffleBag[j], state.shuffleBag[i]];
   }
+}
+
+function pickNext() {
+  if (!state.songs.length) return -1;
+
+  if (state.shuffle) {
+    if (!state.shuffleBag.length) {
+      refillShuffleBag();
+    }
+
+    return state.shuffleBag.pop() ?? state.index;
+  }
+
   return (state.index + 1) % state.songs.length;
 }
-function pickPrev(){ return state.songs.length ? (state.index - 1 + state.songs.length) % state.songs.length : -1; }
-function next(){
-  if(state.repeat && state.index >= 0) return playSong(state.index);
-  const n = pickNext(); if(n>=0) playSong(n);
+
+function pickPrev() {
+  if (!state.songs.length) return -1;
+
+  return (state.index - 1 + state.songs.length) % state.songs.length;
 }
-function prev(){ const p = pickPrev(); if(p>=0) playSong(p); }
 
+/* =========================================================
+   REPRODUCCIÓN PRINCIPAL
+   ========================================================= */
 
-function isStandalone(){
+async function playSong(index, autoplay = false, source = 'user') {
+  const song = state.songs[index];
+
+  if (!song) return false;
+
+  const request = ++state.requestId;
+
+  state.switching = true;
+  state.index = index;
+
+  updateMeta(song);
+  loadCover(song);
+  renderList();
+  updateActiveRow();
+
+  localStorage.setItem('gt-gelm-last-id', String(song.id));
+
+  setMediaSession(song);
+  loadLyrics(song);
+
+  audio.pause();
+  audio.src = song.url;
+  audio.load();
+
+  state.switching = false;
+
+  if (!autoplay) {
+    updatePlayButton(false);
+    return true;
+  }
+
+  try {
+    await audio.play();
+
+    if (request !== state.requestId) return false;
+
+    state.userStartedPlayback = true;
+
+    updatePlayButton(true);
+    cacheAudio(song.url);
+
+    return true;
+
+  } catch (err) {
+    if (request !== state.requestId) return false;
+
+    updatePlayButton(false);
+
+    if (metaEl) {
+      metaEl.textContent =
+        err && err.name === 'NotAllowedError'
+          ? 'Toca reproducir para iniciar el audio'
+          : 'No se pudo iniciar esta canción · toca reproducir para reintentar';
+    }
+
+    console.warn(
+      `GT-GELM: no se pudo reproducir "${song.title}"`,
+      err
+    );
+
+    return false;
+  }
+}
+
+async function playCurrentFromGesture() {
+  if (state.index < 0 && state.songs.length) {
+    const first = Math.floor(Math.random() * state.songs.length);
+
+    return playSong(first, true, 'user');
+  }
+
+  try {
+    await audio.play();
+
+    state.userStartedPlayback = true;
+    updatePlayButton(true);
+
+    const song = state.songs[state.index];
+
+    if (song) cacheAudio(song.url);
+
+  } catch (err) {
+    updatePlayButton(false);
+
+    console.warn(
+      'GT-GELM: el navegador no permitió iniciar el audio.',
+      err
+    );
+
+    if (metaEl) {
+      metaEl.textContent =
+        'No se pudo iniciar · vuelve a tocar reproducir';
+    }
+  }
+}
+
+/* =========================================================
+   SIGUIENTE Y ANTERIOR
+   ========================================================= */
+
+async function next(source = 'user') {
+  if (!state.songs.length) return;
+
+  if (source === 'ended' && state.repeat && state.index >= 0) {
+    await playSong(state.index, true, 'ended');
+    return;
+  }
+
+  const nextIndex = pickNext();
+
+  if (nextIndex >= 0) {
+    const ok = await playSong(nextIndex, true, source);
+
+    if (!ok && source === 'ended' && metaEl) {
+      metaEl.textContent =
+        'La siguiente canción no pudo iniciar · revisa conexión o servidor de audio';
+    }
+  }
+}
+
+function prev() {
+  const p = pickPrev();
+
+  if (p >= 0) {
+    playSong(p, true, 'user');
+  }
+}
+
+/* =========================================================
+   INSTALACIÓN PWA
+   ========================================================= */
+
+function isStandalone() {
   return window.matchMedia('(display-mode: standalone)').matches ||
-         window.navigator.standalone === true;
+    window.navigator.standalone === true;
 }
 
-function isIOS(){
+function isIOS() {
   return /iphone|ipad|ipod/i.test(navigator.userAgent);
 }
 
-function setupInstall(){
+function setupInstall() {
   const btn = $('installBtn');
-  if(!btn) return;
 
-  // Si ya está instalada como PWA, no mostramos el botón.
-  if(isStandalone()){
+  if (!btn) return;
+
+  if (isStandalone()) {
     btn.hidden = true;
     return;
   }
 
-  // El botón queda visible como acceso a instalación.
-  // Si el navegador ofrece el instalador automático, usaremos el prompt real.
   btn.hidden = false;
 
-  window.addEventListener('beforeinstallprompt', (event) => {
+  window.addEventListener('beforeinstallprompt', event => {
     event.preventDefault();
     state.deferredInstallPrompt = event;
     btn.hidden = false;
@@ -269,35 +527,37 @@ function setupInstall(){
   });
 
   btn.addEventListener('click', async () => {
-    if(state.deferredInstallPrompt){
+    if (state.deferredInstallPrompt) {
       const promptEvent = state.deferredInstallPrompt;
       state.deferredInstallPrompt = null;
 
-      try{
+      try {
         await promptEvent.prompt();
+
         const choice = await promptEvent.userChoice;
-        if(choice && choice.outcome === 'accepted'){
+
+        if (choice && choice.outcome === 'accepted') {
           btn.hidden = true;
         }
-      }catch(err){
+
+      } catch (err) {
         console.warn('No se pudo abrir el instalador:', err);
       }
+
       return;
     }
 
-    if(isIOS()){
+    if (isIOS()) {
       alert(
         'Para instalar GT-GELM en iPhone/iPad:\n\n' +
         '1. Toca Compartir.\n' +
         '2. Selecciona “Agregar a pantalla de inicio”.\n' +
         '3. Confirma “Agregar”.'
       );
+
       return;
     }
 
-    // Algunos navegadores (incluido Samsung Browser en determinadas versiones)
-    // no exponen beforeinstallprompt. En ese caso la instalación se hace desde
-    // el menú del navegador.
     alert(
       'Para instalar GT-GELM:\n\n' +
       'Abre el menú del navegador y busca “Instalar aplicación”, ' +
@@ -306,169 +566,471 @@ function setupInstall(){
   });
 }
 
-function setMediaSession(song){
-  if(!('mediaSession' in navigator)) return;
-  try{
-    navigator.mediaSession.metadata = new MediaMetadata({title: humanTitle(song.title || song.file), artist:'GT-GELM', album:'GT-GELM Producciones', artwork:[
-      {src: chooseCover(song), sizes:'512x512', type:'image/png'}
-    ]});
-    navigator.mediaSession.setActionHandler('play', ()=>audio.play());
-    navigator.mediaSession.setActionHandler('pause', ()=>audio.pause());
-    navigator.mediaSession.setActionHandler('previoustrack', prev);
-    navigator.mediaSession.setActionHandler('nexttrack', next);
+/* =========================================================
+   CONTROLES DE PANTALLA BLOQUEADA
+   ========================================================= */
+
+function setMediaSession(song) {
+  if (!('mediaSession' in navigator) ||
+      typeof MediaMetadata === 'undefined') return;
+
+  try {
+    const art = chooseCover(song);
+
+    const type = /\.webp(?:$|\?)/i.test(art)
+      ? 'image/webp'
+      : 'image/png';
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: humanTitle(song.title || song.file),
+      artist: 'GT-GELM',
+      album: 'GT-GELM Producciones',
+      artwork: [
+        { src: art, sizes: '512x512', type },
+        { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' }
+      ]
+    });
 
     const safeAction = (name, handler) => {
-      try{ navigator.mediaSession.setActionHandler(name, handler); }catch{}
+      try {
+        navigator.mediaSession.setActionHandler(name, handler);
+      } catch (_) {}
     };
 
-    safeAction('seekbackward', (details)=>{
+    safeAction('play', playCurrentFromGesture);
+    safeAction('pause', () => audio.pause());
+    safeAction('previoustrack', prev);
+    safeAction('nexttrack', () => next('user'));
+
+    safeAction('seekbackward', details => {
       const skip = Number(details.seekOffset) || 10;
+
       audio.currentTime = Math.max(0, audio.currentTime - skip);
     });
 
-    safeAction('seekforward', (details)=>{
+    safeAction('seekforward', details => {
       const skip = Number(details.seekOffset) || 10;
-      audio.currentTime = Math.min(audio.duration || Infinity, audio.currentTime + skip);
+
+      audio.currentTime =
+        Math.min(audio.duration || Infinity, audio.currentTime + skip);
     });
 
-    safeAction('seekto', (details)=>{
-      if(!Number.isFinite(details.seekTime) || !Number.isFinite(audio.duration)) return;
-      audio.currentTime = Math.min(audio.duration, Math.max(0, details.seekTime));
+    safeAction('seekto', details => {
+      if (!Number.isFinite(details.seekTime) ||
+          !Number.isFinite(audio.duration)) return;
+
+      audio.currentTime =
+        Math.min(audio.duration, Math.max(0, details.seekTime));
     });
-  }catch{}
+
+  } catch (err) {
+    console.warn(
+      'GT-GELM: Media Session no disponible completamente.',
+      err
+    );
+  }
 }
 
-$('play').addEventListener('click', ()=> audio.paused ? audio.play() : audio.pause());
-$('prev').addEventListener('click', prev);
-$('next').addEventListener('click', next);
-$('shuffle').addEventListener('click', ()=>{state.shuffle=!state.shuffle; $('shuffle').setAttribute('aria-pressed', String(state.shuffle));});
-$('repeat').addEventListener('click', ()=>{state.repeat=!state.repeat; $('repeat').setAttribute('aria-pressed', String(state.repeat));});
-$('mute').addEventListener('click', ()=>{audio.muted=!audio.muted; $('mute').textContent = audio.muted ? 'Activar sonido' : 'Silencio';});
-$('audioDirect').addEventListener('click', ()=>{const s=state.songs[state.index]; if(s) window.open(s.url,'_blank','noopener');});
-$('youtubeBtn').addEventListener('click', ()=>{const s=state.songs[state.index]; if(s) renderYoutube(s,true);});
-$('closeYoutube').addEventListener('click', ()=>youtubePanel.hidden=true);
-$('openYoutube').addEventListener('click', ()=>setTimeout(()=>{youtubePanel.hidden=true},100));
-$('libraryBtn').addEventListener('click', ()=>{libraryPanel.hidden=!libraryPanel.hidden; libraryBtn.setAttribute('aria-expanded', String(!libraryPanel.hidden));});
-$('closeLibrary').addEventListener('click', ()=>{libraryPanel.hidden=true; libraryBtn.setAttribute('aria-expanded','false');});
-$('themeBtn').addEventListener('click', ()=>document.body.classList.toggle('light'));
-$('lyricsToggle').addEventListener('click', ()=>{lyrics.hidden=!lyrics.hidden; $('lyricsToggle').textContent=lyrics.hidden?'Mostrar':'Ocultar'; $('lyricsToggle').setAttribute('aria-expanded', String(!lyrics.hidden));});
-search.addEventListener('input', e=>{state.query=e.target.value; applyFilters();});
-document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click', ()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); state.filter=btn.dataset.filter; applyFilters();}));
+/* =========================================================
+   BOTONES
+   ========================================================= */
 
-seek.addEventListener('pointerdown', ()=>{ state.seeking = true; });
-seek.addEventListener('pointerup', ()=>{
+$('play')?.addEventListener('click', () => {
+  if (audio.paused) {
+    playCurrentFromGesture();
+  } else {
+    audio.pause();
+  }
+});
+
+$('prev')?.addEventListener('click', prev);
+
+$('next')?.addEventListener('click', () => next('user'));
+
+$('shuffle')?.addEventListener('click', () => {
+  state.shuffle = !state.shuffle;
+
+  $('shuffle').setAttribute(
+    'aria-pressed',
+    String(state.shuffle)
+  );
+
+  if (state.shuffle) refillShuffleBag();
+});
+
+$('repeat')?.addEventListener('click', () => {
+  state.repeat = !state.repeat;
+
+  $('repeat').setAttribute(
+    'aria-pressed',
+    String(state.repeat)
+  );
+});
+
+$('mute')?.addEventListener('click', () => {
+  audio.muted = !audio.muted;
+
+  $('mute').textContent =
+    audio.muted ? 'Activar sonido' : 'Silencio';
+
+  $('mute').setAttribute(
+    'aria-pressed',
+    String(audio.muted)
+  );
+});
+
+$('audioDirect')?.addEventListener('click', () => {
+  const s = state.songs[state.index];
+
+  if (s) {
+    window.open(s.url, '_blank', 'noopener');
+  }
+});
+
+/* YouTube: pestaña nueva, sin iframe */
+
+$('youtubeBtn')?.addEventListener('click', () => {
+  renderYoutube();
+});
+
+$('openYoutube')?.addEventListener('click', () => {
+  openYoutube.target = '_blank';
+  openYoutube.rel = 'noopener noreferrer';
+});
+
+/* Biblioteca */
+
+$('libraryBtn')?.addEventListener('click', () => {
+  libraryPanel.hidden = !libraryPanel.hidden;
+
+  libraryBtn.setAttribute(
+    'aria-expanded',
+    String(!libraryPanel.hidden)
+  );
+});
+
+$('closeLibrary')?.addEventListener('click', () => {
+  libraryPanel.hidden = true;
+
+  libraryBtn.setAttribute('aria-expanded', 'false');
+});
+
+/* Tema */
+
+$('themeBtn')?.addEventListener('click', () => {
+  document.body.classList.toggle('light');
+});
+
+/* Letras */
+
+$('lyricsToggle')?.addEventListener('click', () => {
+  lyrics.hidden = !lyrics.hidden;
+
+  $('lyricsToggle').textContent =
+    lyrics.hidden ? 'Mostrar' : 'Ocultar';
+
+  $('lyricsToggle').setAttribute(
+    'aria-expanded',
+    String(!lyrics.hidden)
+  );
+});
+
+/* Buscador */
+
+search?.addEventListener('input', e => {
+  state.query = e.target.value;
+  applyFilters();
+});
+
+/* Categorías */
+
+document.querySelectorAll('.filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter').forEach(x => {
+      x.classList.remove('active');
+    });
+
+    btn.classList.add('active');
+    state.filter = btn.dataset.filter;
+
+    applyFilters();
+  });
+});
+
+/* =========================================================
+   PROGRESO Y VOLUMEN
+   ========================================================= */
+
+seek?.addEventListener('pointerdown', () => {
+  state.seeking = true;
+});
+
+seek?.addEventListener('pointerup', () => {
   state.seeking = false;
-  if(Number.isFinite(audio.duration)){
-    audio.currentTime = (Number(seek.value)/100) * audio.duration;
+
+  if (Number.isFinite(audio.duration)) {
+    audio.currentTime =
+      (Number(seek.value) / 100) * audio.duration;
+
     currentTimeEl.textContent = fmt(audio.currentTime);
   }
 });
-seek.addEventListener('input', ()=>{
-  if(Number.isFinite(audio.duration)){
-    const position = (Number(seek.value)/100) * audio.duration;
-    currentTimeEl.textContent = fmt(position);
+
+seek?.addEventListener('pointercancel', () => {
+  state.seeking = false;
+});
+
+seek?.addEventListener('input', () => {
+  if (Number.isFinite(audio.duration)) {
+    currentTimeEl.textContent =
+      fmt((Number(seek.value) / 100) * audio.duration);
   }
 });
-seek.addEventListener('change', ()=>{
-  if(Number.isFinite(audio.duration)){
-    audio.currentTime = (Number(seek.value)/100) * audio.duration;
+
+seek?.addEventListener('change', () => {
+  if (Number.isFinite(audio.duration)) {
+    audio.currentTime =
+      (Number(seek.value) / 100) * audio.duration;
+
     currentTimeEl.textContent = fmt(audio.currentTime);
   }
 });
-volume.addEventListener('input', ()=>audio.volume=Number(volume.value));
-audio.volume=.85;
-audio.addEventListener('loadedmetadata', ()=>{
-  durationEl.textContent=fmt(audio.duration);
-  seek.value=0;
-});
-audio.addEventListener('timeupdate', ()=>{
-  currentTimeEl.textContent=fmt(audio.currentTime);
-  if(audio.duration && !state.seeking){
-    seek.value=(audio.currentTime/audio.duration)*100;
+
+if (volume) {
+  volume.addEventListener('input', () => {
+    audio.volume = Number(volume.value);
+  });
+
+  audio.volume = Number(volume.value || 0.85);
+}
+
+audio.addEventListener('loadedmetadata', () => {
+  durationEl.textContent = fmt(audio.duration);
+
+  if (!state.seeking) {
+    seek.value = 0;
   }
-  if('mediaSession' in navigator && Number.isFinite(audio.duration) && audio.duration > 0){
-    try{
+});
+
+audio.addEventListener('timeupdate', () => {
+  currentTimeEl.textContent = fmt(audio.currentTime);
+
+  if (audio.duration && !state.seeking) {
+    seek.value = (audio.currentTime / audio.duration) * 100;
+  }
+
+  if ('mediaSession' in navigator &&
+      Number.isFinite(audio.duration) &&
+      audio.duration > 0) {
+    try {
       navigator.mediaSession.setPositionState({
         duration: audio.duration,
         playbackRate: audio.playbackRate || 1,
         position: Math.min(audio.currentTime, audio.duration)
       });
-    }catch{}
+    } catch (_) {}
   }
 });
 
-// =========================================================
-// GT-GELM · PULSO MUSICAL V7
-// Visual seguro: solo anima la interfaz. No intercepta el audio.
-// =========================================================
+/* =========================================================
+   ESTADO VISUAL
+   ========================================================= */
+
 const musicPulse = $('musicPulse');
-const brandPulse = $('brandPulse'); // Compatibilidad con versiones anteriores
+const brandPulse = $('brandPulse');
 const heroVitals = $('heroVitals');
 
-function setMusicPulse(playing){
+function setMusicPulse(playing) {
   const active = Boolean(playing);
-  [musicPulse, brandPulse, heroVitals].forEach(el=>{
-    if(!el) return;
-    el.classList.toggle('is-playing', active);
+
+  [musicPulse, brandPulse, heroVitals].forEach(el => {
+    if (el) el.classList.toggle('is-playing', active);
   });
-  if(musicPulse) musicPulse.setAttribute('aria-label', active ? 'Pulso musical activo' : 'Pulso musical detenido');
+
+  if (musicPulse) {
+    musicPulse.setAttribute(
+      'aria-label',
+      active ? 'Pulso musical activo' : 'Pulso musical detenido'
+    );
+  }
 }
 
-// Puente visual: solo activa/desactiva clases CSS, no procesa ni altera el audio.
-function startPulseVisualizer(){ setMusicPulse(true); }
-function stopPulseVisualizer(){ setMusicPulse(false); }
+audio.addEventListener('play', () => {
+  setMusicPulse(true);
+  updatePlayButton(true);
 
-setMusicPulse(!audio.paused && !audio.ended);
-
-audio.addEventListener('play', ()=>{
-  startPulseVisualizer();
-  $('play').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"></rect><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"></rect></svg>';
-  if('mediaSession' in navigator){
-    try{ navigator.mediaSession.playbackState = 'playing'; }catch{}
+  if ('mediaSession' in navigator) {
+    try {
+      navigator.mediaSession.playbackState = 'playing';
+    } catch (_) {}
   }
 });
-audio.addEventListener('pause', ()=>{
-  stopPulseVisualizer();
-  $('play').innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13L19 12 8 5.5Z" fill="currentColor"></path></svg>';
-  if('mediaSession' in navigator){
-    try{ navigator.mediaSession.playbackState = 'paused'; }catch{}
+
+audio.addEventListener('playing', () => {
+  if (metaEl && metaEl.textContent.includes('no pudo')) {
+    const song = state.songs[state.index];
+
+    if (song) updateMeta(song);
+  }
+
+  if (metaEl) {
+    delete metaEl.dataset.waiting;
   }
 });
-audio.addEventListener('ended', next);
-audio.addEventListener('error', ()=>{ metaEl.textContent = 'No se pudo cargar el audio · revisa la dirección Cloudflare'; });
 
-async function boot(){
-  try{
+audio.addEventListener('pause', () => {
+  setMusicPulse(false);
+  updatePlayButton(false);
+
+  if ('mediaSession' in navigator) {
+    try {
+      navigator.mediaSession.playbackState = 'paused';
+    } catch (_) {}
+  }
+});
+
+/* =========================================================
+   CAMBIO AUTOMÁTICO
+   ========================================================= */
+
+audio.addEventListener('ended', () => {
+  next('ended');
+});
+
+audio.addEventListener('waiting', () => {
+  if (metaEl && audio.currentSrc) {
+    metaEl.dataset.waiting = 'true';
+  }
+});
+
+audio.addEventListener('error', () => {
+  if (state.switching) return;
+
+  const song = state.songs[state.index];
+
+  if (metaEl) {
+    metaEl.textContent =
+      `Error de audio${song ? ` · ${song.title}` : ''} · revisa conexión o servidor`;
+  }
+
+  updatePlayButton(false);
+
+  console.error(
+    'GT-GELM audio error:',
+    audio.error,
+    song ? song.url : '(sin canción)'
+  );
+});
+
+/* =========================================================
+   CACHÉ DE AUDIO
+   ========================================================= */
+
+function cacheAudio(url) {
+  const sw =
+    navigator.serviceWorker &&
+    navigator.serviceWorker.controller;
+
+  if (sw) {
+    sw.postMessage({
+      type: 'cache-audio',
+      url
+    });
+  }
+}
+
+/* =========================================================
+   CARGA INICIAL
+   ========================================================= */
+
+async function boot() {
+  try {
     setupInstall();
+
     const [songsRes, ytRes] = await Promise.all([
-      fetch('songs.json', {cache:'no-store'}).catch(() =>
-        fetch(REPO_RAW + 'songs.json', {cache:'no-store'})
+      fetch('songs.json', { cache: 'no-store' }).catch(() =>
+        fetch(REPO_RAW + 'songs.json', { cache: 'no-store' })
       ),
-      fetch('youtube.json', {cache:'no-store'}).catch(()=>null)
+
+      fetch('youtube.json', { cache: 'no-store' }).catch(() => null)
     ]);
-    if(!songsRes.ok) throw new Error(`songs.json ${songsRes.status}`);
-    state.songs = normalizeSongs(await songsRes.json());
-    if(ytRes && ytRes.ok) state.youtube = await ytRes.json();
-    applyFilters();
-    let startIndex = state.songs.length ? Math.floor(Math.random() * state.songs.length) : -1;
-    if (DEFAULT_SONG_ID > 0) {
-      const configured = state.songs.findIndex(s=>s.id===DEFAULT_SONG_ID);
-      if (configured >= 0) startIndex = configured;
+
+    if (!songsRes || !songsRes.ok) {
+      throw new Error(
+        `songs.json ${songsRes ? songsRes.status : 'sin respuesta'}`
+      );
     }
-    await playSong(startIndex,false);
-  }catch(err){
-    titleEl.textContent='No se pudo cargar la biblioteca';
-    metaEl.textContent=String(err.message||err);
-    console.error(err);
+
+    state.songs = normalizeSongs(await songsRes.json());
+
+    if (!state.songs.length) {
+      throw new Error('La biblioteca no contiene canciones válidas.');
+    }
+
+    if (ytRes && ytRes.ok) {
+      state.youtube = await ytRes.json();
+    }
+
+    applyFilters();
+
+    let startIndex =
+      Math.floor(Math.random() * state.songs.length);
+
+    const lastId =
+      Number(localStorage.getItem('gt-gelm-last-id') || 0);
+
+    if (DEFAULT_SONG_ID > 0) {
+      const configured =
+        state.songs.findIndex(s => s.id === DEFAULT_SONG_ID);
+
+      if (configured >= 0) {
+        startIndex = configured;
+      }
+
+    } else if (lastId > 0) {
+      const previous =
+        state.songs.findIndex(s => s.id === lastId);
+
+      if (previous >= 0) {
+        startIndex = previous;
+      }
+    }
+
+    // Preparar la canción sin autoplay.
+    // El usuario inicia la reproducción con el primer toque.
+
+    await playSong(startIndex, false, 'boot');
+
+    if (state.shuffle) {
+      refillShuffleBag();
+    }
+
+  } catch (err) {
+    titleEl.textContent = 'No se pudo cargar la biblioteca';
+    metaEl.textContent = String(err.message || err);
+
+    console.error('GT-GELM boot:', err);
   }
 }
 
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});
-}
-function cacheAudio(url){
-  const sw = navigator.serviceWorker && navigator.serviceWorker.controller;
-  if(sw) sw.postMessage({type:'cache-audio', url});
+/* =========================================================
+   SERVICE WORKER
+   ========================================================= */
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(
+      'sw.js',
+      { updateViaCache: 'none' }
+    )
+      .then(reg => reg.update())
+      .catch(err => {
+        console.warn(
+          'GT-GELM: Service Worker no registrado.',
+          err
+        );
+      });
+  });
 }
 
 boot();
