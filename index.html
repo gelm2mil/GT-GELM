@@ -1,179 +1,294 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#070712">
-  <meta name="description" content="GT-GELM Producciones — reproductor musical de historias de Guatemala.">
+  <meta name="theme-color" content="#050509">
+  <meta name="description" content="GT-GELM Producciones — música e historias de Guatemala.">
+
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icons/icon-192.png" type="image/png">
   <link rel="stylesheet" href="styles.css">
-  <title>GT-GELM · Neon Pulse V4</title>
+
+  <title>GT-GELM · Black Player</title>
 </head>
+
 <body>
-  <div class="ambient ambient-a"></div>
-  <div class="ambient ambient-b"></div>
 
   <main class="app-shell">
-    <header class="neon-banner" aria-label="GT-GELM · Guatemala tu nombre inmortal">
-      <div class="banner-topline">
-        <div class="brand hero-brand">
-          <div class="brand-mark">G</div>
-          <div class="brand-copy">
-            <strong>GT-GELM</strong>
-            <span>GUATEMALA TU NOMBRE INMORTAL</span>
-          </div>
-        </div>
-        <div class="top-actions">
-          <a class="top-link" href="https://www.youtube.com/@GT-GELM" target="_blank" rel="noopener"><span class="btn-symbol" aria-hidden="true">▶</span> YouTube</a>
-          <button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar apariencia">◐</button>
-        </div>
-      </div>
 
-      <div class="hero-vitals" id="heroVitals" aria-label="Signos vitales neón GT-GELM">
-        <svg class="hero-ecg" viewBox="0 0 1200 330" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="heroEcgGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#00f5ff"/><stop offset="22%" stop-color="#168cff"/>
-              <stop offset="43%" stop-color="#6245ff"/><stop offset="58%" stop-color="#ed20ff"/>
-              <stop offset="76%" stop-color="#ff285d"/><stop offset="100%" stop-color="#ff2438"/>
-            </linearGradient>
-            <filter id="heroEcgGlow" x="-15%" y="-80%" width="130%" height="260%">
-              <feGaussianBlur stdDeviation="3.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="heroIconGlow" x="-80%" y="-80%" width="260%" height="260%">
-              <feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
-          <path class="hero-ecg-glow" d="M110 205 H185 L202 205 L218 174 L236 238 L255 112 L278 267 L301 205 H360 L382 205 L399 177 L418 230 L438 205 H488 L512 205 L532 150 L552 258 L574 205 H626 L648 205 L669 127 L692 276 L714 205 H760 L782 205 L802 177 L821 229 L842 205 H900 L920 205 L940 148 L961 260 L983 205 H1030 L1050 205 L1068 177 L1087 229 L1100 205"/>
-          <path class="hero-ecg-line" d="M110 205 H185 L202 205 L218 174 L236 238 L255 112 L278 267 L301 205 H360 L382 205 L399 177 L418 230 L438 205 H488 L512 205 L532 150 L552 258 L574 205 H626 L648 205 L669 127 L692 276 L714 205 H760 L782 205 L802 177 L821 229 L842 205 H900 L920 205 L940 148 L961 260 L983 205 H1030 L1050 205 L1068 177 L1087 229 L1100 205"/>
-          <path class="hero-ecg-traveler" pathLength="1000" d="M110 205 H185 L202 205 L218 174 L236 238 L255 112 L278 267 L301 205 H360 L382 205 L399 177 L418 230 L438 205 H488 L512 205 L532 150 L552 258 L574 205 H626 L648 205 L669 127 L692 276 L714 205 H760 L782 205 L802 177 L821 229 L842 205 H900 L920 205 L940 148 L961 260 L983 205 H1030 L1050 205 L1068 177 L1087 229 L1100 205"/>
-          <g class="hero-note hero-note-left" filter="url(#heroIconGlow)" transform="translate(68 205)">
-            <circle r="43"/><circle r="34" class="hero-note-inner"/><path d="M-8 13V-13L14 -19V7 M-8 13a8 6 0 1 1-7-6 7 5 0 0 1 7 6 M14 7a8 6 0 1 1-7-6 7 5 0 0 1 7 6"/>
-          </g>
-          <g class="hero-note hero-note-right" filter="url(#heroIconGlow)" transform="translate(1132 205)">
-            <circle r="43"/><circle r="34" class="hero-note-inner"/><path d="M-8 13V-13L14 -19V7 M-8 13a8 6 0 1 1-7-6 7 5 0 0 1 7 6 M14 7a8 6 0 1 1-7-6 7 5 0 0 1 7 6"/>
-          </g>
-        </svg>
-        <svg class="hero-g-ring" viewBox="0 0 360 310" aria-hidden="true">
-          <defs><linearGradient id="heroGGradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00efff"/><stop offset="45%" stop-color="#3b55ff"/><stop offset="72%" stop-color="#b52cff"/><stop offset="100%" stop-color="#ff2d9b"/></linearGradient><filter id="heroGGlow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-          <path d="M250 50 A128 128 0 1 0 274 222 L204 222 L204 174 L252 174" fill="none" stroke="url(#heroGGradient)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#heroGGlow)"/>
-          <path d="M250 50 A128 128 0 1 0 274 222 L204 222 L204 174 L252 174" fill="none" stroke="url(#heroGGradient)" stroke-width="1.2" opacity=".95"/>
-        </svg>
-        <span class="hero-heart halo-heart" aria-hidden="true"><img src="heart-neon.png" alt=""></span>
-      </div>
-    </header>
-
+    <!-- REPRODUCTOR PRINCIPAL -->
     <section class="player-layout">
-      <section class="player-card" aria-label="Reproductor GT-GELM">
-        <div class="player-badge">● GT-GELM</div>
 
+      <section class="player-card" aria-label="Reproductor GT-GELM">
+
+        <div class="player-badge">
+          <span class="live-dot"></span>
+          GT-GELM · BLACK PLAYER
+        </div>
+
+        <!-- PORTADA -->
         <div class="cover-wrap">
-          <img id="cover" class="cover" src="assets/img/default-cover.svg" alt="Portada GT-GELM" loading="eager">
+          <img
+            id="cover"
+            class="cover"
+            src="assets/img/default-cover.svg"
+            alt="Portada musical"
+            loading="eager"
+          >
           <div class="cover-glow"></div>
           <div class="cover-corner">♫</div>
         </div>
-        
 
+        <!-- CANCIÓN ACTUAL -->
         <div class="now-playing">
           <span class="eyebrow">AHORA SUENA</span>
-          <h1 id="title">Cargando…</h1>
-          <p id="meta">GT-GELM · 000 · HISTORIAS</p>
+          <h1 id="title">Cargando biblioteca...</h1>
+          <p id="meta">GT-GELM · PREPARANDO AUDIO</p>
         </div>
 
+        <!-- BOTONERA -->
         <div class="main-controls">
-          <button class="control" id="prev" type="button" title="Anterior" aria-label="Anterior">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v12M18 7 10 12l8 5V7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+
+          <button
+            class="control"
+            id="prev"
+            type="button"
+            title="Canción anterior"
+            aria-label="Canción anterior"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6v12M18 7 10 12l8 5V7Z"
+                fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linejoin="round">
+              </path>
+            </svg>
           </button>
-          <button class="control play" id="play" type="button" title="Reproducir / pausar" aria-label="Reproducir / pausar">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13L19 12 8 5.5Z" fill="currentColor"></path></svg>
+
+          <button
+            class="control play"
+            id="play"
+            type="button"
+            title="Reproducir o pausar"
+            aria-label="Reproducir"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 5.5v13L19 12 8 5.5Z"
+                fill="currentColor">
+              </path>
+            </svg>
           </button>
-          <button class="control" id="next" type="button" title="Siguiente" aria-label="Siguiente">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6v12M6 7l8 5-8 5V7Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path></svg>
+
+          <button
+            class="control"
+            id="next"
+            type="button"
+            title="Siguiente canción"
+            aria-label="Siguiente canción"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 6v12M6 7l8 5-8 5V7Z"
+                fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linejoin="round">
+              </path>
+            </svg>
           </button>
-          <button class="control" id="shuffle" type="button" title="Aleatorio" aria-label="Aleatorio" aria-pressed="true">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h2.5c4 0 5 10 11 10H20M17 5l3 2-3 2M4 17h2.5c1.6 0 2.7-.9 3.6-2.1M14.5 9.1C15.5 7.8 16.4 7 20 7M17 15l3 2-3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+
+          <button
+            class="control"
+            id="shuffle"
+            type="button"
+            title="Reproducción aleatoria"
+            aria-label="Aleatorio"
+            aria-pressed="true"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 7h2.5c4 0 5 10 11 10H20M17 5l3 2-3 2M4 17h2.5c1.6 0 2.7-.9 3.6-2.1M14.5 9.1C15.5 7.8 16.4 7 20 7M17 15l3 2-3 2"
+                fill="none" stroke="currentColor"
+                stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round">
+              </path>
+            </svg>
           </button>
-          <button class="control" id="repeat" type="button" title="Repetir" aria-label="Repetir" aria-pressed="false">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10l-2-2m2 2-2 2M17 17H7l2 2m-2-2 2-2M5 10V8a1 1 0 0 1 1-1M19 14v2a1 1 0 0 1-1 1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+
+          <button
+            class="control"
+            id="repeat"
+            type="button"
+            title="Repetir canción"
+            aria-label="Repetir"
+            aria-pressed="false"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 7h10l-2-2m2 2-2 2M17 17H7l2 2m-2-2 2-2M5 10V8a1 1 0 0 1 1-1M19 14v2a1 1 0 0 1-1 1"
+                fill="none" stroke="currentColor"
+                stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round">
+              </path>
+            </svg>
           </button>
+
         </div>
 
+        <!-- PROGRESO -->
         <div class="timeline">
           <span id="currentTime">00:00</span>
-          <input id="seek" type="range" min="0" max="100" value="0" step="0.1" aria-label="Posición de la canción">
+
+          <input
+            id="seek"
+            type="range"
+            min="0"
+            max="100"
+            value="0"
+            step="0.1"
+            aria-label="Posición de la canción"
+          >
+
           <span id="duration">00:00</span>
         </div>
 
+        <!-- VOLUMEN -->
         <div class="volume-row">
           <span class="volume-icon" aria-hidden="true">◖)))</span>
-          <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01" aria-label="Volumen">
-          <button class="small-btn" id="mute" type="button">Silencio</button>
+
+          <input
+            id="volume"
+            type="range"
+            min="0"
+            max="1"
+            value="0.85"
+            step="0.01"
+            aria-label="Volumen"
+          >
+
+          <button
+            class="small-btn"
+            id="mute"
+            type="button"
+          >
+            Silencio
+          </button>
         </div>
 
+        <!-- ACCIONES -->
         <div class="player-actions">
-          <button class="action-btn" id="audioDirect" type="button"><span class="btn-symbol" aria-hidden="true">♫</span> Audio GT-GELM</button>
-          <button class="action-btn" id="youtubeBtn" type="button"><span class="btn-symbol" aria-hidden="true">▶</span> YouTube</button>
-          <button class="action-btn" id="installBtn" type="button"><span class="btn-symbol" aria-hidden="true">＋</span> Instalar GT-GELM</button>
-          <button class="action-btn" id="libraryBtn" type="button" aria-expanded="false" aria-controls="libraryPanel"><span class="btn-symbol" aria-hidden="true">☰</span> Biblioteca</button>
+
+          <button class="action-btn" id="audioDirect" type="button">
+            <span class="btn-symbol">♫</span>
+            Audio GT-GELM
+          </button>
+
+          <button class="action-btn" id="youtubeBtn" type="button">
+            <span class="btn-symbol">▶</span>
+            YouTube
+          </button>
+
+          <button class="action-btn" id="installBtn" type="button">
+            <span class="btn-symbol">＋</span>
+            Instalar GT-GELM
+          </button>
+
+          <button
+            class="action-btn"
+            id="libraryBtn"
+            type="button"
+            aria-expanded="false"
+            aria-controls="libraryPanel"
+          >
+            <span class="btn-symbol">☰</span>
+            Biblioteca
+          </button>
+
         </div>
 
+        <!-- BIBLIOTECA -->
         <section class="library-panel" id="libraryPanel" hidden>
+
           <div class="library-head">
             <div>
-              <span class="eyebrow">BIBLIOTECA</span>
+              <span class="eyebrow">BIBLIOTECA MUSICAL</span>
               <h2>GT-GELM · <span id="count">0</span></h2>
             </div>
-            <button class="close-btn" id="closeLibrary" type="button">✕</button>
+
+            <button class="close-btn" id="closeLibrary" type="button">
+              ✕
+            </button>
           </div>
+
           <div class="search-wrap">
             <span>⌕</span>
-            <input id="search" type="search" placeholder="Buscar historia, canción o número…" autocomplete="off">
+
+            <input
+              id="search"
+              type="search"
+              placeholder="Buscar historia, canción o número..."
+              autocomplete="off"
+            >
           </div>
-          <div class="filters" role="tablist" aria-label="Filtros">
-            <button class="filter active" data-filter="all" type="button">Todas</button>
-            <button class="filter" data-filter="historias" type="button">Historias</button>
-            <button class="filter" data-filter="pmt" type="button">PMT</button>
-            <button class="filter" data-filter="cultura" type="button">Cultura</button>
+
+          <div class="filters" role="tablist" aria-label="Categorías">
+
+            <button class="filter active" data-filter="all" type="button">
+              Todas
+            </button>
+
+            <button class="filter" data-filter="historias" type="button">
+              Historias
+            </button>
+
+            <button class="filter" data-filter="pmt" type="button">
+              PMT
+            </button>
+
+            <button class="filter" data-filter="cultura" type="button">
+              Cultura
+            </button>
+
           </div>
+
           <div class="song-list" id="songList"></div>
+
         </section>
 
-        <section class="media-panel" id="youtubePanel" hidden>
-          <div class="panel-head">
-            <div>
-              <span class="eyebrow">VIDEO</span>
-              <h2 id="videoTitle">YouTube</h2>
-            </div>
-            <div class="panel-head-actions">
-              <a id="openYoutube" class="small-btn link-btn" href="#" target="_blank" rel="noopener">Abrir</a>
-              <button class="close-btn" id="closeYoutube" type="button">✕</button>
-            </div>
-          </div>
-          <div class="video-frame-wrap" id="videoWrap"></div>
-          <p class="panel-note" id="videoNote"></p>
-        </section>
-
+        <!-- LETRAS -->
         <section class="lyrics-panel" id="lyricsPanel">
+
           <div class="panel-head">
             <div>
-              <span class="eyebrow">TEXTO</span>
+              <span class="eyebrow">LETRAS</span>
               <h2>Letra de la canción</h2>
             </div>
-            <button class="small-btn" id="lyricsToggle" type="button" aria-expanded="false">Mostrar</button>
+
+            <button
+              class="small-btn"
+              id="lyricsToggle"
+              type="button"
+              aria-expanded="false"
+            >
+              Mostrar
+            </button>
           </div>
+
           <pre id="lyrics" hidden>Letra no disponible todavía en el repositorio.</pre>
+
         </section>
+
       </section>
     </section>
 
+    <!-- PIE -->
     <footer class="footer">
       <span>GT-GELM · Historias de Guatemala convertidas en música</span>
-      <span>GT-GELM... DANDO A CONOCER LUGARES, HISTORIAS, LEYENDAS DE NUESTRA PATRIA</span>
+      <span>GUATEMALA TU NOMBRE INMORTAL</span>
     </footer>
+
   </main>
 
+  <!-- MOTOR DE AUDIO -->
   <audio id="audio" preload="metadata"></audio>
+
   <script src="app.js" defer></script>
+
 </body>
 </html>
