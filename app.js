@@ -998,11 +998,32 @@ audio.addEventListener('pause', () => {
   }
 });
 
-/* ================= CAMBIO AUTOMÁTICO ================= */
+/* ================= CAMBIO AUTOMÁTICO V2 ================= */
 
-audio.addEventListener('ended', () => {
-  next('ended');
-});
+// Evita que el evento ended dispare dos cambios simultáneos.
+let autoAdvanceRunning = false;
+
+async function advanceAfterEnd() {
+  if (autoAdvanceRunning || state.switching) return;
+
+  autoAdvanceRunning = true;
+
+  console.info('GT-GELM: canción terminada. Cargando la siguiente...');
+
+  try {
+    await next('ended');
+  } catch (err) {
+    console.error('GT-GELM: no se pudo avanzar a la siguiente canción.', err);
+
+    if (metaEl) {
+      metaEl.textContent = 'No se pudo iniciar la siguiente canción.';
+    }
+  } finally {
+    autoAdvanceRunning = false;
+  }
+}
+
+audio.addEventListener('ended', advanceAfterEnd);
 
 audio.addEventListener('waiting', () => {
   if (metaEl && audio.currentSrc) {
