@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070b14"><meta name="description" content="GT-GELM Music Player">
+<meta name="theme-color" content="#070b14"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="description" content="GT-GELM Music Player">
 <title>GT-GELM · Music Player</title><link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
 <section class="player panel">
 <div class="cover-wrap"><div class="cover" id="cover">♫</div><span class="cover-tag">GT-GELM ORIGINALS</span></div>
 <div class="track"><small id="sourceLabel">CATÁLOGO GENERAL</small><h1 id="trackTitle">Preparando tu música…</h1><p id="trackMeta">118 canciones disponibles</p></div>
-<audio id="audio" preload="metadata"></audio>
+<audio id="audio" preload="auto" playsinline></audio>
 <div class="timeline"><span id="elapsed">0:00</span><input id="seek" type="range" min="0" max="1000" value="0"><span id="duration">0:00</span></div>
 <div class="controls"><button id="shuffle" class="toggle active" aria-label="Aleatorio" title="Aleatorio">🔀</button><button id="prev" aria-label="Anterior">⏮</button><button id="play" class="play" aria-label="Reproducir">▶</button><button id="next" aria-label="Siguiente">⏭</button><button id="repeat" class="toggle" aria-label="Repetir lista" title="Repetir lista">🔁</button></div>
 <div class="status" id="status" role="status">Listo para reproducir</div>
