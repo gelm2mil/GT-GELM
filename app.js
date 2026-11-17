@@ -47,9 +47,12 @@
     }
   }
 
-  async function playId(id, autoplay=true){
+  function playId(id, autoplay=true){
     const song=pool().find(s=>s.id===id) || state.songs.find(s=>s.id===id);
     if(!song) return false;
+
+    // Solo se bloquea durante el cambio de fuente. Nunca se espera a audio.play()
+    // para liberar este estado: en móviles esa promesa puede tardar o quedar pendiente.
     state.switching=true;
     audio.pause();
     state.currentId=song.id;
@@ -64,23 +67,28 @@
     audio.load();
     renderSongs();
     updateMediaSession(song);
-    let started=false;
+    state.switching=false;
+
     if(autoplay){
       try{
-        await audio.play();
-        started=true;
+        const promise=audio.play();
+        if(promise && typeof promise.catch==='function'){
+          promise.catch(err=>{
+            setStatus(err.name==='NotAllowedError'
+              ? 'El navegador requiere que pulses reproducir para continuar.'
+              : 'No se pudo iniciar esta pista. Puedes intentar con la siguiente.');
+            console.warn('Audio play error',err);
+          });
+        }
         setStatus('Reproduciendo');
       }catch(err){
-        setStatus(err.name==='NotAllowedError'
-          ? 'El navegador pausó la reproducción. Pulsa reproducir para continuar.'
-          : 'No se pudo iniciar esta pista. Puedes intentar con la siguiente.');
+        setStatus('No se pudo iniciar esta pista. Puedes intentar con la siguiente.');
         console.warn('Audio play error',err);
       }
     }else{
       setStatus('Canción preparada. Pulsa reproducir.');
     }
-    state.switching=false;
-    return started;
+    return true;
   }
   async function play(){ if(!current()){const list=pool();if(!list.length){setStatus('Esta lista no tiene canciones.');return;} if(state.shuffle){makeBag(false);state.currentId=state.bag.pop();}else state.currentId=list[0].id; await playId(state.currentId,false);} try{await audio.play();setStatus('Reproduciendo');}catch(e){setStatus('El navegador no permitió iniciar el audio. Vuelve a tocar reproducir.');} }
   async function next(){
@@ -121,7 +129,7 @@
     $('play').onclick=()=>audio.paused?play():audio.pause();$('next').onclick=next;$('prev').onclick=previous;
     $('shuffle').onclick=()=>{state.shuffle=!state.shuffle;state.bag=[];$('shuffle').classList.toggle('active',state.shuffle);setStatus(state.shuffle?'Aleatorio activado':'Orden secuencial activado');};
     $('repeat').onclick=()=>{state.repeatList=!state.repeatList;$('repeat').classList.toggle('active',state.repeatList);$('repeat').title=state.repeatList?'Repetir lista activado':'Repetir lista desactivado';};
-    audio.addEventListener('ended',()=>{if(!state.switching)next();});
+    audio.onended=()=>{if(!state.switching)next();};
     audio.addEventListener('play',()=>{$('play').textContent='Ⅱ';if('mediaSession' in navigator)navigator.mediaSession.playbackState='playing';updateMediaSession(current());});
     audio.addEventListener('pause',()=>{$('play').textContent='▶';if('mediaSession' in navigator)navigator.mediaSession.playbackState='paused';});
     audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){$('seek').value=Math.round(audio.currentTime/audio.duration*1000);$('elapsed').textContent=fmt(audio.currentTime);$('duration').textContent=fmt(audio.duration);}});
