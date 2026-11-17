@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const AUDIO_BASE = "https://divine-gentle-king-c86b.chapin7839.workers.dev/";
+  const AUDIO_BASE = "https://divine-king-c86b.chapin7839.workers.dev/";
   const FALLBACK_COVER = "img/gt-gelm-logo.webp";
   const $ = id => document.getElementById(id);
   const audio = $("audio");
