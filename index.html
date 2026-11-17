@@ -2,293 +2,951 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#050509">
-  <meta name="description" content="GT-GELM Producciones — música e historias de Guatemala.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050509">
+<meta name="description" content="GT-GELM Música Variada">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<title>GT-GELM · Música</title>
 
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icons/icon-192.png" type="image/png">
-  <link rel="stylesheet" href="styles.css">
+<style>
+:root {
+  color-scheme: dark;
+  --cyan: #00eaff;
+  --green: #00ff88;
+  --purple: #9b4dff;
+  --pink: #e52bff;
+  --bg: #050509;
+  --panel: #101019;
+  --text: #fff;
+  --muted: #9999aa;
+}
 
-  <title>GT-GELM · Black Player</title>
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 15% 10%, #062a3b55, transparent 40%),
+    radial-gradient(ellipse at 85% 85%, #50105b44, transparent 42%),
+    var(--bg);
+}
+
+button, input, select { font: inherit; }
+
+button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.app {
+  width: min(100%, 560px);
+  min-height: 100vh;
+  margin: auto;
+  padding: 22px 16px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 17px;
+}
+
+.brand {
+  text-align: center;
+  width: 100%;
+  padding: 8px 0 12px;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 27px;
+  letter-spacing: 4px;
+  color: var(--cyan);
+  text-shadow: 0 0 12px #00eaff99;
+}
+
+.brand p {
+  margin: 5px 0 0;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--muted);
+}
+
+.player {
+  width: 100%;
+  background: linear-gradient(145deg, #151522, #090910);
+  border: 1px solid #303047;
+  border-radius: 20px;
+  padding: 22px 18px;
+  box-shadow:
+    0 0 25px #00eaff12,
+    0 0 35px #a000ff12;
+}
+
+.cover {
+  width: 145px;
+  height: 145px;
+  margin: 0 auto 18px;
+  display: block;
+  object-fit: cover;
+  border-radius: 18px;
+  border: 1px solid #00eaff88;
+  box-shadow: 0 0 22px #00eaff33;
+  background: #080810;
+}
+
+.now {
+  text-align: center;
+  min-width: 0;
+}
+
+.now .eyebrow {
+  color: var(--green);
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+#songTitle {
+  margin: 7px 0 4px;
+  font-size: 19px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+#songMeta {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.timeline {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+input[type="range"] {
+  accent-color: var(--cyan);
+  cursor: pointer;
+}
+
+#seek {
+  flex: 1;
+  min-width: 0;
+  height: 5px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 19px 0;
+}
+
+.control {
+  width: 43px;
+  height: 43px;
+  border: 0;
+  border-radius: 50%;
+  color: white;
+  background: #242433;
+  font-size: 19px;
+  display: grid;
+  place-items: center;
+}
+
+.control.active {
+  color: var(--green);
+  box-shadow: 0 0 12px #00ff8844;
+}
+
+.control.play {
+  width: 61px;
+  height: 61px;
+  font-size: 25px;
+  color: #050509;
+  background: linear-gradient(135deg, var(--cyan), var(--green));
+  box-shadow: 0 0 20px #00eaff66;
+}
+
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+#volume {
+  flex: 1;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 19px;
+}
+
+.action {
+  border: 1px solid #343447;
+  background: #171722;
+  color: var(--cyan);
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-size: 12px;
+}
+
+.action:active, .control:active {
+  transform: scale(.96);
+}
+
+.library {
+  width: 100%;
+  background: #101019ee;
+  border: 1px solid #303047;
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.library[hidden] { display: none; }
+
+.library h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: var(--cyan);
+}
+
+#search {
+  width: 100%;
+  padding: 12px;
+  color: white;
+  background: #080810;
+  border: 1px solid #343447;
+  border-radius: 9px;
+  outline: none;
+}
+
+.filters {
+  display: flex;
+  gap: 7px;
+  overflow-x: auto;
+  padding: 12px 0;
+}
+
+.filter {
+  flex: 0 0 auto;
+  border: 1px solid #343447;
+  background: #171722;
+  color: #bbb;
+  border-radius: 20px;
+  padding: 7px 12px;
+  font-size: 11px;
+}
+
+.filter.active {
+  color: var(--green);
+  border-color: var(--green);
+}
+
+.song-list {
+  max-height: 330px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.song-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  text-align: left;
+  padding: 11px 9px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: white;
+  background: #171722;
+}
+
+.song-row.active {
+  border-color: var(--cyan);
+  background: #06232c;
+}
+
+.song-number {
+  color: var(--green);
+  font-size: 12px;
+  min-width: 30px;
+}
+
+.song-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.song-name {
+  display: block;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.song-category {
+  display: block;
+  color: var(--muted);
+  font-size: 10px;
+  margin-top: 3px;
+}
+
+.status {
+  min-height: 18px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.footer {
+  margin-top: auto;
+  padding-top: 10px;
+  color: var(--green);
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+@media (max-width: 380px) {
+  .app { padding: 15px 11px 24px; }
+  .player { padding: 18px 13px; }
+  .controls { gap: 9px; }
+  .control { width: 39px; height: 39px; }
+  .control.play { width: 55px; height: 55px; }
+}
+</style>
 </head>
 
 <body>
+<main class="app">
 
-  <main class="app-shell">
+  <header class="brand">
+    <h1>GT-GELM</h1>
+    <p>GUATEMALA TU NOMBRE INMORTAL</p>
+  </header>
 
-    <!-- REPRODUCTOR PRINCIPAL -->
-    <section class="player-layout">
+  <section class="player">
 
-      <section class="player-card" aria-label="Reproductor GT-GELM">
+    <img
+      id="cover"
+      class="cover"
+      src="icons/icon-192.png"
+      alt="GT-GELM"
+    >
 
-        <div class="player-badge">
-          <span class="live-dot"></span>
-          GT-GELM · BLACK PLAYER
-        </div>
+    <div class="now">
+      <span class="eyebrow">AHORA SUENA</span>
+      <h2 id="songTitle">Cargando biblioteca...</h2>
+      <div id="songMeta">GT-GELM · Música variada</div>
+    </div>
 
-        <!-- PORTADA -->
-        <div class="cover-wrap">
-          <img
-            id="cover"
-            class="cover"
-            src="assets/img/default-cover.svg"
-            alt="Portada musical"
-            loading="eager"
-          >
-          <div class="cover-glow"></div>
-          <div class="cover-corner">♫</div>
-        </div>
+    <div class="timeline">
+      <span id="currentTime">00:00</span>
+      <input id="seek" type="range" min="0" max="100" value="0" step="0.1">
+      <span id="duration">00:00</span>
+    </div>
 
-        <!-- CANCIÓN ACTUAL -->
-        <div class="now-playing">
-          <span class="eyebrow">AHORA SUENA</span>
-          <h1 id="title">Cargando biblioteca...</h1>
-          <p id="meta">GT-GELM · PREPARANDO AUDIO</p>
-        </div>
+    <div class="controls">
+      <button class="control" id="shuffle" title="Aleatorio" aria-label="Aleatorio">🔀</button>
+      <button class="control" id="prev" title="Anterior" aria-label="Anterior">⏮</button>
+      <button class="control play" id="play" title="Reproducir" aria-label="Reproducir">▶</button>
+      <button class="control" id="next" title="Siguiente" aria-label="Siguiente">⏭</button>
+      <button class="control" id="repeat" title="Repetir canción" aria-label="Repetir">🔁</button>
+    </div>
 
-        <!-- BOTONERA -->
-        <div class="main-controls">
+    <div class="volume">
+      <span>🔉</span>
+      <input id="volume" type="range" min="0" max="1" value="0.85" step="0.01">
+      <span>🔊</span>
+    </div>
 
-          <button
-            class="control"
-            id="prev"
-            type="button"
-            title="Canción anterior"
-            aria-label="Canción anterior"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M6 6v12M18 7 10 12l8 5V7Z"
-                fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linejoin="round">
-              </path>
-            </svg>
-          </button>
+    <div class="actions">
+      <button class="action" id="libraryButton">☰ Biblioteca</button>
+      <button class="action" id="directButton">♫ Audio directo</button>
+      <button class="action" id="youtubeButton">▶ YouTube</button>
+    </div>
 
-          <button
-            class="control play"
-            id="play"
-            type="button"
-            title="Reproducir o pausar"
-            aria-label="Reproducir"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M8 5.5v13L19 12 8 5.5Z"
-                fill="currentColor">
-              </path>
-            </svg>
-          </button>
+  </section>
 
-          <button
-            class="control"
-            id="next"
-            type="button"
-            title="Siguiente canción"
-            aria-label="Siguiente canción"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 6v12M6 7l8 5-8 5V7Z"
-                fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linejoin="round">
-              </path>
-            </svg>
-          </button>
+  <section class="library" id="library" hidden>
+    <h2>Biblioteca GT-GELM · <span id="songCount">0</span></h2>
 
-          <button
-            class="control"
-            id="shuffle"
-            type="button"
-            title="Reproducción aleatoria"
-            aria-label="Aleatorio"
-            aria-pressed="true"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 7h2.5c4 0 5 10 11 10H20M17 5l3 2-3 2M4 17h2.5c1.6 0 2.7-.9 3.6-2.1M14.5 9.1C15.5 7.8 16.4 7 20 7M17 15l3 2-3 2"
-                fill="none" stroke="currentColor"
-                stroke-width="1.8" stroke-linecap="round"
-                stroke-linejoin="round">
-              </path>
-            </svg>
-          </button>
+    <input
+      id="search"
+      type="search"
+      placeholder="Buscar canción..."
+      autocomplete="off"
+    >
 
-          <button
-            class="control"
-            id="repeat"
-            type="button"
-            title="Repetir canción"
-            aria-label="Repetir"
-            aria-pressed="false"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M7 7h10l-2-2m2 2-2 2M17 17H7l2 2m-2-2 2-2M5 10V8a1 1 0 0 1 1-1M19 14v2a1 1 0 0 1-1 1"
-                fill="none" stroke="currentColor"
-                stroke-width="1.8" stroke-linecap="round"
-                stroke-linejoin="round">
-              </path>
-            </svg>
-          </button>
+    <div class="filters">
+      <button class="filter active" data-filter="all">Todas</button>
+      <button class="filter" data-filter="historias">Historias</button>
+      <button class="filter" data-filter="cultura">Cultura</button>
+      <button class="filter" data-filter="pmt">PMT</button>
+    </div>
 
-        </div>
+    <div class="song-list" id="songList"></div>
+  </section>
 
-        <!-- PROGRESO -->
-        <div class="timeline">
-          <span id="currentTime">00:00</span>
+  <div class="status" id="status">Preparando reproductor...</div>
 
-          <input
-            id="seek"
-            type="range"
-            min="0"
-            max="100"
-            value="0"
-            step="0.1"
-            aria-label="Posición de la canción"
-          >
+  <footer class="footer">
+    GT-GELM · PRODUCCIONES
+  </footer>
 
-          <span id="duration">00:00</span>
-        </div>
+</main>
 
-        <!-- VOLUMEN -->
-        <div class="volume-row">
-          <span class="volume-icon" aria-hidden="true">◖)))</span>
+<audio id="audio" preload="metadata" playsinline></audio>
 
-          <input
-            id="volume"
-            type="range"
-            min="0"
-            max="1"
-            value="0.85"
-            step="0.01"
-            aria-label="Volumen"
-          >
+<script>
+'use strict';
 
-          <button
-            class="small-btn"
-            id="mute"
-            type="button"
-          >
-            Silencio
-          </button>
-        </div>
+/* =====================================
+   CONFIGURACIÓN
+===================================== */
 
-        <!-- ACCIONES -->
-        <div class="player-actions">
+const AUDIO_BASE =
+  'https://divine-king-c86b.chapin7839.workers.dev/';
 
-          <button class="action-btn" id="audioDirect" type="button">
-            <span class="btn-symbol">♫</span>
-            Audio GT-GELM
-          </button>
+const YOUTUBE_PLAYLIST =
+  'PLJGpqFTRWh98';
 
-          <button class="action-btn" id="youtubeBtn" type="button">
-            <span class="btn-symbol">▶</span>
-            YouTube
-          </button>
+const $ = id => document.getElementById(id);
 
-          <button class="action-btn" id="installBtn" type="button">
-            <span class="btn-symbol">＋</span>
-            Instalar GT-GELM
-          </button>
+const audio = $('audio');
 
-          <button
-            class="action-btn"
-            id="libraryBtn"
-            type="button"
-            aria-expanded="false"
-            aria-controls="libraryPanel"
-          >
-            <span class="btn-symbol">☰</span>
-            Biblioteca
-          </button>
+let songs = [];
+let index = -1;
+let shuffle = true;
+let repeat = false;
+let filter = 'all';
+let query = '';
+let shuffleBag = [];
+let seeking = false;
 
-        </div>
+/* =====================================
+   UTILIDADES
+===================================== */
 
-        <!-- BIBLIOTECA -->
-        <section class="library-panel" id="libraryPanel" hidden>
+function formatTime(seconds) {
+  if (!Number.isFinite(seconds)) return '00:00';
 
-          <div class="library-head">
-            <div>
-              <span class="eyebrow">BIBLIOTECA MUSICAL</span>
-              <h2>GT-GELM · <span id="count">0</span></h2>
-            </div>
+  seconds = Math.floor(Math.max(0, seconds));
 
-            <button class="close-btn" id="closeLibrary" type="button">
-              ✕
-            </button>
-          </div>
+  return String(Math.floor(seconds / 60)).padStart(2, '0') +
+    ':' +
+    String(seconds % 60).padStart(2, '0');
+}
 
-          <div class="search-wrap">
-            <span>⌕</span>
+function makeURL(file) {
+  if (/^https?:\/\//i.test(file)) return file;
 
-            <input
-              id="search"
-              type="search"
-              placeholder="Buscar historia, canción o número..."
-              autocomplete="off"
-            >
-          </div>
+  return AUDIO_BASE +
+    String(file).split('/').map(encodeURIComponent).join('/');
+}
 
-          <div class="filters" role="tablist" aria-label="Categorías">
+function saveLastSong(song) {
+  try {
+    localStorage.setItem('gt-gelm-last-id', String(song.id));
+  } catch (_) {}
+}
 
-            <button class="filter active" data-filter="all" type="button">
-              Todas
-            </button>
+/* =====================================
+   CARGAR BIBLIOTECA
+===================================== */
 
-            <button class="filter" data-filter="historias" type="button">
-              Historias
-            </button>
+async function loadSongs() {
+  try {
+    const response = await fetch('songs.json', {
+      cache: 'no-store'
+    });
 
-            <button class="filter" data-filter="pmt" type="button">
-              PMT
-            </button>
+    if (!response.ok) {
+      throw new Error('No se pudo cargar songs.json');
+    }
 
-            <button class="filter" data-filter="cultura" type="button">
-              Cultura
-            </button>
+    const data = await response.json();
 
-          </div>
+    const rows = Array.isArray(data)
+      ? data
+      : (Array.isArray(data.songs) ? data.songs : []);
 
-          <div class="song-list" id="songList"></div>
+    songs = rows
+      .filter(song => song.file || song.filename)
+      .map((song, i) => ({
+        id: Number(song.id ?? i + 1),
+        file: String(song.file || song.filename),
+        title: String(song.title || song.file || song.filename),
+        category: String(song.category || 'historias').toLowerCase(),
+        cover: song.cover || '',
+        url: makeURL(song.file || song.filename)
+      }));
 
-        </section>
+    if (!songs.length) {
+      throw new Error('No hay canciones en la biblioteca.');
+    }
 
-        <!-- LETRAS -->
-        <section class="lyrics-panel" id="lyricsPanel">
+    $('songCount').textContent = songs.length;
 
-          <div class="panel-head">
-            <div>
-              <span class="eyebrow">LETRAS</span>
-              <h2>Letra de la canción</h2>
-            </div>
+    renderLibrary();
 
-            <button
-              class="small-btn"
-              id="lyricsToggle"
-              type="button"
-              aria-expanded="false"
-            >
-              Mostrar
-            </button>
-          </div>
+    let lastId = null;
 
-          <pre id="lyrics" hidden>Letra no disponible todavía en el repositorio.</pre>
+    try {
+      lastId = Number(localStorage.getItem('gt-gelm-last-id'));
+    } catch (_) {}
 
-        </section>
+    const lastIndex = songs.findIndex(song => song.id === lastId);
 
-      </section>
-    </section>
+    index = lastIndex >= 0
+      ? lastIndex
+      : Math.floor(Math.random() * songs.length);
 
-    <!-- PIE -->
-    <footer class="footer">
-      <span>GT-GELM · Historias de Guatemala convertidas en música</span>
-      <span>GUATEMALA TU NOMBRE INMORTAL</span>
-    </footer>
+    refillShuffle();
 
-  </main>
+    loadSong(index, false);
 
-  <!-- MOTOR DE AUDIO -->
-  <audio id="audio" preload="metadata"></audio>
+    $('status').textContent =
+      songs.length + ' canciones disponibles · Toca reproducir';
 
-  <script src="app.js" defer></script>
+  } catch (error) {
+    console.error(error);
+    $('songTitle').textContent = 'No se pudo cargar la biblioteca';
+    $('status').textContent = error.message;
+  }
+}
 
+/* =====================================
+   REPRODUCCIÓN
+===================================== */
+
+function loadSong(i, autoplay = true) {
+  if (!songs.length || i < 0 || i >= songs.length) return;
+
+  index = i;
+
+  const song = songs[index];
+
+  audio.pause();
+
+  audio.src = song.url;
+  audio.load();
+
+  $('songTitle').textContent = song.title;
+
+  $('songMeta').textContent =
+    'GT-GELM · ' +
+    String(song.id).padStart(3, '0') +
+    ' · ' +
+    song.category.toUpperCase();
+
+  $('cover').src = song.cover || 'icons/icon-192.png';
+
+  $('cover').onerror = () => {
+    $('cover').onerror = null;
+    $('cover').src = 'icons/icon-192.png';
+  };
+
+  $('currentTime').textContent = '00:00';
+  $('duration').textContent = '00:00';
+  $('seek').value = 0;
+
+  saveLastSong(song);
+
+  updateMediaSession(song);
+  renderLibrary();
+
+  if (autoplay) {
+    audio.play().then(() => {
+      $('status').textContent = 'Reproduciendo';
+    }).catch(error => {
+      console.error('Error al reproducir:', error);
+      $('status').textContent =
+        'Toca reproducir para iniciar la canción';
+    });
+  }
+}
+
+/* =====================================
+   SIGUIENTE Y ANTERIOR
+===================================== */
+
+function refillShuffle() {
+  shuffleBag = songs
+    .map((_, i) => i)
+    .filter(i => i !== index);
+
+  for (let i = shuffleBag.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+
+    [shuffleBag[i], shuffleBag[j]] =
+      [shuffleBag[j], shuffleBag[i]];
+  }
+}
+
+function next() {
+  if (!songs.length) return;
+
+  if (repeat) {
+    loadSong(index, true);
+    return;
+  }
+
+  let nextIndex;
+
+  if (shuffle) {
+    if (!shuffleBag.length) refillShuffle();
+
+    nextIndex = shuffleBag.pop();
+  } else {
+    nextIndex = (index + 1) % songs.length;
+  }
+
+  if (nextIndex !== undefined) {
+    loadSong(nextIndex, true);
+  }
+}
+
+function prev() {
+  if (!songs.length) return;
+
+  const previous =
+    (index - 1 + songs.length) % songs.length;
+
+  loadSong(previous, true);
+}
+
+/*
+  ESTA ES LA INSTRUCCIÓN CENTRAL:
+  Cuando termina una canción, llama directamente a next().
+*/
+audio.onended = next;
+
+/* =====================================
+   CONTROLES
+===================================== */
+
+$('play').addEventListener('click', () => {
+  if (audio.paused) {
+    if (index < 0 && songs.length) {
+      loadSong(0, true);
+    } else {
+      audio.play().catch(error => {
+        console.error(error);
+        $('status').textContent = 'No se pudo iniciar el audio';
+      });
+    }
+  } else {
+    audio.pause();
+  }
+});
+
+$('prev').addEventListener('click', prev);
+$('next').addEventListener('click', next);
+
+$('shuffle').addEventListener('click', () => {
+  shuffle = !shuffle;
+
+  $('shuffle').classList.toggle('active', shuffle);
+
+  if (shuffle) refillShuffle();
+});
+
+$('repeat').addEventListener('click', () => {
+  repeat = !repeat;
+  $('repeat').classList.toggle('active', repeat);
+});
+
+$('shuffle').classList.add('active');
+
+audio.addEventListener('play', () => {
+  $('play').textContent = 'Ⅱ';
+  $('status').textContent = 'Reproduciendo';
+
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = 'playing';
+  }
+});
+
+audio.addEventListener('pause', () => {
+  $('play').textContent = '▶';
+
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = 'paused';
+  }
+});
+
+audio.addEventListener('error', () => {
+  console.error('Error de audio:', audio.error, audio.currentSrc);
+  $('status').textContent = 'Error al cargar el audio';
+});
+
+/* =====================================
+   MEDIA SESSION
+   CONTROLES DE PANTALLA BLOQUEADA
+===================================== */
+
+function updateMediaSession(song) {
+  if (!('mediaSession' in navigator)) return;
+  if (typeof MediaMetadata === 'undefined') return;
+
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: song.title,
+      artist: 'GT-GELM',
+      album: 'Música Variada',
+      artwork: [
+        {
+          src: song.cover || 'icons/icon-192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: 'icons/icon-512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ]
+    });
+
+    navigator.mediaSession.setActionHandler('play', () => {
+      audio.play().catch(console.error);
+    });
+
+    navigator.mediaSession.setActionHandler('pause', () => {
+      audio.pause();
+    });
+
+    navigator.mediaSession.setActionHandler('previoustrack', prev);
+    navigator.mediaSession.setActionHandler('nexttrack', next);
+
+    navigator.mediaSession.setActionHandler('seekbackward', details => {
+      audio.currentTime = Math.max(
+        0,
+        audio.currentTime - (details.seekOffset || 10)
+      );
+    });
+
+    navigator.mediaSession.setActionHandler('seekforward', details => {
+      audio.currentTime = Math.min(
+        audio.duration || Infinity,
+        audio.currentTime + (details.seekOffset || 10)
+      );
+    });
+
+  } catch (error) {
+    console.warn('Media Session:', error);
+  }
+}
+
+/* =====================================
+   PROGRESO
+===================================== */
+
+audio.addEventListener('loadedmetadata', () => {
+  $('duration').textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener('timeupdate', () => {
+  $('currentTime').textContent = formatTime(audio.currentTime);
+
+  if (audio.duration && !seeking) {
+    $('seek').value =
+      (audio.currentTime / audio.duration) * 100;
+  }
+
+  if ('mediaSession' in navigator &&
+      Number.isFinite(audio.duration) &&
+      audio.duration > 0) {
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        position: audio.currentTime,
+        playbackRate: audio.playbackRate || 1
+      });
+    } catch (_) {}
+  }
+});
+
+$('seek').addEventListener('pointerdown', () => {
+  seeking = true;
+});
+
+$('seek').addEventListener('pointerup', () => {
+  seeking = false;
+
+  if (Number.isFinite(audio.duration)) {
+    audio.currentTime =
+      Number($('seek').value) / 100 * audio.duration;
+  }
+});
+
+$('seek').addEventListener('pointercancel', () => {
+  seeking = false;
+});
+
+$('seek').addEventListener('change', () => {
+  seeking = false;
+
+  if (Number.isFinite(audio.duration)) {
+    audio.currentTime =
+      Number($('seek').value) / 100 * audio.duration;
+  }
+});
+
+/* =====================================
+   VOLUMEN
+===================================== */
+
+$('volume').addEventListener('input', () => {
+  audio.volume = Number($('volume').value);
+});
+
+audio.volume = 0.85;
+
+/* =====================================
+   BIBLIOTECA Y BÚSQUEDA
+===================================== */
+
+function renderLibrary() {
+  const container = $('songList');
+  container.replaceChildren();
+
+  const filtered = songs.filter((song, i) => {
+    const categoryOK =
+      filter === 'all' || song.category === filter;
+
+    const text =
+      `${song.id} ${song.title} ${song.file}`.toLowerCase();
+
+    const searchOK = text.includes(query);
+
+    return categoryOK && searchOK;
+  });
+
+  filtered.forEach(song => {
+    const songIndex = songs.indexOf(song);
+
+    const button = document.createElement('button');
+
+    button.className =
+      'song-row' + (songIndex === index ? ' active' : '');
+
+    button.innerHTML = `
+      <span class="song-number">
+        ${String(song.id).padStart(3, '0')}
+      </span>
+      <span class="song-info">
+        <span class="song-name">${escapeHTML(song.title)}</span>
+        <span class="song-category">${escapeHTML(song.category.toUpperCase())}</span>
+      </span>
+      <span>▶</span>
+    `;
+
+    button.addEventListener('click', () => {
+      loadSong(songIndex, true);
+    });
+
+    container.appendChild(button);
+  });
+
+  if (!filtered.length) {
+    container.textContent = 'No se encontraron canciones.';
+  }
+}
+
+function escapeHTML(text) {
+  return String(text).replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+$('libraryButton').addEventListener('click', () => {
+  $('library').hidden = !$('library').hidden;
+});
+
+$('search').addEventListener('input', event => {
+  query = event.target.value.toLowerCase().trim();
+  renderLibrary();
+});
+
+document.querySelectorAll('.filter').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.filter').forEach(item => {
+      item.classList.remove('active');
+    });
+
+    button.classList.add('active');
+    filter = button.dataset.filter;
+
+    renderLibrary();
+  });
+});
+
+/* =====================================
+   AUDIO DIRECTO Y YOUTUBE
+===================================== */
+
+$('directButton').addEventListener('click', () => {
+  if (index >= 0) {
+    window.open(
+      songs[index].url,
+      '_blank',
+      'noopener,noreferrer'
+    );
+  }
+});
+
+$('youtubeButton').addEventListener('click', () => {
+  window.open(
+    'https://www.youtube.com/playlist?list=' + YOUTUBE_PLAYLIST,
+    '_blank',
+    'noopener,noreferrer'
+  );
+});
+
+/* =====================================
+   SERVICE WORKER
+===================================== */
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .catch(error => console.warn('SW:', error));
+  });
+}
+
+/* =====================================
+   INICIAR
+===================================== */
+
+loadSongs();
+
+</script>
 </body>
 </html>
