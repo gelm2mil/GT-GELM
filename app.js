@@ -99,7 +99,18 @@
   async function previous(){const id=prevId();if(id!==null)await playId(id,true);}
 
   function renderPlaylists(){const area=$('playlistArea');area.innerHTML='';const all=document.createElement('button');all.className='playlist-chip'+(!state.activeList?' active':'');all.textContent='Catálogo general';all.onclick=()=>{state.activeList=null;state.bag=[];if(current())updateMediaSession(current());render();};area.append(all);for(const p of state.playlists){const b=document.createElement('button');b.className='playlist-chip'+(state.activeList===p.id?' active':'');b.textContent=`${p.name} · ${p.songIds.length}`;b.onclick=()=>{state.activeList=p.id;state.bag=[];if(current())updateMediaSession(current());render();};b.oncontextmenu=e=>{e.preventDefault();const action=prompt(`Lista: ${p.name}\nEscribe RENOMBRAR o ELIMINAR`);if(action?.toUpperCase()==='RENOMBRAR'){const n=prompt('Nuevo nombre:',p.name)?.trim();if(n)p.name=n;}if(action?.toUpperCase()==='ELIMINAR'&&confirm(`¿Eliminar ${p.name}?`)){state.playlists=state.playlists.filter(x=>x.id!==p.id);if(state.activeList===p.id)state.activeList=null;}saveLists();renderPlaylists();};area.append(b);}}
-  function renderSongs(){const list=$('songs');const q=state.query.toLocaleLowerCase('es');const items=pool().filter(s=>`${s.id} ${s.title} ${s.file}`.toLocaleLowerCase('es').includes(q));$('listTitle').textContent=activeList()?.name||'Todas las canciones';$('resultCount').textContent=`${items.length} canciones`;if(!items.length){list.innerHTML='<div class="empty">No hay canciones en esta selección.</div>';return;}list.innerHTML=items.map(s=>`<div class="song ${s.id===state.currentId?'current':''}"><span class="num">${String(s.id).padStart(3,'0')}</span><button class="song-main" data-play="${s.id}"><b>${escapeHTML(s.title)}</b><small>${escapeHTML(s.category)}</small></button><button class="song-action" data-action="${s.id}" aria-label="${activeList()?'Quitar':'Agregar a lista'}">${activeList()?'−':'＋'}</button></div>`).join('');}
+  function renderSongs(){
+    const list=$('songs');const q=state.query.toLocaleLowerCase('es');
+    const items=pool().filter(s=>`${s.id} ${s.title} ${s.file}`.toLocaleLowerCase('es').includes(q));
+    $('listTitle').textContent=activeList()?.name||'Todas las canciones';$('resultCount').textContent=`${items.length} canciones`;
+    const picker=$('songPicker');
+    if(picker){
+      const selected=String(state.currentId??'');
+      picker.innerHTML='<option value="">Elegir canción…</option>'+items.map(s=>`<option value="${s.id}" ${String(s.id)===selected?'selected':''}>${String(s.id).padStart(3,'0')} · ${escapeHTML(s.title)}</option>`).join('');
+    }
+    if(!items.length){list.innerHTML='<div class="empty">No hay canciones en esta selección.</div>';return;}
+    list.innerHTML=items.map(s=>`<div class="song ${s.id===state.currentId?'current':''}"><span class="num">${String(s.id).padStart(3,'0')}</span><button class="song-main" data-play="${s.id}"><b>${escapeHTML(s.title)}</b><small>${escapeHTML(s.category)}</small></button><button class="song-action" data-action="${s.id}" aria-label="${activeList()?'Quitar':'Agregar a lista'}">${activeList()?'−':'＋'}</button></div>`).join('');
+  }
   function render(){ $('playlistArea').hidden=state.view!=='playlists';$('search').hidden=false;document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===state.view));renderPlaylists();renderSongs(); }
   function createList(name){const p={id:`pl_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,name,songIds:[]};state.playlists.push(p);state.activeList=p.id;state.view='playlists';state.bag=[];saveLists();render();}
   function addSongToList(songId,listId){const p=state.playlists.find(x=>x.id===listId);if(p&&!p.songIds.includes(songId))p.songIds.push(songId);saveLists();render();}
@@ -126,6 +137,7 @@
     });
     $('seek').oninput=e=>{if(Number.isFinite(audio.duration))audio.currentTime=Number(e.target.value)/1000*audio.duration;};
     $('search').oninput=e=>{state.query=e.target.value;renderSongs();};
+    $('songPicker').onchange=async e=>{const id=Number(e.target.value);if(id){state.bag=state.bag.filter(x=>x!==id);await playId(id,true);}};
     document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{state.view=b.dataset.view;if(state.view==='catalog')state.activeList=null;render();});
     $('songs').onclick=async e=>{const playBtn=e.target.closest('[data-play]'),action=e.target.closest('[data-action]');if(playBtn){const id=Number(playBtn.dataset.play);state.bag=state.bag.filter(x=>x!==id);await playId(id,true);}else if(action){const id=Number(action.dataset.action);if(activeList()){const p=activeList();p.songIds=p.songIds.filter(x=>x!==id);saveLists();render();}else{state.pendingSong=id;if(!state.playlists.length){alert('Primero crea una lista personal.');return;}$('listChoices').innerHTML=state.playlists.map(p=>`<button class="choice" data-list="${p.id}">${escapeHTML(p.name)} · ${p.songIds.length} canciones</button>`).join('');$('addDialog').showModal();}}};
     $('newList').onclick=()=>$('createDialog').showModal();$('createForm').onsubmit=e=>{e.preventDefault();const name=$('listName').value.trim();if(name){createList(name);$('createDialog').close();$('listName').value='';}};

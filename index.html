@@ -7,7 +7,7 @@
 </head>
 <body>
 <main class="app">
-<header class="top"><a class="brand" href="#"><span class="logo">G</span><span><b>GT-GELM</b><small>MUSIC PLAYER · V1</small></span></a><span id="libraryCount" class="count">Cargando…</span></header>
+<header class="top"><a class="brand" href="#"><span class="logo">G</span><span><b>GT-GELM</b><small>MUSIC PLAYER · V1.2</small></span></a><span id="libraryCount" class="count">Cargando…</span></header>
 <section class="player panel">
 <div class="cover-wrap"><div class="cover" id="cover">♫</div><span class="cover-tag">GT-GELM ORIGINALS</span></div>
 <div class="track"><small id="sourceLabel">CATÁLOGO GENERAL</small><h1 id="trackTitle">Preparando tu música…</h1><p id="trackMeta">118 canciones disponibles</p></div>
@@ -15,15 +15,19 @@
 <div class="timeline"><span id="elapsed">0:00</span><input id="seek" type="range" min="0" max="1000" value="0"><span id="duration">0:00</span></div>
 <div class="controls"><button id="shuffle" class="toggle active" aria-label="Aleatorio" title="Aleatorio">🔀</button><button id="prev" aria-label="Anterior">⏮</button><button id="play" class="play" aria-label="Reproducir">▶</button><button id="next" aria-label="Siguiente">⏭</button><button id="repeat" class="toggle" aria-label="Repetir lista" title="Repetir lista">🔁</button></div>
 <div class="status" id="status" role="status">Listo para reproducir</div>
+<div class="quick-select">
+<label for="songPicker">SELECCIONAR CANCIÓN</label>
+<select id="songPicker"><option value="">Cargando canciones…</option></select>
+</div>
 </section>
-<section class="library panel">
+<details class="library-drawer"><summary>Biblioteca y mis listas <span>＋</span></summary><section class="library panel">
 <div class="section-head"><div><small>EXPLORA TU MÚSICA</small><h2>Biblioteca</h2></div><button id="newList" class="primary">＋ Nueva lista</button></div>
 <div class="tabs"><button class="tab selected" data-view="catalog">Catálogo general</button><button class="tab" data-view="playlists">Mis listas</button></div>
 <label class="search">⌕ <input id="search" type="search" placeholder="Buscar canciones…"></label>
 <div id="playlistArea" class="playlist-area" hidden></div>
 <div class="list-head"><b id="listTitle">Todas las canciones</b><span id="resultCount"></span></div>
 <div id="songs" class="songs"></div>
-</section><footer>GT-GELM · Guatemala tu nombre inmortal</footer>
+</section></details><footer>GT-GELM · Guatemala tu nombre inmortal</footer>
 </main>
 <dialog id="createDialog"><form method="dialog" id="createForm"><h3>Nueva lista</h3><input id="listName" maxlength="40" required placeholder="Nombre de la lista"><div class="dialog-actions"><button value="cancel" class="secondary">Cancelar</button><button value="default" class="primary">Crear lista</button></div></form></dialog>
 <dialog id="addDialog"><div class="dialog-inner"><h3>Agregar a una lista</h3><div id="listChoices"></div><button id="closeAdd" class="secondary">Cerrar</button></div></dialog>
