@@ -54,3 +54,11 @@ footer{color:#00c9b5}
  .catalog-actions{grid-column:2;justify-content:flex-end}
  .catalog-actions button{height:32px}
 }
+
+
+/* V1.4 · Botón de instalación PWA en la cabecera */
+.brand-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.install-btn{display:inline-flex;align-items:center;gap:5px;padding:2px 0;border:0;background:transparent;color:var(--green);font:700 10px/1.3 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:1.35px;text-shadow:0 0 9px #00ffc855;cursor:pointer}
+.install-btn[hidden]{display:none!important}
+.install-btn:focus-visible{outline:1px solid var(--cyan);outline-offset:4px;border-radius:4px}
+.install-btn:active{color:var(--cyan)}

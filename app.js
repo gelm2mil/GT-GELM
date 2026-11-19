@@ -6,6 +6,65 @@
   const audio = $('audio');
   const state = { songs:[], view:'catalog', activeList:null, playlists:[], currentId:null, shuffle:true, repeatList:true, bag:[], history:[], query:'', catalogQuery:'', pendingSong:null, switching:false, advancing:false, failedIds:new Set() };
 
+  // Instalación PWA: conserva el reproductor V1.4 y reutiliza el sw.js existente.
+  let deferredInstallPrompt = null;
+  function isStandalone(){
+    return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  }
+  function isIOS(){
+    return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+  function setupInstall(){
+    const button = $('installBtn');
+    if(!button) return;
+    if(isStandalone()){ button.hidden = true; return; }
+
+    button.hidden = false;
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      button.hidden = false;
+      button.textContent = '↓ INSTALAR';
+    });
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      button.hidden = true;
+      setStatus('GT-GELM quedó instalado correctamente.');
+    });
+    button.addEventListener('click', async () => {
+      if(deferredInstallPrompt){
+        const promptEvent = deferredInstallPrompt;
+        deferredInstallPrompt = null;
+        try{
+          await promptEvent.prompt();
+          const choice = await promptEvent.userChoice;
+          if(choice && choice.outcome === 'accepted'){
+            button.hidden = true;
+            setStatus('Instalación aceptada.');
+          }else{
+            setStatus('Puedes instalar GT-GELM cuando quieras desde este botón.');
+          }
+        }catch(error){
+          console.warn('No se pudo abrir el diálogo de instalación', error);
+          setStatus('No se pudo abrir la instalación. Intenta desde el menú del navegador.');
+        }
+        return;
+      }
+      if(isIOS()){
+        alert('Para instalar GT-GELM en tu iPhone o iPad:\n1. Pulsa Compartir en Safari.\n2. Selecciona “Agregar a pantalla de inicio”.\n3. Confirma con “Agregar”.');
+      }else{
+        alert('Para instalar GT-GELM:\n1. Abre el menú del navegador (⋮ o ⋯).\n2. Busca “Instalar aplicación”, “Instalar GT-GELM” o “Agregar a pantalla de inicio”.\n3. Confirma la instalación.');
+      }
+    });
+  }
+  function registerServiceWorker(){
+    if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
+      navigator.serviceWorker.register('./sw.js', {updateViaCache:'none'})
+        .catch(error => console.warn('No se pudo registrar el Service Worker:', error));
+    }
+  }
+
   const escapeHTML = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const fmt = n => Number.isFinite(n) ? `${Math.floor(n/60)}:${String(Math.floor(n%60)).padStart(2,'0')}` : '0:00';
   const current = () => state.songs.find(s=>s.id===state.currentId) || null;
@@ -202,5 +261,7 @@ function render(){ $('playlistArea').hidden=state.view!=='playlists';$('search')
     $('newList').onclick=()=>$('createDialog').showModal();$('createForm').onsubmit=e=>{e.preventDefault();const name=$('listName').value.trim();if(name){createList(name);$('createDialog').close();$('listName').value='';}};
     $('listChoices').onclick=e=>{const b=e.target.closest('[data-list]');if(b){addSongToList(state.pendingSong,b.dataset.list);$('addDialog').close();}};$('closeAdd').onclick=()=>$('addDialog').close();
   }
+  setupInstall();
+  registerServiceWorker();
   init();
 })();
