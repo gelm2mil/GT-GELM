@@ -7,7 +7,7 @@
 </head>
 <body>
 <main class="app">
-<header class="top"><a class="brand" href="#"><span class="logo">G</span><span><b>GT-GELM</b><small>MUSIC PLAYER · V1.3</small></span></a><span id="libraryCount" class="count">Cargando…</span></header>
+<header class="top"><a class="brand" href="#"><span class="logo">G</span><span><b>GT-GELM</b><small>MUSIC PLAYER · V1.4</small></span></a><span id="libraryCount" class="count">Cargando…</span></header>
 <section class="player panel">
 <div class="cover-wrap"><div class="cover" id="cover">♫</div><span class="cover-tag">GT-GELM ORIGINALS</span></div>
 <div class="track"><small id="sourceLabel">CATÁLOGO GENERAL</small><h1 id="trackTitle">Preparando tu música…</h1><p id="trackMeta">118 canciones disponibles</p></div>
@@ -17,7 +17,10 @@
 <div class="status" id="status" role="status">Listo para reproducir</div>
 <div class="quick-select">
 <label for="songPicker">SELECCIONAR CANCIÓN</label>
+<div class="picker-row">
 <select id="songPicker"><option value="">Cargando canciones…</option></select>
+<button id="openCatalog" class="catalog-open" type="button" aria-label="Abrir biblioteca completa" title="Abrir biblioteca completa">↗</button>
+</div>
 </div>
 </section>
 <details class="library-drawer"><summary>Biblioteca y mis listas <span>＋</span></summary><section class="library panel">
@@ -31,5 +34,16 @@
 </main>
 <dialog id="createDialog"><form method="dialog" id="createForm"><h3>Nueva lista</h3><input id="listName" maxlength="40" required placeholder="Nombre de la lista"><div class="dialog-actions"><button value="cancel" class="secondary">Cancelar</button><button value="default" class="primary">Crear lista</button></div></form></dialog>
 <dialog id="addDialog"><div class="dialog-inner"><h3>Agregar a una lista</h3><div id="listChoices"></div><button id="closeAdd" class="secondary">Cerrar</button></div></dialog>
+<dialog id="catalogDialog" class="catalog-dialog">
+  <div class="catalog-modal">
+    <div class="catalog-heading">
+      <div><small>GT-GELM ORIGINALS</small><h2>Biblioteca musical</h2><p id="catalogCount">118 canciones</p></div>
+      <button id="closeCatalog" class="catalog-close" type="button" aria-label="Cerrar biblioteca">×</button>
+    </div>
+    <label class="search catalog-search">⌕ <input id="catalogSearch" type="search" placeholder="Buscar canción, número o categoría…"></label>
+    <div id="catalogSongs" class="catalog-songs"></div>
+    <p class="catalog-note">Abrir MP3 y descargar utilizan el enlace original. La descarga depende de los permisos del servidor.</p>
+  </div>
+</dialog>
 <script src="app.js" defer></script>
 </body></html>

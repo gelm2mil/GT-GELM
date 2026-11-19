@@ -4,7 +4,7 @@
   const STORE = 'gtgelm.player.playlists.v1';
   const $ = id => document.getElementById(id);
   const audio = $('audio');
-  const state = { songs:[], view:'catalog', activeList:null, playlists:[], currentId:null, shuffle:true, repeatList:true, bag:[], history:[], query:'', pendingSong:null, switching:false, advancing:false, failedIds:new Set() };
+  const state = { songs:[], view:'catalog', activeList:null, playlists:[], currentId:null, shuffle:true, repeatList:true, bag:[], history:[], query:'', catalogQuery:'', pendingSong:null, switching:false, advancing:false, failedIds:new Set() };
 
   const escapeHTML = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const fmt = n => Number.isFinite(n) ? `${Math.floor(n/60)}:${String(Math.floor(n%60)).padStart(2,'0')}` : '0:00';
@@ -119,13 +119,64 @@
     if(!items.length){list.innerHTML='<div class="empty">No hay canciones en esta selección.</div>';return;}
     list.innerHTML=items.map(s=>`<div class="song ${s.id===state.currentId?'current':''}"><span class="num">${String(s.id).padStart(3,'0')}</span><button class="song-main" data-play="${s.id}"><b>${escapeHTML(s.title)}</b><small>${escapeHTML(s.category)}</small></button><button class="song-action" data-action="${s.id}" aria-label="${activeList()?'Quitar':'Agregar a lista'}">${activeList()?'−':'＋'}</button></div>`).join('');
   }
-  function render(){ $('playlistArea').hidden=state.view!=='playlists';$('search').hidden=false;document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===state.view));renderPlaylists();renderSongs(); }
+  
+  function renderCatalogSongs(){
+    const host=$('catalogSongs');
+    const q=state.catalogQuery.toLocaleLowerCase('es').trim();
+    const items=state.songs.filter(s=>`${s.id} ${s.title} ${s.category}`.toLocaleLowerCase('es').includes(q));
+    $('catalogCount').textContent=`${items.length} de ${state.songs.length} canciones`;
+    if(!items.length){host.innerHTML='<div class="empty">No se encontraron canciones.</div>';return;}
+    host.innerHTML=items.map(s=>`<div class="catalog-song ${s.id===state.currentId?'current':''}">
+      <span class="catalog-number">${String(s.id).padStart(3,'0')}</span>
+      <div class="catalog-info"><b>${escapeHTML(s.title)}</b><small>${escapeHTML(s.category)}${s.id===state.currentId?' · En reproducción':''}</small></div>
+      <div class="catalog-actions">
+        <button type="button" data-song-action="play" data-song-id="${s.id}" title="Reproducir" aria-label="Reproducir ${escapeHTML(s.title)}">▶</button>
+        <button type="button" data-song-action="open" data-song-id="${s.id}" title="Abrir MP3 original">↗</button>
+        <button type="button" data-song-action="download" data-song-id="${s.id}" title="Descargar MP3">↓</button>
+      </div>
+    </div>`).join('');
+  }
+  function openOriginal(song){
+    if(!song)return;
+    const url=songUrl(song.file);
+    window.open(url,'_blank','noopener,noreferrer');
+  }
+  function downloadOriginal(song){
+    if(!song)return;
+    const a=document.createElement('a');
+    a.href=songUrl(song.file);
+    a.download=(song.title||`GT-GELM-${song.id}`).replace(/[\\/:*?"<>|]+/g,'-')+'.mp3';
+    a.target='_blank';
+    a.rel='noopener noreferrer';
+    document.body.append(a);
+    a.click();
+    a.remove();
+    setStatus('Solicitud de descarga enviada. El servidor puede controlar la descarga.');
+  }
+function render(){ $('playlistArea').hidden=state.view!=='playlists';$('search').hidden=false;document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('selected',b.dataset.view===state.view));renderPlaylists();renderSongs(); }
   function createList(name){const p={id:`pl_${Date.now()}_${Math.random().toString(36).slice(2,7)}`,name,songIds:[]};state.playlists.push(p);state.activeList=p.id;state.view='playlists';state.bag=[];saveLists();render();}
   function addSongToList(songId,listId){const p=state.playlists.find(x=>x.id===listId);if(p&&!p.songIds.includes(songId))p.songIds.push(songId);saveLists();render();}
 
   async function init(){try{const res=await fetch('songs.json');if(!res.ok)throw Error('No se pudo leer songs.json');const raw=await res.json();state.songs=(Array.isArray(raw)?raw:raw.songs||[]).map((s,i)=>({id:Number(s.id??i+1),file:String(s.file||''),title:String(s.title||s.file||`Canción ${i+1}`),category:String(s.category||'historias').toLowerCase()})).filter(s=>s.file);loadLists();$('libraryCount').textContent=`${state.songs.length} canciones`;if(!state.songs.length)throw Error('El catálogo está vacío');makeBag(false);state.currentId=state.bag.pop();await playId(state.currentId,false);setStatus('Catálogo listo · pulsa reproducir');render();bind();}catch(e){$('trackTitle').textContent='No se pudo iniciar';setStatus(e.message);console.error(e);}}
   function bind(){
     bindMediaSession();
+    $('openCatalog').onclick=()=>{state.catalogQuery='';$('catalogSearch').value='';renderCatalogSongs();$('catalogDialog').showModal();};
+    $('closeCatalog').onclick=()=>$('catalogDialog').close();
+    $('catalogSearch').oninput=e=>{state.catalogQuery=e.target.value;renderCatalogSongs();};
+    $('catalogSongs').onclick=async e=>{
+      const b=e.target.closest('[data-song-action]');
+      if(!b)return;
+      const song=state.songs.find(s=>s.id===Number(b.dataset.songId));
+      if(!song)return;
+      const action=b.dataset.songAction;
+      if(action==='play'){
+        state.bag=state.bag.filter(x=>x!==song.id);
+        await playId(song.id,true);
+        renderCatalogSongs();
+        $('catalogDialog').close();
+      }else if(action==='open')openOriginal(song);
+      else if(action==='download')downloadOriginal(song);
+    };
     $('play').onclick=()=>audio.paused?play():audio.pause();$('next').onclick=next;$('prev').onclick=previous;
     $('shuffle').onclick=()=>{state.shuffle=!state.shuffle;state.bag=[];$('shuffle').classList.toggle('active',state.shuffle);setStatus(state.shuffle?'Aleatorio activado':'Orden secuencial activado');};
     $('repeat').onclick=()=>{state.repeatList=!state.repeatList;$('repeat').classList.toggle('active',state.repeatList);$('repeat').title=state.repeatList?'Repetir lista activado':'Repetir lista desactivado';};
