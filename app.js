@@ -106,59 +106,103 @@
     }
   }
 
-  function playId(id, autoplay=true){
+  async function playId(id, autoplay=true){
     const song=pool().find(s=>s.id===id) || state.songs.find(s=>s.id===id);
     if(!song) return false;
 
-    // Solo se bloquea durante el cambio de fuente. Nunca se espera a audio.play()
-    // para liberar este estado: en móviles esa promesa puede tardar o quedar pendiente.
-    state.switching=true;
-    audio.pause();
-    state.currentId=song.id;
-    $('trackTitle').textContent=song.title;
-    $('trackMeta').textContent=`GT-GELM · ${String(song.id).padStart(3,'0')} · ${song.category}`;
-    $('sourceLabel').textContent=activeList()?.name || 'CATÁLOGO GENERAL';
-    $('cover').textContent='♫';
-    $('elapsed').textContent='0:00';
-    $('duration').textContent='0:00';
-    $('seek').value=0;
-    audio.src=songUrl(song.file);
-    audio.load();
-    renderSongs();
-    updateMediaSession(song);
-    state.switching=false;
+    // El token evita que una transición antigua actualice el estado de una pista nueva.
+    const requestId = (state.playRequestId || 0) + 1;
+    state.playRequestId = requestId;
+    state.switching = true;
 
-    if(autoplay){
-      try{
-        const promise=audio.play();
-        if(promise && typeof promise.catch==='function'){
-          promise.catch(err=>{
-            setStatus(err.name==='NotAllowedError'
-              ? 'El navegador requiere que pulses reproducir para continuar.'
-              : 'No se pudo iniciar esta pista. Puedes intentar con la siguiente.');
-            console.warn('Audio play error',err);
-          });
-        }
-        setStatus('Reproduciendo');
-      }catch(err){
-        setStatus('No se pudo iniciar esta pista. Puedes intentar con la siguiente.');
-        console.warn('Audio play error',err);
-      }
-    }else{
-      setStatus('Canción preparada. Pulsa reproducir.');
+    try{
+      audio.pause();
+      state.currentId=song.id;
+      $('trackTitle').textContent=song.title;
+      $('trackMeta').textContent=`GT-GELM · ${String(song.id).padStart(3,'0')} · ${song.category}`;
+      $('sourceLabel').textContent=activeList()?.name || 'CATÁLOGO GENERAL';
+      $('cover').textContent='♫';
+      $('elapsed').textContent='0:00';
+      $('duration').textContent='0:00';
+      $('seek').value=0;
+
+      audio.src=songUrl(song.file);
+      audio.load();
+      renderSongs();
+      updateMediaSession(song);
+    }catch(error){
+      if(state.playRequestId === requestId) state.switching=false;
+      console.error('No se pudo preparar la canción:', error);
+      setStatus('No se pudo preparar esta canción.');
+      return false;
     }
-    return true;
+
+    // Se libera switching después de asignar la nueva fuente, no después de
+    // terminar la descarga. Así el evento ended anterior no dispara otra transición.
+    if(state.playRequestId === requestId) state.switching=false;
+
+    if(!autoplay){
+      setStatus('Canción preparada. Pulsa reproducir.');
+      return true;
+    }
+
+    try{
+      // IMPORTANTE: esperamos la promesa real. Antes se marcaba "Reproduciendo"
+      // y se liberaba next() aunque el navegador todavía no hubiera iniciado el audio.
+      await audio.play();
+
+      if(state.playRequestId !== requestId) return false;
+      state.failedIds.delete(song.id);
+      setStatus('Reproduciendo');
+      updateMediaSession(song);
+      return true;
+    }catch(error){
+      if(state.playRequestId !== requestId) return false;
+
+      const blocked = error && error.name === 'NotAllowedError';
+      setStatus(blocked
+        ? 'El navegador bloqueó la reproducción automática. Pulsa reproducir para continuar.'
+        : 'No se pudo iniciar esta pista. Comprueba la conexión e intenta nuevamente.');
+      console.warn('Audio play error:', error);
+      return false;
+    }
   }
-  async function play(){ if(!current()){const list=pool();if(!list.length){setStatus('Esta lista no tiene canciones.');return;} if(state.shuffle){makeBag(false);state.currentId=state.bag.pop();}else state.currentId=list[0].id; await playId(state.currentId,false);} try{await audio.play();setStatus('Reproduciendo');}catch(e){setStatus('El navegador no permitió iniciar el audio. Vuelve a tocar reproducir.');} }
+
+  async function play(){
+    if(!current()){
+      const list=pool();
+      if(!list.length){setStatus('Esta lista no tiene canciones.');return;}
+      const id = state.shuffle ? (makeBag(false), state.bag.pop()) : list[0].id;
+      if(!await playId(id,false)) return;
+    }
+    try{
+      await audio.play();
+      setStatus('Reproduciendo');
+      updateMediaSession(current());
+    }catch(error){
+      setStatus(error?.name === 'NotAllowedError'
+        ? 'El navegador no permitió iniciar el audio. Vuelve a tocar reproducir.'
+        : 'No se pudo iniciar el audio. Comprueba tu conexión.');
+      console.warn('Audio play error:', error);
+    }
+  }
+
   async function next(){
     if(state.advancing) return;
     state.advancing=true;
     try{
       const id=nextId();
       if(id===null){setStatus('La lista terminó.');return;}
-      if(state.history.at(-1)!==state.currentId&&state.currentId!==null)state.history.push(state.currentId);
-      if(state.history.length>30)state.history.shift();
-      await playId(id,true);
+
+      const previousId = state.currentId;
+      const started = await playId(id,true);
+
+      if(started && previousId !== null && state.history.at(-1)!==previousId){
+        state.history.push(previousId);
+        if(state.history.length>30) state.history.shift();
+      }
+      // NotAllowedError requiere una acción explícita del usuario. No saltamos
+      // automáticamente por todo el catálogo en ese caso.
     }finally{
       state.advancing=false;
     }
@@ -244,12 +288,17 @@ function render(){ $('playlistArea').hidden=state.view!=='playlists';$('search')
     audio.addEventListener('pause',()=>{$('play').textContent='▶';if('mediaSession' in navigator)navigator.mediaSession.playbackState='paused';});
     audio.addEventListener('timeupdate',()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){$('seek').value=Math.round(audio.currentTime/audio.duration*1000);$('elapsed').textContent=fmt(audio.currentTime);$('duration').textContent=fmt(audio.duration);}});
     audio.addEventListener('error',()=>{
-      if(audio.error && current() && !state.switching){
-        setStatus('No se pudo cargar esta canción. Pasando a otra…');
-        if(!state.failedIds.has(current().id)){
-          state.failedIds.add(current().id);
-          if(state.failedIds.size < state.songs.length) setTimeout(()=>next(),250);
-          else setStatus('No se pudieron reproducir las canciones disponibles. Revisa tu conexión.');
+      if(audio.error && current() && !state.switching && !state.advancing){
+        const failedId = current().id;
+        if(!state.failedIds.has(failedId)){
+          state.failedIds.add(failedId);
+          setStatus('No se pudo cargar esta canción. Intentando la siguiente…');
+          if(state.failedIds.size < state.songs.length){
+            // Deja que el navegador termine de despachar el error antes de cambiar la fuente.
+            queueMicrotask(()=>next());
+          }else{
+            setStatus('No se pudieron reproducir las canciones disponibles. Revisa tu conexión.');
+          }
         }
       }
     });
