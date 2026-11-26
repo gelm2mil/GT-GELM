@@ -45,7 +45,6 @@ let songs=[];
 let index=0;
 let shuffle=true;
 let pendingPlay=false;
-let loadVersion=0;
 let failedTracks=new Set();
 
 function updateMediaSession(song){
@@ -72,7 +71,6 @@ function selectSong(i,autoplay=false){
   index=(i+songs.length)%songs.length;
   const song=songs[index];
   if(!song || !song.url) return;
-  loadVersion++;
   pendingPlay=autoplay;
   audio.pause();
   audio.removeAttribute("src");
@@ -106,9 +104,18 @@ audio.addEventListener("canplay",()=>{
 });
 function next(){
   if(!songs.length) return;
-  let target=(index+1)%songs.length;
-  if(shuffle && songs.length>1){
-    do{target=Math.floor(Math.random()*songs.length)}while(target===index);
+  const available=songs.map((song,i)=>i).filter(i=>!failedTracks.has(i));
+  if(!available.length){
+    title.textContent="No se pudieron reproducir las canciones";
+    return;
+  }
+  let target;
+  if(shuffle && available.length>1){
+    const choices=available.filter(i=>i!==index);
+    target=choices[Math.floor(Math.random()*choices.length)];
+  }else{
+    target=available.find(i=>i>index);
+    if(target===undefined) target=available[0];
   }
   selectSong(target,true);
 }
