@@ -44,6 +44,9 @@ const playButton=document.getElementById("play");
 let songs=[];
 let index=0;
 let shuffle=true;
+let pendingPlay=false;
+let loadVersion=0;
+let failedTracks=new Set();
 
 function updateMediaSession(song){
   if(!("mediaSession" in navigator) || typeof MediaMetadata==="undefined") return;
@@ -69,25 +72,38 @@ function selectSong(i,autoplay=false){
   index=(i+songs.length)%songs.length;
   const song=songs[index];
   if(!song || !song.url) return;
+  loadVersion++;
+  pendingPlay=autoplay;
   audio.pause();
-  audio.src=song.url;
+  audio.removeAttribute("src");
+  audio.src=song.url.trim();
   audio.load();
   title.textContent=song.title||"GT-GELM";
   list.value=String(index);
   localStorage.setItem("lastSong",String(index));
   bar.style.width="0%";
   updateMediaSession(song);
-  if(autoplay) startPlayback();
+  if(autoplay && audio.readyState>=HTMLMediaElement.HAVE_FUTURE_DATA) startPlayback();
 }
 
 async function startPlayback(){
   if(!audio.src) return;
+  if(audio.readyState<HTMLMediaElement.HAVE_FUTURE_DATA){
+    pendingPlay=true;
+    return;
+  }
+  pendingPlay=false;
   try{
     await audio.play();
   }catch(error){
     console.warn("No se pudo iniciar la reproducción:",error);
+    if(error && error.name!=="AbortError") pendingPlay=true;
   }
 }
+
+audio.addEventListener("canplay",()=>{
+  if(pendingPlay) startPlayback();
+});
 function next(){
   if(!songs.length) return;
   let target=(index+1)%songs.length;
@@ -115,8 +131,20 @@ audio.addEventListener("timeupdate",()=>{
 audio.addEventListener("ended",next);
 audio.addEventListener("play",()=>{playButton.textContent="⏸";});
 audio.addEventListener("pause",()=>{playButton.textContent="⏯";});
+audio.addEventListener("playing",()=>{
+  failedTracks.delete(index);
+});
 audio.addEventListener("error",()=>{
-  if(audio.error) console.error("Error de audio:",audio.error.code,audio.currentSrc);
+  if(!audio.error) return;
+  console.error("Error de audio:",audio.error.code,audio.currentSrc);
+  pendingPlay=false;
+  if(failedTracks.has(index)) return;
+  failedTracks.add(index);
+  if(failedTracks.size>=songs.length){
+    title.textContent="No se pudieron reproducir las canciones";
+    return;
+  }
+  setTimeout(()=>next(),250);
 });
 
 async function loadSongs(){
