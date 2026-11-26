@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GT-GELM - Player</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+
+<style>
+html,body{
+  margin:0;
+  padding:0;
+  height:100%;
+  background:#000;
+  color:#fff;
+  font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+.app{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:14px;
+}
+.title{
+  font-size:18px;
+  font-weight:600;
+}
+.progress{
+  width:70%;
+  height:3px;
+  background:#222;
+  border-radius:4px;
+  overflow:hidden;
+}
+.bar{
+  height:100%;
+  width:0%;
+  background:#00ff55;
+}
+.controls{
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+.btn{
+  background:none;
+  border:none;
+  color:white;
+  font-size:22px;
+}
+.btn.save{
+  font-size:18px;
+  color:#00ff55;
+}
+select{
+  background:#000;
+  color:#00ff55;
+  border:1px solid #00ff55;
+  padding:6px 12px;
+  border-radius:8px;
+}
+.footer{
+  font-size:12px;
+  color:#00ff55;
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+  <div class="title" id="songTitle">Cargando…</div>
+
+  <div class="progress">
+    <div class="bar" id="bar"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn" id="shuffle">🔀</button>
+    <button class="btn" id="prev">⏮</button>
+    <button class="btn" id="play">⏯</button>
+    <button class="btn" id="next">⏭</button>
+    <button class="btn save" id="save">💾</button>
+  </div>
+
+  <select id="list"></select>
+
+  <div class="footer">Created by GELM</div>
+
+</div>
+
+<audio id="audio" crossorigin="anonymous"></audio>
+
+<script>
+const audio = document.getElementById("audio");
+const title = document.getElementById("songTitle");
+const bar = document.getElementById("bar");
+const list = document.getElementById("list");
+
+let songs = [];
+let index = 0;
+let shuffle = true;
+
+/* Load songs */
+fetch("../songs.json", { cache: "no-store" })
+.then(r=>r.json())
+.then(data=>{
+  songs = data.filter(s=>s.url);
+  songs.forEach((s,i)=>{
+    const o = document.createElement("option");
+    o.value=i;
+    o.textContent=s.title;
+    list.appendChild(o);
+  });
+
+  index = Math.floor(Math.random() * songs.length);
+  playSong(index);
+});
+
+/* Play */
+function playSong(i){
+  const s = songs[i];
+  if(!s) return;
+  audio.src = s.url;
+  audio.play();
+  title.textContent = s.title;
+  list.value = i;
+  localStorage.setItem("lastSong", i);
+
+  if("mediaSession" in navigator){
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: s.title,
+      artist: "GELM",
+      album: "Música Variada",
+      artwork:[
+        {src:"icons/icon-192.png",sizes:"192x192",type:"image/png"},
+        {src:"icons/icon-512.png",sizes:"512x512",type:"image/png"}
+      ]
+    });
+
+    navigator.mediaSession.setActionHandler("previoustrack", prev);
+    navigator.mediaSession.setActionHandler("nexttrack", next);
+    navigator.mediaSession.setActionHandler("play", ()=>audio.play());
+    navigator.mediaSession.setActionHandler("pause", ()=>audio.pause());
+  }
+}
+
+/* Controls */
+function next(){
+  index = shuffle ? Math.floor(Math.random()*songs.length) : (index+1)%songs.length;
+  playSong(index);
+}
+function prev(){
+  index = (index-1+songs.length)%songs.length;
+  playSong(index);
+}
+
+document.getElementById("next").onclick=next;
+document.getElementById("prev").onclick=prev;
+document.getElementById("play").onclick=()=>audio.paused?audio.play():audio.pause();
+document.getElementById("shuffle").onclick=()=>shuffle=!shuffle;
+
+list.onchange=e=>{
+  index=parseInt(e.target.value);
+  playSong(index);
+};
+
+/* Progress */
+audio.ontimeupdate=()=>{
+  if(audio.duration){
+    bar.style.width=(audio.currentTime/audio.duration*100)+"%";
+  }
+};
+
+/* Auto next */
+audio.onended=next;
+
+/* Save offline (cache audio) */
+document.getElementById("save").onclick=async ()=>{
+  if(navigator.serviceWorker && navigator.serviceWorker.controller){
+    await fetch(audio.src);
+    alert("Canción guardada offline ✔");
+  }
+};
+
+/* Register SW */
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
+</body>
+</html>
